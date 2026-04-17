@@ -59,12 +59,12 @@
 
     header{
       display:flex;
-      gap:16px;
+      gap:18px;
       align-items:flex-start;
       justify-content:space-between;
       flex-wrap:nowrap;
       margin-top:0;
-      padding:6px 0 16px 0;
+      padding:8px 0 18px 0;
       border-bottom:1px solid var(--border);
     }
 
@@ -80,26 +80,79 @@
       flex:1 1 auto;
     }
 
-    .title h1{margin:0;font-size:26px;letter-spacing:.2px;line-height:1.12;font-weight:800}
-    .title p{margin:6px 0 0 0;color:var(--muted);font-size:13px}
-    .titleWrap{display:flex;align-items:center;gap:16px;flex-wrap:nowrap}
-    .titleWrap .title{min-width:0;flex:1 1 auto}
-    .titleVisual{
-      width:152px;min-width:152px;height:96px;border-radius:20px;
-      border:1px solid rgba(47,124,255,.32);
-      background:linear-gradient(180deg, rgba(47,124,255,.18), rgba(34,211,238,.12));
-      box-shadow:0 16px 38px rgba(0,0,0,.24);
-      display:flex;align-items:center;justify-content:center;overflow:hidden
+    .titleWrap{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:nowrap;
+      padding:14px 16px;
+      border:1px solid rgba(47,124,255,.14);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+        radial-gradient(circle at 15% 20%, rgba(47,124,255,.10), transparent 35%);
+      box-shadow:0 14px 34px rgba(0,0,0,.18);
     }
-    .titleVisual svg{width:100%;height:100%;display:block}
+
+    .titleVisual{
+      order:0;
+      flex:0 0 172px;
+      width:172px;
+      min-width:172px;
+      height:108px;
+      border-radius:22px;
+      border:1px solid rgba(47,124,255,.30);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(47,124,255,.24), transparent 45%),
+        radial-gradient(circle at 80% 25%, rgba(34,211,238,.20), transparent 40%),
+        linear-gradient(180deg, rgba(8,18,37,.98), rgba(10,24,52,.96));
+      box-shadow:
+        0 18px 42px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.05);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .titleVisual svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    .titleWrap .title{
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:21px;
+      letter-spacing:.2px;
+      line-height:1.15;
+      font-weight:800;
+      color:#F4F7FF;
+    }
+
+    .title p{
+      margin:8px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
 
     .controls{
-      margin-top:14px;
+      margin-top:16px;
       display:grid;
-      grid-template-columns: 120px 120px minmax(190px,1fr) minmax(190px,1fr) 150px;
-      gap:10px 12px;
+      grid-template-columns: 120px 120px minmax(210px,1fr) minmax(210px,1fr) 160px;
+      gap:12px 12px;
       align-items:end;
       justify-content:flex-start;
+      padding:14px;
+      border:1px solid rgba(47,124,255,.10);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
     }
 
     .filterField{
@@ -123,11 +176,48 @@
     @media (max-width: 1100px){
       .controls{grid-template-columns: repeat(3, minmax(140px, 1fr));}
     }
+
     @media (max-width: 760px){
-      .titleWrap{flex-wrap:wrap}
+      .titleWrap{
+        gap:14px;
+        padding:12px 14px;
+      }
+
+      .titleVisual{
+        flex:0 0 138px;
+        width:138px;
+        min-width:138px;
+        height:90px;
+      }
+
+      .title h1{
+        font-size:19px;
+      }
+
       .controls{grid-template-columns: repeat(2, minmax(140px, 1fr));}
     }
+
     @media (max-width: 520px){
+      .titleWrap{
+        gap:10px;
+        padding:10px 12px;
+      }
+
+      .titleVisual{
+        flex:0 0 112px;
+        width:112px;
+        min-width:112px;
+        height:78px;
+      }
+
+      .title h1{
+        font-size:17px;
+      }
+
+      .title p{
+        font-size:12px;
+      }
+
       .controls{grid-template-columns: 1fr;}
     }
 
@@ -259,13 +349,13 @@
     }
 
     .rightHead{
-      margin-top:12px;
+      margin-top:8px;
       margin-left:auto;
       display:flex;
       flex-direction:column;
       align-items:flex-end;
-      gap:8px;
-      min-width:260px;
+      gap:10px;
+      min-width:280px;
       flex:0 0 auto;
       align-self:flex-start;
     }
@@ -782,30 +872,62 @@
         <div class="leftHead">
           <div class="titleWrap">
             <div class="titleVisual" aria-hidden="true" title="Dashboard de Indicadores de Atendimento">
-              <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" role="img">
+              <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img">
                 <defs>
-                  <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#2F7CFF" stop-opacity="0.95"/>
-                    <stop offset="100%" stop-color="#22D3EE" stop-opacity="0.95"/>
+                  <linearGradient id="cardBg2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#081225"/>
+                    <stop offset="100%" stop-color="#0B234A"/>
                   </linearGradient>
-                  <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.95"/>
-                    <stop offset="100%" stop-color="#2F7CFF" stop-opacity="0.9"/>
+
+                  <linearGradient id="barBlue2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2F7CFF"/>
+                    <stop offset="100%" stop-color="#1D4ED8"/>
                   </linearGradient>
+
+                  <linearGradient id="barCyan2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#0891B2"/>
+                  </linearGradient>
+
+                  <linearGradient id="lineGlow2" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#7C3AED"/>
+                  </linearGradient>
+
+                  <filter id="softGlow2">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
                 </defs>
-                <rect x="0" y="0" width="220" height="140" rx="20" fill="#071225"/>
-                <circle cx="178" cy="34" r="26" fill="#2F7CFF" fill-opacity="0.10"/>
-                <circle cx="36" cy="106" r="34" fill="#22D3EE" fill-opacity="0.08"/>
-                <rect x="22" y="24" width="78" height="14" rx="7" fill="#EAF0FF" fill-opacity="0.18"/>
-                <rect x="22" y="48" width="50" height="10" rx="5" fill="#EAF0FF" fill-opacity="0.10"/>
-                <rect x="24" y="90" width="22" height="26" rx="6" fill="url(#g1)"/>
-                <rect x="56" y="76" width="22" height="40" rx="6" fill="url(#g2)"/>
-                <rect x="88" y="62" width="22" height="54" rx="6" fill="url(#g1)"/>
-                <path d="M126 100 C143 82, 156 90, 174 65 S 201 48, 204 40" fill="none" stroke="#22D3EE" stroke-width="6" stroke-linecap="round"/>
-                <circle cx="126" cy="100" r="5" fill="#EAF0FF"/>
-                <circle cx="152" cy="84" r="5" fill="#EAF0FF"/>
-                <circle cx="176" cy="66" r="5" fill="#EAF0FF"/>
-                <circle cx="204" cy="40" r="5" fill="#EAF0FF"/>
+
+                <rect x="0" y="0" width="240" height="150" rx="22" fill="url(#cardBg2)"/>
+                <rect x="18" y="18" width="90" height="12" rx="6" fill="#EAF0FF" opacity="0.16"/>
+                <rect x="18" y="38" width="62" height="8" rx="4" fill="#EAF0FF" opacity="0.10"/>
+                <rect x="18" y="112" width="204" height="1" fill="rgba(255,255,255,.10)"/>
+
+                <rect x="24" y="88" width="22" height="28" rx="7" fill="url(#barBlue2)"/>
+                <rect x="56" y="74" width="22" height="42" rx="7" fill="url(#barCyan2)"/>
+                <rect x="88" y="56" width="22" height="60" rx="7" fill="url(#barBlue2)"/>
+                <rect x="120" y="42" width="22" height="74" rx="7" fill="url(#barCyan2)"/>
+
+                <path d="M30 98 C55 84, 70 92, 92 76 S 132 48, 164 56 S 198 42, 218 28"
+                      fill="none"
+                      stroke="url(#lineGlow2)"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      filter="url(#softGlow2)"/>
+
+                <circle cx="30" cy="98" r="4.5" fill="#EAF0FF"/>
+                <circle cx="92" cy="76" r="4.5" fill="#EAF0FF"/>
+                <circle cx="164" cy="56" r="4.5" fill="#EAF0FF"/>
+                <circle cx="218" cy="28" r="4.5" fill="#EAF0FF"/>
+
+                <rect x="162" y="84" width="52" height="8" rx="4" fill="#2F7CFF" opacity="0.20"/>
+                <rect x="162" y="98" width="38" height="8" rx="4" fill="#22D3EE" opacity="0.20"/>
+                <rect x="162" y="112" width="28" height="8" rx="4" fill="#7C3AED" opacity="0.16"/>
               </svg>
             </div>
 
@@ -1979,37 +2101,6 @@
     setTimeout(()=>{ document.title = prevTitle; }, 800);
   }
 
-  function hasActiveSearch(){
-    const qId = String(els.idLocalidadeSearch.value || "").trim();
-    const qTicket = String(els.ticketSearch.value || "").trim();
-    return !!(qId || qTicket);
-  }
-
-  function pickGalleryItem(filteredItems){
-    if (!filteredItems || !filteredItems.length) return null;
-    if (selectedIdx !== null && filteredItems[selectedIdx]) return filteredItems[selectedIdx];
-    const qTicket = String(els.ticketSearch.value || "").trim().toLowerCase();
-    if (qTicket){
-      const match = filteredItems.find(i => String(i.numero_ticket || "").toLowerCase().includes(qTicket));
-      if (match) return match;
-    }
-    return filteredItems[0];
-  }
-
-  function updateGalleryFromFilters(filteredItems){
-    if (!hasActiveSearch()){
-      resetGallery();
-      return;
-    }
-    const it = pickGalleryItem(filteredItems);
-    if (!it){
-      resetGallery();
-      els.galleryHint.textContent = "Nenhum registro encontrado para o filtro informado.";
-      return;
-    }
-    showGalleryFor(it);
-  }
-
   function renderAllFromRaw(){
     if (!rawData) return;
     const allItems = (rawData.itens || []).map(safeItem);
@@ -2018,7 +2109,12 @@
     renderKPIsFromItems(filtered);
     renderTable(filtered);
     renderCharts(filtered);
-    updateGalleryFromFilters(filtered);
+    if (!els.idLocalidadeSearch.value.trim() && !els.ticketSearch.value.trim()) {
+      resetGallery();
+    } else {
+      const it = filtered[0];
+      if (it) showGalleryFor(it); else resetGallery();
+    }
     renderDescricaoAtendimentoFromItems(filtered);
   }
 
@@ -2354,13 +2450,6 @@
     const el = document.getElementById(elementId);
     el.className = "status";
     el.textContent = "";
-  }
-
-  function formatarData(iso) {
-    if (!iso) return "";
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return iso;
-    return d.toLocaleString("pt-BR");
   }
 
   async function testarConexao() {
