@@ -13,59 +13,12 @@
         <div class="leftHead">
           <div class="titleWrap">
             <div class="titleVisual" aria-hidden="true" title="Dashboard de Indicadores de Atendimento">
-              <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img">
-                <defs>
-                  <linearGradient id="cardBg2" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#081225"/>
-                    <stop offset="100%" stop-color="#0B234A"/>
-                  </linearGradient>
-                  <linearGradient id="barBlue2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2F7CFF"/>
-                    <stop offset="100%" stop-color="#1D4ED8"/>
-                  </linearGradient>
-                  <linearGradient id="barCyan2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#22D3EE"/>
-                    <stop offset="100%" stop-color="#0891B2"/>
-                  </linearGradient>
-                  <linearGradient id="lineGlow2" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="#22D3EE"/>
-                    <stop offset="100%" stop-color="#7C3AED"/>
-                  </linearGradient>
-                  <filter id="softGlow2">
-                    <feGaussianBlur stdDeviation="4" result="blur"/>
-                    <feMerge>
-                      <feMergeNode in="blur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                <rect x="0" y="0" width="240" height="150" rx="22" fill="url(#cardBg2)"/>
-                <rect x="18" y="18" width="90" height="12" rx="6" fill="#EAF0FF" opacity="0.16"/>
-                <rect x="18" y="38" width="62" height="8" rx="4" fill="#EAF0FF" opacity="0.10"/>
-                <rect x="18" y="112" width="204" height="1" fill="rgba(255,255,255,.10)"/>
-
-                <rect x="24" y="88" width="22" height="28" rx="7" fill="url(#barBlue2)"/>
-                <rect x="56" y="74" width="22" height="42" rx="7" fill="url(#barCyan2)"/>
-                <rect x="88" y="56" width="22" height="60" rx="7" fill="url(#barBlue2)"/>
-                <rect x="120" y="42" width="22" height="74" rx="7" fill="url(#barCyan2)"/>
-
-                <path d="M30 98 C55 84, 70 92, 92 76 S 132 48, 164 56 S 198 42, 218 28"
-                      fill="none"
-                      stroke="url(#lineGlow2)"
-                      stroke-width="5"
-                      stroke-linecap="round"
-                      filter="url(#softGlow2)"/>
-
-                <circle cx="30" cy="98" r="4.5" fill="#EAF0FF"/>
-                <circle cx="92" cy="76" r="4.5" fill="#EAF0FF"/>
-                <circle cx="164" cy="56" r="4.5" fill="#EAF0FF"/>
-                <circle cx="218" cy="28" r="4.5" fill="#EAF0FF"/>
-
-                <rect x="162" y="84" width="52" height="8" rx="4" fill="#2F7CFF" opacity="0.20"/>
-                <rect x="162" y="98" width="38" height="8" rx="4" fill="#22D3EE" opacity="0.20"/>
-                <rect x="162" y="112" width="28" height="8" rx="4" fill="#7C3AED" opacity="0.16"/>
-              </svg>
+              <img
+                src="./sabesp_logo.png"
+                alt="Sabesp"
+                class="titleVisualLogo"
+                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;titleVisualFallback&quot;>SABESP</div>';"
+              />
             </div>
 
             <div class="title">
