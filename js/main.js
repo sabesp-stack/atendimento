@@ -2,27 +2,41 @@ import { state } from "./state.js";
 import { getEls } from "./dom.js";
 import { safeItem } from "./utils.js";
 import {
-  initDashboardSelectors, fillMonthYearSelectors, renderAllFromRaw,
-  resetGallery, loadJsonFromFileInput
+  initDashboardSelectors,
+  fillMonthYearSelectors,
+  renderAllFromRaw,
+  resetGallery,
+  loadJsonFromFileInput
 } from "./dashboard.js";
 import {
-  testarConexao, salvarAcao, limparFormulario, carregarAcoes,
-  aplicarFiltroTabela, limparFiltros, getApiBase
+  testarConexao,
+  salvarAcao,
+  limparFormulario,
+  carregarAcoes,
+  aplicarFiltroTabela,
+  limparFiltros,
+  getApiBase
 } from "./atendimento.js";
 import { exportPDF, exportPPTX } from "./export.js";
 
 const els = getEls();
 const API_URL_PADRAO = "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 
-function setPersistedValue(key, value){
+function setPersistedValue(key, value) {
   const serialized = JSON.stringify(value);
-  try{ localStorage.setItem(key, serialized); return true; }catch{}
-  try{ sessionStorage.setItem(key, serialized); return true; }catch{}
+  try {
+    localStorage.setItem(key, serialized);
+    return true;
+  } catch {}
+  try {
+    sessionStorage.setItem(key, serialized);
+    return true;
+  } catch {}
   return false;
 }
 
-function getPersistedValue(key){
-  try{
+function getPersistedValue(key) {
+  try {
     const raw = localStorage.getItem(key) ?? sessionStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch {
@@ -30,7 +44,7 @@ function getPersistedValue(key){
   }
 }
 
-function buildPersistedState(){
+function buildPersistedState() {
   return {
     rawData: state.rawData || null,
     rawJsonText: state.rawData ? JSON.stringify(state.rawData) : "",
@@ -42,41 +56,51 @@ function buildPersistedState(){
       ticket: els.ticketSearch?.value || ""
     },
     ui: {
-      activePage: getComputedStyle(els.novoAtendimentoPage).display !== "none" ? "novoAtendimento" : "dashboard",
+      activePage:
+        getComputedStyle(els.novoAtendimentoPage).display !== "none"
+          ? "novoAtendimento"
+          : "dashboard",
       apiBase: getApiBase(els) || API_URL_PADRAO
     }
   };
 }
 
-function saveDashboardState(){
+function saveDashboardState() {
   setPersistedValue(state.STORAGE_KEY, buildPersistedState());
 }
 
-function abrirNovoAtendimento(scroll = true){
+function abrirNovoAtendimento(scroll = true) {
   els.dashboardPage.style.display = "none";
   els.novoAtendimentoPage.style.display = "block";
 
-  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+  if (scroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   saveDashboardState();
-  testarConexao(els).catch(()=>{});
-  carregarAcoes(els).catch(()=>{});
+  testarConexao(els).catch(() => {});
+  carregarAcoes(els).catch(() => {});
 }
 
-function voltarDashboard(scroll = true){
+function voltarDashboard(scroll = true) {
   els.novoAtendimentoPage.style.display = "none";
   els.dashboardPage.style.display = "block";
 
-  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+  if (scroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   saveDashboardState();
 
-  if (history.replaceState){
+  if (history.replaceState) {
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 }
 
-function restoreDashboardState(){
-  try{
+function restoreDashboardState() {
+  try {
     const saved = getPersistedValue(state.STORAGE_KEY);
+
     if (!saved || typeof saved !== "object") {
       els.api_base.value = API_URL_PADRAO;
       return false;
@@ -84,41 +108,50 @@ function restoreDashboardState(){
 
     els.api_base.value = saved.ui?.apiBase || API_URL_PADRAO;
 
-    if (saved.filters){
+    if (saved.filters) {
       els.idLocalidadeSearch.value = saved.filters.idLocalidade || "";
       els.ticketSearch.value = saved.filters.ticket || "";
     }
 
-    const restoredRaw = (saved.rawData && Array.isArray(saved.rawData.itens))
-      ? saved.rawData
-      : (() => {
-          try{
-            const parsed = saved.rawJsonText ? JSON.parse(saved.rawJsonText) : null;
-            return parsed && Array.isArray(parsed.itens) ? parsed : null;
-          } catch {
-            return null;
-          }
-        })();
+    const restoredRaw =
+      saved.rawData && Array.isArray(saved.rawData.itens)
+        ? saved.rawData
+        : (() => {
+            try {
+              const parsed = saved.rawJsonText ? JSON.parse(saved.rawJsonText) : null;
+              return parsed && Array.isArray(parsed.itens) ? parsed : null;
+            } catch {
+              return null;
+            }
+          })();
 
-    if (restoredRaw){
+    if (restoredRaw) {
       state.rawData = restoredRaw;
       els.fileName.textContent = saved.fileName || "Arquivo restaurado";
+
       fillMonthYearSelectors(els, state.rawData.itens.map(safeItem));
 
-      if (saved.filters){
-        if (Array.from(els.anoSelect.options).some(o => o.value === String(saved.filters.ano || "all"))){
-          els.anoSelect.value = String(saved.filters.ano || "all");
+      if (saved.filters) {
+        const anoSalvo = String(saved.filters.ano || "all");
+        const mesSalvo = String(saved.filters.mes || "all");
+
+        if (Array.from(els.anoSelect.options).some((o) => o.value === anoSalvo)) {
+          els.anoSelect.value = anoSalvo;
         }
-        if (Array.from(els.mesSelect.options).some(o => o.value === String(saved.filters.mes || "all"))){
-          els.mesSelect.value = String(saved.filters.mes || "all");
+
+        if (Array.from(els.mesSelect.options).some((o) => o.value === mesSalvo)) {
+          els.mesSelect.value = mesSalvo;
         }
       }
 
       renderAllFromRaw(els);
     }
 
-    if (saved.ui?.activePage === "novoAtendimento") abrirNovoAtendimento(false);
-    else voltarDashboard(false);
+    if (saved.ui?.activePage === "novoAtendimento") {
+      abrirNovoAtendimento(false);
+    } else {
+      voltarDashboard(false);
+    }
 
     return true;
   } catch {
@@ -127,7 +160,7 @@ function restoreDashboardState(){
   }
 }
 
-function debounce(fn, delay = 140){
+function debounce(fn, delay = 140) {
   let t = null;
   return (...args) => {
     clearTimeout(t);
@@ -135,14 +168,14 @@ function debounce(fn, delay = 140){
   };
 }
 
-function bindLogoFallback(){
+function bindLogoFallback() {
   els.yssyLogo?.addEventListener("error", () => {
     els.yssyLogo.style.display = "none";
     els.yssyFallback.style.display = "block";
   });
 }
 
-function bindDashboardEvents(){
+function bindDashboardEvents() {
   const debouncedRender = debounce(() => {
     state.selectedIdx = null;
     renderAllFromRaw(els);
@@ -174,6 +207,7 @@ function bindDashboardEvents(){
     els.mesSelect.value = "all";
     els.anoSelect.value = "all";
     state.selectedIdx = null;
+
     renderAllFromRaw(els);
     resetGallery(els);
     els.descAtendimento.textContent = "—";
@@ -182,37 +216,46 @@ function bindDashboardEvents(){
   });
 
   els.jsonFile.addEventListener("change", () => {
-    const f = els.jsonFile.files?.[0];
-    if (!f) return;
-    loadJsonFromFileInput(els, f).then(saveDashboardState);
+    const file = els.jsonFile.files?.[0];
+    if (!file) return;
+
+    loadJsonFromFileInput(els, file)
+      .then(() => saveDashboardState())
+      .catch((err) => {
+        console.error("Erro ao carregar JSON:", err);
+      });
   });
 
   els.btnExportPDF.addEventListener("click", () => exportPDF(els));
   els.btnExportPPTX.addEventListener("click", () => exportPPTX(els));
   els.btnAcoes.addEventListener("click", () => abrirNovoAtendimento());
 
-  window.addEventListener("keydown", e => {
+  window.addEventListener("keydown", (e) => {
     const isRefresh = e.key === "F5" || (e.ctrlKey && e.key.toLowerCase() === "r");
-    if (isRefresh) saveDashboardState();
+    if (isRefresh) {
+      saveDashboardState();
+    }
   });
 
-  window.addEventListener("beforeunload", saveDashboardState);
+  window.addEventListener("beforeunload", () => {
+    saveDashboardState();
+  });
 }
 
-function bindAtendimentoEvents(){
+function bindAtendimentoEvents() {
   els.btnVoltarDashboard.addEventListener("click", () => voltarDashboard());
   els.btnAtualizarLista.addEventListener("click", () => carregarAcoes(els));
   els.btnTestarConexao.addEventListener("click", () => testarConexao(els));
   els.btnLimparFormulario.addEventListener("click", () => limparFormulario(els));
   els.btnLimparFiltrosTabela.addEventListener("click", () => limparFiltros(els));
 
-  els.formAcao.addEventListener("submit", e => salvarAcao(els, e));
+  els.formAcao.addEventListener("submit", (e) => salvarAcao(els, e));
   els.filtroBusca.addEventListener("input", () => aplicarFiltroTabela(els));
   els.filtroAno.addEventListener("input", () => aplicarFiltroTabela(els));
   els.filtroMes.addEventListener("input", () => aplicarFiltroTabela(els));
 }
 
-function init(){
+function init() {
   bindLogoFallback();
   initDashboardSelectors(els);
   bindDashboardEvents();
@@ -223,7 +266,8 @@ function init(){
   }
 
   const restored = restoreDashboardState();
-  if (!restored && !state.rawData){
+
+  if (!restored && !state.rawData) {
     voltarDashboard(false);
   }
 
