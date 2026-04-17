@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard de Indicadores de Atendimento (Yssy)</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div id="dashboardPage">
+    <div class="wrap">
+      <header>
+        <div class="leftHead">
+          <div class="titleWrap">
+            <div class="titleVisual" aria-hidden="true" title="Dashboard de Indicadores de Atendimento">
+              <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="cardBg2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#081225"/>
+                    <stop offset="100%" stop-color="#0B234A"/>
+                  </linearGradient>
+                  <linearGradient id="barBlue2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2F7CFF"/>
+                    <stop offset="100%" stop-color="#1D4ED8"/>
+                  </linearGradient>
+                  <linearGradient id="barCyan2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#0891B2"/>
+                  </linearGradient>
+                  <linearGradient id="lineGlow2" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#7C3AED"/>
+                  </linearGradient>
+                  <filter id="softGlow2">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <rect x="0" y="0" width="240" height="150" rx="22" fill="url(#cardBg2)"/>
+                <rect x="18" y="18" width="90" height="12" rx="6" fill="#EAF0FF" opacity="0.16"/>
+                <rect x="18" y="38" width="62" height="8" rx="4" fill="#EAF0FF" opacity="0.10"/>
+                <rect x="18" y="112" width="204" height="1" fill="rgba(255,255,255,.10)"/>
+
+                <rect x="24" y="88" width="22" height="28" rx="7" fill="url(#barBlue2)"/>
+                <rect x="56" y="74" width="22" height="42" rx="7" fill="url(#barCyan2)"/>
+                <rect x="88" y="56" width="22" height="60" rx="7" fill="url(#barBlue2)"/>
+                <rect x="120" y="42" width="22" height="74" rx="7" fill="url(#barCyan2)"/>
+
+                <path d="M30 98 C55 84, 70 92, 92 76 S 132 48, 164 56 S 198 42, 218 28"
+                      fill="none"
+                      stroke="url(#lineGlow2)"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      filter="url(#softGlow2)"/>
+
+                <circle cx="30" cy="98" r="4.5" fill="#EAF0FF"/>
+                <circle cx="92" cy="76" r="4.5" fill="#EAF0FF"/>
+                <circle cx="164" cy="56" r="4.5" fill="#EAF0FF"/>
+                <circle cx="218" cy="28" r="4.5" fill="#EAF0FF"/>
+
+                <rect x="162" y="84" width="52" height="8" rx="4" fill="#2F7CFF" opacity="0.20"/>
+                <rect x="162" y="98" width="38" height="8" rx="4" fill="#22D3EE" opacity="0.20"/>
+                <rect x="162" y="112" width="28" height="8" rx="4" fill="#7C3AED" opacity="0.16"/>
+              </svg>
+            </div>
+
+            <div class="title">
+              <h1>Dashboard de Indicadores de Atendimento</h1>
+              <p id="subtitle">Selecione um JSON (Kpis_YYYY-MM.json) para carregar os dados.</p>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="filterField">
+              <label class="small" for="mesSelect">Mês</label>
+              <select id="mesSelect"></select>
+            </div>
+
+            <div class="filterField">
+              <label class="small" for="anoSelect">Ano</label>
+              <select id="anoSelect"></select>
+            </div>
+
+            <div class="filterField">
+              <label class="small" for="idLocalidadeSearch">Id Localidade</label>
+              <input id="idLocalidadeSearch" type="search" placeholder="Ex.: (18123)" autocomplete="off" />
+            </div>
+
+            <div class="filterField">
+              <label class="small" for="ticketSearch">Nº Ticket</label>
+              <input id="ticketSearch" type="search" placeholder="Ex.: (INC00012345)" autocomplete="off" />
+            </div>
+
+            <div class="filterActions">
+              <button id="btnClearSearch" class="btn-secondary" title="Limpar filtros e pesquisas">Limpar filtros</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rightHead">
+          <div class="logo" title="Logo Yssy">
+            <img id="yssyLogo" src="./yssy_logo.png" alt="Yssy">
+            <div id="yssyFallback" class="fallback" style="display:none;">YSSY</div>
+          </div>
+
+          <div class="actions">
+            <button id="btnExportPPTX" class="btn-secondary" title="Exportar relatório para PowerPoint (.pptx)">Exportar PPT</button>
+            <button id="btnExportPDF" class="btn-secondary" title="Exportar para PDF (impressão)">Exportar PDF</button>
+            <button id="btnAcoes" class="btn-secondary" title="Abrir formulário de novo atendimento">Novo Atendimento</button>
+
+            <label class="fileBtn" for="jsonFile" title="Selecionar arquivo JSON">
+              Carregar KPIs
+              <span class="small fileNote" id="fileName">Arquivo</span>
+            </label>
+            <input id="jsonFile" type="file" accept=".json,application/json" />
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Total de Tickets/Mês</div>
+              <div class="kpiHint">Chamados registrados no período</div>
+            </div>
+            <div class="kpiIcon blue" title="Tickets">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 8.5V6.8C4 5.81 4.81 5 5.8 5h12.4C19.19 5 20 5.81 20 6.8v1.7a2 2 0 0 0 0 7v1.7c0 .99-.81 1.8-1.8 1.8H5.8A1.8 1.8 0 0 1 4 17.2v-1.7a2 2 0 0 0 0-7Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 9h6M9 15h3" stroke="currentColor" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiTickets">—</div>
+          <div class="sub" id="kpiTicketsSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Localidades Atendidas/Mês</div>
+              <div class="kpiHint">Unidades atendidas no filtro</div>
+            </div>
+            <div class="kpiIcon cyan" title="Localidades">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 13.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiLocais">—</div>
+          <div class="sub">Total de localidades no filtro</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Equipamentos Trocados/Mês</div>
+              <div class="kpiHint">Substituições realizadas</div>
+            </div>
+            <div class="kpiIcon green" title="Equipamentos trocados">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7 7h11l-2.5-2.5M17 17H6l2.5 2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 7 15 4M6 17l3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiEquip">—</div>
+          <div class="sub" id="kpiEquipSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Equipamentos Configurados/Mês</div>
+              <div class="kpiHint">Ajustes e configurações executadas</div>
+            </div>
+            <div class="kpiIcon violet" title="Configuração">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor"/>
+                <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1.2 1.2 0 0 1 0 1.7l-1.6 1.6a1.2 1.2 0 0 1-1.7 0l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1.2 1.2 0 0 1-1.2 1.2h-2.3A1.2 1.2 0 0 1 9.9 20v-.2a1 1 0 0 0-.6-.9 1 1 0 0 0-1.1.2l-.1.1a1.2 1.2 0 0 1-1.7 0l-1.6-1.6a1.2 1.2 0 0 1 0-1.7l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a1.2 1.2 0 0 1-1.2-1.2v-2.3A1.2 1.2 0 0 1 4 9.3h.2a1 1 0 0 0 .9-.6 1 1 0 0 0-.2-1.1l-.1-.1a1.2 1.2 0 0 1 0-1.7l1.6-1.6a1.2 1.2 0 0 1 1.7 0l.1.1a1 1 0 0 0 1.1.2h.1a1 1 0 0 0 .5-.9V4A1.2 1.2 0 0 1 11.1 2.8h2.3A1.2 1.2 0 0 1 14.6 4v.2a1 1 0 0 0 .6.9 1 1 0 0 0 1.1-.2l.1-.1a1.2 1.2 0 0 1 1.7 0l1.6 1.6a1.2 1.2 0 0 1 0 1.7l-.1.1a1 1 0 0 0-.2 1.1 1 1 0 0 0 .9.6h.2A1.2 1.2 0 0 1 21.2 11v2.3a1.2 1.2 0 0 1-1.2 1.2h-.2a1 1 0 0 0-.4.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiEquipCfg">—</div>
+          <div class="sub" id="kpiEquipCfgSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Tempo Gasto (Atividades)</div>
+              <div class="kpiHint">Carga horária acumulada</div>
+            </div>
+            <div class="kpiIcon blue" title="Tempo">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="13" r="8" stroke="currentColor"/>
+                <path d="M12 13V9M12 5V3M9 3h6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15 16l-3-3" stroke="currentColor" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiTempoHoras">—</div>
+          <div class="sub" id="kpiTempoHorasSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpiHead">
+            <div class="kpiTitle">
+              <div class="label">Total de Pontos de Rede/Mês</div>
+              <div class="kpiHint">Infraestrutura atendida</div>
+            </div>
+            <div class="kpiIcon cyan" title="Rede">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 19v-4M6 19v-2M18 19v-2" stroke="currentColor" stroke-linecap="round"/>
+                <rect x="9" y="11" width="6" height="4" rx="1.2" stroke="currentColor"/>
+                <rect x="3" y="17" width="6" height="3" rx="1" stroke="currentColor"/>
+                <rect x="15" y="17" width="6" height="3" rx="1" stroke="currentColor"/>
+                <path d="M12 11V7M12 7H6v3M12 7h6v3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="value" id="kpiMediaPontos">—</div>
+          <div class="sub" id="kpiMediaPontosSub">—</div>
+        </div>
+
+        <div class="card panel">
+          <div class="row">
+            <div>
+              <div class="label">Localidades Atendidas e Tempo Gasto</div>
+              <div class="small">Tabela detalhada por localidade (respeita mês, ano e pesquisas)</div>
+            </div>
+            <div class="pill small">
+              <span class="muted">Total no filtro:</span>
+              <span class="mono" id="totalFiltro">—</span>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Nº Ticket</th>
+                <th>Id Localidade</th>
+                <th>Localidade</th>
+                <th class="right">Tempo (Horas)</th>
+                <th class="right">Qtde Equip. Trocados</th>
+                <th class="right">Qtde Equip. Configurados</th>
+                <th class="right">Pontos de Rede</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyLocais">
+              <tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="galleryWrap" id="galleryWrap">
+            <div class="galleryHead">
+              <div>
+                <div class="galleryTitle">Fotos — Antes e Depois da Visita Técnica</div>
+                <div class="galleryHint" id="galleryHint">As fotos serão exibidas <b>somente</b> ao filtrar por <b>Id Localidade</b> ou <b>Nº Ticket</b>.</div>
+              </div>
+              <div class="pill small">
+                <span class="muted">Selecionado:</span>
+                <span class="mono" id="selectedInfo">—</span>
+              </div>
+            </div>
+
+            <div class="galleryGrid">
+              <div class="shot">
+                <div class="shotLabel">
+                  <span>Antes</span>
+                  <span class="shotSub" id="beforeMeta">—</span>
+                </div>
+                <div class="shotMedia">
+                  <div id="beforeBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
+                  <img id="beforeImg" class="shotImg" alt="Foto Antes" />
+                </div>
+                <a id="beforeLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+              </div>
+
+              <div class="shot">
+                <div class="shotLabel">
+                  <span>Depois</span>
+                  <span class="shotSub" id="afterMeta">—</span>
+                </div>
+                <div class="shotMedia">
+                  <div id="afterBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
+                  <img id="afterImg" class="shotImg" alt="Foto Depois" />
+                </div>
+                <a id="afterLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div>
+              <div class="label">Gráficos</div>
+              <div class="small">Top 10 Localidades por Tempo, Configurados e Trocas</div>
+            </div>
+            <div class="small muted">Sem dependências externas (Offline)</div>
+          </div>
+
+          <div class="grid chartGrid">
+            <div class="card chartCard">
+              <div class="small muted chartTitle">Tempo por localidade (Top 10) — horas</div>
+              <div class="chart"><canvas id="chartTempo"></canvas></div>
+            </div>
+
+            <div class="card chartCard">
+              <div class="small muted chartTitle">Equipamentos Configurados por Localidade (Top 10)</div>
+              <div class="chart"><canvas id="chartTickets"></canvas></div>
+            </div>
+
+            <div class="card chartCard">
+              <div class="small muted chartTitle">Quantidade de Equipamentos Trocados por Localidade (Top 10)</div>
+              <div class="chart"><canvas id="chartEquip"></canvas></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div>
+              <div class="label">Descrição do Atendimento</div>
+            </div>
+            <div class="small muted">Atualiza pelo filtro e ao clicar na tabela</div>
+          </div>
+
+          <div class="descBox">
+            <div class="small muted">Descrição:</div>
+            <div id="descAtendimento" class="descText">—</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="small muted" id="errorBox"></div>
+        </div>
+      </section>
+
+      <footer>Copyright © 2026 YSSY. Todos os direitos reservados.</footer>
+    </div>
+  </div>
+
+  <section id="novoAtendimentoPage">
+    <div class="container">
+      <div class="topbar">
+        <div class="brand">
+          <h1>Novo Atendimento • YSSY</h1>
+          <p>Integração direta com Google Sheets</p>
+        </div>
+
+        <div class="actions-top">
+          <button class="btn btn-secondary" type="button" id="btnVoltarDashboard">← Voltar</button>
+          <button class="btn btn-secondary" type="button" id="btnAtualizarLista">Atualizar lista</button>
+        </div>
+      </div>
+
+      <div class="card pageCard">
+        <div class="card-header">
+          <h2>Configuração da integração</h2>
+          <p>Informe a URL do Web App do Google Apps Script vinculado à planilha KPIs_Atendimentos.</p>
+        </div>
+        <div class="card-body">
+          <div class="grid">
+            <div class="col-8">
+              <label for="api_base">URL do Google Apps Script (Web App)</label>
+              <input id="api_base" type="text" value="COLE_AQUI_A_URL_DO_SEU_WEBAPP" />
+            </div>
+            <div class="col-4">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" type="button" id="btnTestarConexao">Testar conexão</button>
+            </div>
+          </div>
+          <div id="statusApi" class="status"></div>
+        </div>
+      </div>
+
+      <div class="card pageCard">
+        <div class="card-header">
+          <h2>Novo registro</h2>
+          <p>Os dados serão gravados na planilha <strong>KPIs_Atendimentos</strong>, aba <strong>Atendimentos</strong>.</p>
+        </div>
+        <div class="card-body">
+          <form id="formAcao">
+            <div class="section-title-inline"><span class="section-dot"></span><strong>Preencha os dados do atendimento</strong></div>
+            <div class="field-help">Mapeamento da planilha: Ano, Mês, Dia, Nº Ticket, Id Localidade, Localidade, Tempo (Horas), Qtde Equip. Trocados, Qtde Equip. Configurados, Pontos de Rede, Foto Antes, Foto Depois, Descrição Atendimento.</div>
+
+            <div class="grid formGrid">
+              <div class="col-2 field-group highlight">
+                <label for="ano">Ano</label>
+                <input id="ano" type="number" min="2020" max="2100" value="2026" required />
+              </div>
+
+              <div class="col-2 field-group highlight">
+                <label for="mes">Mês</label>
+                <select id="mes" required>
+                  <option value="">Selecione</option>
+                  <option value="1">1 - Janeiro</option>
+                  <option value="2">2 - Fevereiro</option>
+                  <option value="3">3 - Março</option>
+                  <option value="4">4 - Abril</option>
+                  <option value="5">5 - Maio</option>
+                  <option value="6">6 - Junho</option>
+                  <option value="7">7 - Julho</option>
+                  <option value="8">8 - Agosto</option>
+                  <option value="9">9 - Setembro</option>
+                  <option value="10">10 - Outubro</option>
+                  <option value="11">11 - Novembro</option>
+                  <option value="12">12 - Dezembro</option>
+                </select>
+              </div>
+
+              <div class="col-2 field-group highlight">
+                <label for="dia">Dia</label>
+                <input id="dia" type="number" min="1" max="31" value="1" required />
+              </div>
+
+              <div class="col-3 field-group highlight">
+                <label for="numero_ticket">Nº Ticket</label>
+                <input id="numero_ticket" type="text" placeholder="Ex.: INC123456" />
+              </div>
+
+              <div class="col-3 field-group highlight">
+                <label for="id_localidade">Id Localidade</label>
+                <input id="id_localidade" type="text" placeholder="Ex.: 1001" />
+              </div>
+
+              <div class="col-6 field-group highlight">
+                <label for="localidade">Localidade</label>
+                <input id="localidade" type="text" placeholder="Ex.: Sabesp Unidade Centro" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="tempo_gasto_horas">Tempo (Horas)</label>
+                <input id="tempo_gasto_horas" type="number" step="0.1" min="0" placeholder="Ex.: 4.5" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="pontos_de_rede">Pontos de Rede</label>
+                <input id="pontos_de_rede" type="number" min="0" placeholder="Ex.: 12" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="equipamentos_trocados">Qtde Equip. Trocados</label>
+                <input id="equipamentos_trocados" type="number" min="0" placeholder="Ex.: 2" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="equipamentos_configurados">Qtde Equip. Configurados</label>
+                <input id="equipamentos_configurados" type="number" min="0" placeholder="Ex.: 5" />
+              </div>
+
+              <div class="col-6 field-group">
+                <label for="foto_antes_url">Foto Antes (caminho/URL)</label>
+                <input id="foto_antes_url" type="text" placeholder="Ex.: https://... ou C:\fotos\antes.jpg" />
+              </div>
+
+              <div class="col-6 field-group">
+                <label for="foto_depois_url">Foto Depois (caminho/URL)</label>
+                <input id="foto_depois_url" type="text" placeholder="Ex.: https://... ou C:\fotos\depois.jpg" />
+              </div>
+
+              <div class="col-12 field-group">
+                <label for="descricao_atendimento">Descrição Atendimento</label>
+                <textarea id="descricao_atendimento" placeholder="Descreva a ação realizada em campo"></textarea>
+              </div>
+
+              <div class="col-12">
+                <div class="formActions">
+                  <button class="btn btn-primary" type="submit">Salvar atendimento</button>
+                  <button class="btn btn-secondary" type="button" id="btnLimparFormulario">Limpar formulário</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div id="statusForm" class="status"></div>
+        </div>
+      </div>
+
+      <div class="card pageCard">
+        <div class="card-header">
+          <h2>Registros cadastrados</h2>
+          <p>A listagem abaixo é carregada diretamente da planilha pelo Google Apps Script.</p>
+        </div>
+        <div class="card-body">
+          <div class="toolbar">
+            <div class="left">
+              <div>
+                <label for="filtroBusca">Buscar</label>
+                <input id="filtroBusca" type="text" placeholder="Ticket, localidade, descrição..." />
+              </div>
+            </div>
+
+            <div class="right">
+              <div>
+                <label for="filtroAno">Ano</label>
+                <input id="filtroAno" type="number" placeholder="Todos" />
+              </div>
+              <div>
+                <label for="filtroMes">Mês</label>
+                <input id="filtroMes" type="number" min="1" max="12" placeholder="Todos" />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn btn-secondary" type="button" id="btnLimparFiltrosTabela">Limpar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ano</th>
+                  <th>Mês</th>
+                  <th>Dia</th>
+                  <th>Nº Ticket</th>
+                  <th>Id Localidade</th>
+                  <th>Localidade</th>
+                  <th>Tempo (Horas)</th>
+                  <th>Qtde Equip. Trocados</th>
+                  <th>Qtde Equip. Configurados</th>
+                  <th>Pontos de Rede</th>
+                  <th>Foto Antes</th>
+                  <th>Foto Depois</th>
+                  <th>Descrição Atendimento</th>
+                </tr>
+              </thead>
+              <tbody id="tbody_acoes">
+                <tr>
+                  <td colspan="13" class="muted">Nenhum registro carregado.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="footer-note">
+            A URL usada acima deve ser a do Web App do Google Apps Script publicado como <strong>Aplicativo da Web</strong>.
+          </div>
+
+          <div id="statusTabela" class="status"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
