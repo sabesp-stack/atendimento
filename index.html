@@ -3,27 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard de Indicadores de Atendimento (Yssy)</title>
+  <title>Dashboard Sabesp</title>
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
   <div id="dashboardPage">
     <div class="wrap">
-      <header>
+      <header class="heroHeader">
         <div class="leftHead">
           <div class="titleWrap">
-            <div class="titleVisual" aria-hidden="true" title="Dashboard de Indicadores de Atendimento">
-              <img
-                src="./sabesp_logo.svg"
-                alt="Sabesp"
-                class="titleVisualLogo"
-                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;titleVisualFallback&quot;>SABESP</div>';"
-              />
-            </div>
-
             <div class="title">
-              <h1>Dashboard de Indicadores de Atendimento</h1>
-              <p id="subtitle">Selecione um JSON (Kpis_YYYY-MM.json) para carregar os dados.</p>
+              <span class="eyebrow">Painel Operacional</span>
+              <h1>Dashboard Sabesp</h1>
+              <p id="subtitle">Selecione um arquivo JSON no padrão Kpis_YYYY-MM para visualizar os indicadores.</p>
             </div>
           </div>
 
@@ -40,12 +32,12 @@
 
             <div class="filterField">
               <label class="small" for="idLocalidadeSearch">Id Localidade</label>
-              <input id="idLocalidadeSearch" type="search" placeholder="Ex.: (18123)" autocomplete="off" />
+              <input id="idLocalidadeSearch" type="search" placeholder="Ex.: 18123" autocomplete="off" />
             </div>
 
             <div class="filterField">
               <label class="small" for="ticketSearch">Nº Ticket</label>
-              <input id="ticketSearch" type="search" placeholder="Ex.: (INC00012345)" autocomplete="off" />
+              <input id="ticketSearch" type="search" placeholder="Ex.: INC00012345" autocomplete="off" />
             </div>
 
             <div class="filterActions">
