@@ -86,12 +86,9 @@
       gap:18px;
       flex-wrap:nowrap;
       padding:14px 16px;
-      border:1px solid rgba(47,124,255,.14);
-      border-radius:22px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
-        radial-gradient(circle at 15% 20%, rgba(47,124,255,.10), transparent 35%);
-      box-shadow:0 14px 34px rgba(0,0,0,.18);
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)),
+        radial-gradient(circle at 15% 20%, rgba(47,124,255,.06), transparent 35%);
     }
 
     .titleVisual{
@@ -150,8 +147,6 @@
       align-items:end;
       justify-content:flex-start;
       padding:14px;
-      border:1px solid rgba(47,124,255,.10);
-      border-radius:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
     }
 
@@ -2100,130 +2095,6 @@
     window.print();
     setTimeout(()=>{ document.title = prevTitle; }, 800);
   }
-
-  function renderAllFromRaw(){
-    if (!rawData) return;
-    const allItems = (rawData.itens || []).map(safeItem);
-    const byYm = applyMonthYearFilter(allItems);
-    const filtered = applySearchFilters(byYm, els.idLocalidadeSearch.value, els.ticketSearch.value);
-    renderKPIsFromItems(filtered);
-    renderTable(filtered);
-    renderCharts(filtered);
-    if (!els.idLocalidadeSearch.value.trim() && !els.ticketSearch.value.trim()) {
-      resetGallery();
-    } else {
-      const it = filtered[0];
-      if (it) showGalleryFor(it); else resetGallery();
-    }
-    renderDescricaoAtendimentoFromItems(filtered);
-  }
-
-  async function loadJsonFromFileInput(file){
-    els.errorBox.textContent = "";
-    els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Lendo arquivo…</td></tr>`;
-    resetGallery();
-    selectedIdx = null;
-    els.descAtendimento.textContent = "—";
-
-    try{
-      const text = await file.text();
-      const data = JSON.parse(text);
-      const err = validateData(data);
-      if (err) throw new Error(err);
-
-      rawData = data;
-      fillMonthYearSelectors(rawData.itens.map(safeItem));
-
-      const m = String(file.name || "").match(/(\d{4})-(\d{2})/);
-      if (m){
-        const year = m[1];
-        const month = m[2];
-
-        if (Array.from(els.anoSelect.options).some(o => o.value === year)) {
-          els.anoSelect.value = year;
-        }
-        if (Array.from(els.mesSelect.options).some(o => o.value === month)) {
-          els.mesSelect.value = month;
-        }
-      } else {
-        els.anoSelect.value = "all";
-        els.mesSelect.value = "all";
-      }
-
-      els.fileName.textContent = file.name;
-      renderAllFromRaw();
-      saveDashboardState();
-      resetGallery();
-      els.descAtendimento.textContent = "—";
-    }catch(e){
-      els.errorBox.textContent = `Falha ao ler JSON selecionado: ${String(e?.message || e)}`;
-      els.subtitle.textContent = "Selecione um arquivo JSON válido.";
-      els.tbody.innerHTML = `<tr><td colspan="7" class="error">Erro ao carregar dados.</td></tr>`;
-      resetGallery();
-      els.descAtendimento.textContent = "—";
-    }
-  }
-
-  let _tDeb = null;
-  function debouncedRender(){
-    clearTimeout(_tDeb);
-    _tDeb = setTimeout(() => {
-      selectedIdx = null;
-      renderAllFromRaw();
-      saveDashboardState();
-    }, 140);
-  }
-
-  els.idLocalidadeSearch.addEventListener("input", debouncedRender);
-  els.ticketSearch.addEventListener("input", debouncedRender);
-
-  els.mesSelect.addEventListener("change", () => {
-    selectedIdx = null;
-    renderAllFromRaw();
-    resetGallery();
-    els.descAtendimento.textContent = "—";
-    saveDashboardState();
-  });
-
-  els.anoSelect.addEventListener("change", () => {
-    selectedIdx = null;
-    renderAllFromRaw();
-    resetGallery();
-    els.descAtendimento.textContent = "—";
-    saveDashboardState();
-  });
-
-  els.btnClearSearch.addEventListener("click", () => {
-    els.idLocalidadeSearch.value = "";
-    els.ticketSearch.value = "";
-    els.mesSelect.value = "all";
-    els.anoSelect.value = "all";
-    selectedIdx = null;
-    renderAllFromRaw();
-    resetGallery();
-    els.descAtendimento.textContent = "—";
-    saveDashboardState();
-    els.ticketSearch.focus();
-  });
-
-  els.jsonFile.addEventListener("change", () => {
-    const f = els.jsonFile.files && els.jsonFile.files[0];
-    if (!f) return;
-    loadJsonFromFileInput(f);
-  });
-
-  window.addEventListener("keydown", (e) => {
-    const isRefresh = (e.key === "F5") || (e.ctrlKey && (e.key.toLowerCase() === "r"));
-    if (!isRefresh) return;
-    saveDashboardState();
-  });
-
-  window.addEventListener("beforeunload", () => {
-    saveDashboardState();
-  });
-
-  els.btnExportPDF.addEventListener("click", exportPDF);
-  els.btnAcoes.addEventListener("click", abrirNovoAtendimento);
 
   function sanitizeFilename(name){
     return String(name || "KPIs")
