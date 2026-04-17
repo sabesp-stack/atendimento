@@ -19,23 +19,32 @@ export async function testarConexao(els){
   esconderStatus(els.statusApi);
   const API_BASE = getApiBase(els);
 
-  if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP"){
+  if (!API_BASE) {
     mostrarStatus(els.statusApi, "Informe a URL do Web App do Google Sheets.", "error");
     return;
   }
 
-  try{
+  try {
     const resp = await fetch(API_BASE, { method: "GET" });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    if (!resp.ok) {
+      throw new Error(`HTTP ${resp.status}`);
+    }
 
     const data = await resp.json();
-    if (Array.isArray(data) || data.ok === true){
+
+    if (Array.isArray(data) || data.ok === true) {
       mostrarStatus(els.statusApi, "Conexão com Google Sheets realizada com sucesso.", "ok");
     } else {
       mostrarStatus(els.statusApi, "Web App respondeu, mas retornou erro.", "error");
     }
-  } catch {
-    mostrarStatus(els.statusApi, "Não foi possível conectar ao Google Sheets. Verifique a URL do Web App e a implantação.", "error");
+  } catch (error) {
+    console.error("Erro ao testar conexão:", error);
+    mostrarStatus(
+      els.statusApi,
+      "Não foi possível conectar ao Google Sheets. Verifique a URL do Web App e a implantação.",
+      "error"
+    );
   }
 }
 
@@ -61,7 +70,7 @@ export function validarPayload(payload){
   if (!payload.ano || payload.ano < 2020) return "Informe um ano válido.";
   if (!payload.mes || payload.mes < 1 || payload.mes > 12) return "Informe um mês válido.";
   if (!payload.dia || payload.dia < 1 || payload.dia > 31) return "Informe um dia válido.";
-  if (!payload.numero_ticket && !payload.localidade && !payload.descricao_atendimento){
+  if (!payload.numero_ticket && !payload.localidade && !payload.descricao_atendimento) {
     return "Preencha ao menos Nº Ticket, Localidade ou Descrição.";
   }
   return null;
@@ -75,36 +84,46 @@ export async function salvarAcao(els, event){
   const payload = obterPayloadFormulario(els);
   const erroValidacao = validarPayload(payload);
 
-  if (erroValidacao){
+  if (erroValidacao) {
     mostrarStatus(els.statusForm, erroValidacao, "error");
     return;
   }
 
-  if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP"){
+  if (!API_BASE) {
     mostrarStatus(els.statusForm, "Informe a URL do Web App do Google Sheets.", "error");
     return;
   }
 
-  try{
+  try {
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok){
+    if (!response.ok) {
       const texto = await response.text();
       throw new Error(texto || `Erro HTTP ${response.status}`);
     }
 
     const data = await response.json();
-    if (!data.ok) throw new Error(data.error || "Falha ao salvar no Google Sheets.");
+
+    if (!data.ok) {
+      throw new Error(data.error || "Falha ao salvar no Google Sheets.");
+    }
 
     mostrarStatus(els.statusForm, "Atendimento cadastrado com sucesso no Google Sheets.", "ok");
     limparFormulario(els, false);
     await carregarAcoes(els);
-  } catch {
-    mostrarStatus(els.statusForm, "Erro ao salvar no Google Sheets. Verifique a URL do Web App, a implantação e as permissões.", "error");
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+    mostrarStatus(
+      els.statusForm,
+      "Erro ao salvar no Google Sheets. Verifique a URL do Web App, a implantação e as permissões.",
+      "error"
+    );
   }
 }
 
@@ -125,7 +144,7 @@ export async function carregarAcoes(els){
     </tr>
   `;
 
-  if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP"){
+  if (!API_BASE) {
     els.tbodyAcoes.innerHTML = `
       <tr>
         <td colspan="13" class="muted">Informe a URL do Web App para carregar os registros.</td>
@@ -134,20 +153,25 @@ export async function carregarAcoes(els){
     return;
   }
 
-  try{
+  try {
     const response = await fetch(API_BASE, { method: "GET" });
-    if (!response.ok){
+
+    if (!response.ok) {
       const texto = await response.text();
       throw new Error(texto || `HTTP ${response.status}`);
     }
 
     const lista = await response.json();
-    if (!Array.isArray(lista)) throw new Error("Resposta inválida ao carregar registros.");
+
+    if (!Array.isArray(lista)) {
+      throw new Error("Resposta inválida ao carregar registros.");
+    }
 
     state.acoesCache = lista;
     renderizarTabela(els, state.acoesCache);
     mostrarStatus(els.statusTabela, `${state.acoesCache.length} registro(s) carregado(s).`, "info");
-  } catch {
+  } catch (error) {
+    console.error("Erro ao carregar ações:", error);
     state.acoesCache = [];
     els.tbodyAcoes.innerHTML = `
       <tr>
@@ -159,7 +183,7 @@ export async function carregarAcoes(els){
 }
 
 export function renderizarTabela(els, lista){
-  if (!lista.length){
+  if (!lista.length) {
     els.tbodyAcoes.innerHTML = `
       <tr>
         <td colspan="13" class="muted">Nenhum registro encontrado.</td>

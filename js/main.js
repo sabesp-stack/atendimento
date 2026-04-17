@@ -12,6 +12,7 @@ import {
 import { exportPDF, exportPPTX } from "./export.js";
 
 const els = getEls();
+const API_URL_PADRAO = "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 
 function setPersistedValue(key, value){
   const serialized = JSON.stringify(value);
@@ -42,7 +43,7 @@ function buildPersistedState(){
     },
     ui: {
       activePage: getComputedStyle(els.novoAtendimentoPage).display !== "none" ? "novoAtendimento" : "dashboard",
-      apiBase: getApiBase(els) || "COLE_AQUI_A_URL_DO_SEU_WEBAPP"
+      apiBase: getApiBase(els) || API_URL_PADRAO
     }
   };
 }
@@ -76,9 +77,13 @@ function voltarDashboard(scroll = true){
 function restoreDashboardState(){
   try{
     const saved = getPersistedValue(state.STORAGE_KEY);
-    if (!saved || typeof saved !== "object") return false;
+    if (!saved || typeof saved !== "object") {
+      els.api_base.value = API_URL_PADRAO;
+      return false;
+    }
 
-    if (saved.ui?.apiBase) els.api_base.value = saved.ui.apiBase;
+    els.api_base.value = saved.ui?.apiBase || API_URL_PADRAO;
+
     if (saved.filters){
       els.idLocalidadeSearch.value = saved.filters.idLocalidade || "";
       els.ticketSearch.value = saved.filters.ticket || "";
@@ -117,6 +122,7 @@ function restoreDashboardState(){
 
     return true;
   } catch {
+    els.api_base.value = API_URL_PADRAO;
     return false;
   }
 }
@@ -211,6 +217,10 @@ function init(){
   initDashboardSelectors(els);
   bindDashboardEvents();
   bindAtendimentoEvents();
+
+  if (!els.api_base.value || els.api_base.value === "COLE_AQUI_A_URL_DO_SEU_WEBAPP") {
+    els.api_base.value = API_URL_PADRAO;
+  }
 
   const restored = restoreDashboardState();
   if (!restored && !state.rawData){
