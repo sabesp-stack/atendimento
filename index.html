@@ -3,74 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard com Indicadores de Atendimento</title>
+  <title>Dashboard de Indicadores de Atendimento (Yssy)</title>
 
   <style>
     :root{
-      --bg:#F5F7FB;
-      --bgSoft:#EEF3FA;
-      --surface:#FFFFFF;
-      --surface2:#F9FBFF;
-      --text:#0F172A;
-      --muted:#64748B;
-      --muted2:#94A3B8;
-
+      --bg:#070A12;
+      --text:#EAF0FF;
+      --muted:#A7B0C7;
+      --muted2:#7F8AA6;
       --accent:#2F7CFF;
       --accent2:#22D3EE;
       --violet:#7C3AED;
-      --success:#16A34A;
-      --warning:#D97706;
-      --danger:#DC2626;
-
-      --labelDark:#0F172A;
-
-      --border:rgba(15, 23, 42, .08);
-      --borderStrong:rgba(47,124,255,.28);
-
-      --shadowSoft:0 8px 24px rgba(15,23,42,.06);
-      --shadowCard:0 12px 28px rgba(15,23,42,.07);
-
-      --selectBg:#FFFFFF;
-      --selectBgHover:#F8FBFF;
-      --selectBorder:rgba(47,124,255,.20);
-
-      --inputBg:#FFFFFF;
-      --inputBgHover:#F8FBFF;
-      --inputBorder:rgba(47,124,255,.20);
-
-      --selectOptionBg:#FFFFFF;
-      --selectOptionText:#0F172A;
-
-      --yssyNavy:#001B60;
+      --labelDark: rgba(8, 12, 22, .92);
+      --danger:#FF4D6D;
+      --border: rgba(148, 163, 184, .14);
+      --borderStrong: rgba(47,124,255,.55);
+      --shadowSoft: 0 10px 30px rgba(0,0,0,.28);
+      --glowA: rgba(47,124,255,.22);
+      --glowB: rgba(34,211,238,.14);
+      --glowV: rgba(124,58,237,.12);
+      --selectBg: rgba(47,124,255,.35);
+      --selectBgHover: rgba(47,124,255,.45);
+      --selectBorder: rgba(47,124,255,.65);
+      --inputBg: rgba(47,124,255,.20);
+      --inputBgHover: rgba(47,124,255,.28);
+      --inputBorder: rgba(47,124,255,.55);
+      --selectOptionBg: rgb(0, 27, 96);
+      --selectOptionText: #ffffff;
+      --yssyNavy: rgb(0, 27, 96);
+      --panel:#121933;
+      --panel-2:#182142;
+      --line: rgba(255,255,255,.08);
+      --primary:#2f7cff;
+      --primary-2:#22d3ee;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --dangerStrong:#ef4444;
+      --radius:18px;
     }
 
     *{box-sizing:border-box}
-
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
+      color: var(--text);
       background:
-        radial-gradient(900px 500px at 0% 0%, rgba(47,124,255,.07), transparent 60%),
-        radial-gradient(700px 380px at 100% 0%, rgba(34,211,238,.06), transparent 55%),
-        linear-gradient(180deg, #F8FAFD 0%, #F3F6FB 100%);
+        radial-gradient(1200px 700px at 10% 10%, var(--glowA), transparent 60%),
+        radial-gradient(1000px 600px at 85% 15%, var(--glowB), transparent 55%),
+        radial-gradient(900px 600px at 60% 95%, var(--glowV), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0) 30%),
+        var(--bg);
     }
 
-    .wrap{
-      max-width:1320px;
-      margin:0 auto;
-      padding:24px;
-    }
+    .wrap{max-width:1240px;margin:0 auto;padding:22px}
 
     header{
       display:flex;
-      gap:20px;
+      gap:18px;
       align-items:flex-start;
       justify-content:space-between;
       flex-wrap:nowrap;
-      padding:0 0 20px 0;
+      margin-top:0;
+      padding:8px 0 18px 0;
       border-bottom:1px solid var(--border);
-      margin-bottom:4px;
     }
 
     @media (max-width: 980px){
@@ -80,7 +75,7 @@
     .leftHead{
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:10px;
       min-width:0;
       flex:1 1 auto;
     }
@@ -88,91 +83,159 @@
     .titleWrap{
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:18px;
+      flex-wrap:nowrap;
+      padding:14px 16px;
+      border:1px solid rgba(47,124,255,.14);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+        radial-gradient(circle at 15% 20%, rgba(47,124,255,.10), transparent 35%);
+      box-shadow:0 14px 34px rgba(0,0,0,.18);
     }
 
-    .titleBadge{
-      width:62px;
-      height:62px;
-      border-radius:18px;
-      background: linear-gradient(180deg, rgba(47,124,255,.10), rgba(34,211,238,.08));
-      border:1px solid rgba(47,124,255,.18);
+    .titleVisual{
+      order:0;
+      flex:0 0 172px;
+      width:172px;
+      min-width:172px;
+      height:108px;
+      border-radius:22px;
+      border:1px solid rgba(47,124,255,.30);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(47,124,255,.24), transparent 45%),
+        radial-gradient(circle at 80% 25%, rgba(34,211,238,.20), transparent 40%),
+        linear-gradient(180deg, rgba(8,18,37,.98), rgba(10,24,52,.96));
+      box-shadow:
+        0 18px 42px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.05);
       display:flex;
       align-items:center;
       justify-content:center;
       overflow:hidden;
-      flex:0 0 62px;
-      box-shadow:var(--shadowSoft);
     }
 
-    .titleBadge img{
-      width:34px;
-      height:34px;
-      object-fit:contain;
+    .titleVisual svg{
+      width:100%;
+      height:100%;
       display:block;
     }
 
-    .titleIconFallback{
-      width:100%;
-      height:100%;
-      align-items:center;
-      justify-content:center;
-      color: var(--yssyNavy);
-    }
-
-    .titleIconFallback svg{
-      width:30px;
-      height:30px;
+    .titleWrap .title{
+      min-width:0;
+      flex:1 1 auto;
     }
 
     .title h1{
       margin:0;
-      font-size:30px;
-      letter-spacing:.1px;
-      font-weight:800;
-      color:var(--yssyNavy);
+      font-size:21px;
+      letter-spacing:.2px;
       line-height:1.15;
+      font-weight:800;
+      color:#F4F7FF;
     }
 
     .title p{
-      margin:7px 0 0 0;
+      margin:8px 0 0 0;
       color:var(--muted);
       font-size:13px;
       line-height:1.5;
     }
 
     .controls{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 120px 120px minmax(210px,1fr) minmax(210px,1fr) 160px;
+      gap:12px 12px;
+      align-items:end;
       justify-content:flex-start;
       padding:14px;
-      border:1px solid var(--border);
+      border:1px solid rgba(47,124,255,.10);
       border-radius:18px;
-      background:rgba(255,255,255,.85);
-      box-shadow:var(--shadowSoft);
-      backdrop-filter: blur(8px);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
     }
 
-    .small{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:600;
+    .filterField{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
     }
+
+    .filterActions{
+      display:flex;
+      align-items:end;
+      height:100%;
+    }
+
+    .filterActions button{
+      width:100%;
+      min-height:38px;
+    }
+
+    @media (max-width: 1100px){
+      .controls{grid-template-columns: repeat(3, minmax(140px, 1fr));}
+    }
+
+    @media (max-width: 760px){
+      .titleWrap{
+        gap:14px;
+        padding:12px 14px;
+      }
+
+      .titleVisual{
+        flex:0 0 138px;
+        width:138px;
+        min-width:138px;
+        height:90px;
+      }
+
+      .title h1{
+        font-size:19px;
+      }
+
+      .controls{grid-template-columns: repeat(2, minmax(140px, 1fr));}
+    }
+
+    @media (max-width: 520px){
+      .titleWrap{
+        gap:10px;
+        padding:10px 12px;
+      }
+
+      .titleVisual{
+        flex:0 0 112px;
+        width:112px;
+        min-width:112px;
+        height:78px;
+      }
+
+      .title h1{
+        font-size:17px;
+      }
+
+      .title p{
+        font-size:12px;
+      }
+
+      .controls{grid-template-columns: 1fr;}
+    }
+
+    .small{font-size:11px;color:var(--muted2)}
 
     select{
-      background: var(--selectBg);
-      color:var(--text);
+      background: linear-gradient(180deg, var(--selectBg), rgba(47,124,255,.22));
+      color:#ffffff;
       border:1px solid var(--selectBorder);
-      border-radius:12px;
-      padding:9px 12px;
+      border-radius:10px;
+      padding:7px 10px;
       outline:none;
       font-size:12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
       appearance:none; -webkit-appearance:none; -moz-appearance:none;
       background-image:
-        linear-gradient(45deg, transparent 50%, rgba(15,23,42,.7) 50%),
-        linear-gradient(135deg, rgba(15,23,42,.7) 50%, transparent 50%),
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.95) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.95) 50%, transparent 50%),
         linear-gradient(180deg, transparent, transparent);
       background-position:
         calc(100% - 16px) 50%,
@@ -181,97 +244,76 @@
       background-size: 5px 5px, 5px 5px, 100% 100%;
       background-repeat:no-repeat;
       padding-right:28px;
-      box-shadow:none;
-      transition:.18s ease;
     }
-
     select:hover{
-      background:var(--selectBgHover);
-      border-color:rgba(47,124,255,.35);
+      border-color: rgba(47,124,255,.85);
+      background: linear-gradient(180deg, var(--selectBgHover), rgba(47,124,255,.24));
     }
-
     select:focus{
-      border-color:rgba(47,124,255,.55);
-      box-shadow:0 0 0 4px rgba(47,124,255,.10);
+      border-color: var(--borderStrong);
+      box-shadow: 0 0 0 4px rgba(47,124,255,.22), 0 8px 18px rgba(0,0,0,.18);
     }
 
     #mesSelect option,
-    #anoSelect option{
+    #anoSelect option,
+    #mes option{
       background: var(--selectOptionBg);
       color: var(--selectOptionText);
     }
 
-    input[type="search"], input[type="text"]{
-      background:var(--inputBg);
-      color:var(--text);
+    input[type="search"], input[type="text"], input[type="number"]{
+      background: linear-gradient(180deg, var(--inputBg), rgba(47,124,255,.10));
+      color:#ffffff;
       border:1px solid var(--inputBorder);
-      border-radius:12px;
-      padding:9px 12px;
+      border-radius:10px;
+      padding:7px 10px;
       outline:none;
       font-size:12px;
-      min-width:120px;
-      width:130px;
-      transition:.18s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      min-width: 110px;
+      width: 100%;
     }
 
-    #ticketSearch{ width: 170px; min-width: 160px; }
+    #ticketSearch{ min-width: 140px; }
 
-    input[type="search"]::placeholder, input[type="text"]::placeholder{
-      color:#94A3B8;
+    input::placeholder, textarea::placeholder{
+      color: rgba(234,240,255,.72);
     }
 
-    input[type="search"]:hover, input[type="text"]:hover{
-      background:var(--inputBgHover);
-      border-color:rgba(47,124,255,.35);
+    input:hover, textarea:hover{
+      border-color: rgba(47,124,255,.85);
+      background: linear-gradient(180deg, rgba(47,124,255,.28), rgba(47,124,255,.12));
     }
 
-    input[type="search"]:focus, input[type="text"]:focus{
-      border-color:rgba(47,124,255,.55);
-      box-shadow:0 0 0 4px rgba(47,124,255,.10);
-    }
-
-    .fileBtn,
-    button{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:#FFFFFF;
-      color:var(--text);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:9px 13px;
-      outline:none;
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-      white-space:nowrap;
-      transition:.18s ease;
-      box-shadow:none;
-    }
-
-    .fileBtn:hover,
-    button:hover{
-      transform:translateY(-1px);
-      border-color:rgba(47,124,255,.28);
-      box-shadow:0 6px 14px rgba(15,23,42,.06);
-    }
-
-    button:focus{
-      border-color:rgba(47,124,255,.55);
-      box-shadow:0 0 0 4px rgba(47,124,255,.10);
-    }
-
-    .btn-secondary{
-      background:#fff;
+    input:focus, textarea:focus{
+      border-color: var(--borderStrong);
+      box-shadow: 0 0 0 4px rgba(47,124,255,.22), 0 8px 18px rgba(0,0,0,.18);
     }
 
     .fileBtn{
       align-self:flex-end;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color: var(--text);
+      border:1px solid rgba(47,124,255,.25);
+      border-radius:10px;
+      padding:7px 10px;
+      outline:none;
+      font-size:12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      cursor:pointer;
       user-select:none;
+      white-space:nowrap;
+    }
+    .fileBtn:hover{
+      border-color: rgba(47,124,255,.55);
+      box-shadow: 0 0 0 4px rgba(47,124,255,.12), 0 10px 22px rgba(0,0,0,.24);
     }
 
     .fileNote{
-      max-width: 220px;
+      max-width: 260px;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -279,44 +321,56 @@
 
     #jsonFile{ display:none; }
 
+    button{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color: var(--text);
+      border:1px solid rgba(47,124,255,.25);
+      border-radius:10px;
+      padding:7px 10px;
+      outline:none;
+      font-size:12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    button:hover{
+      border-color: rgba(47,124,255,.55);
+      box-shadow: 0 0 0 4px rgba(47,124,255,.12), 0 10px 22px rgba(0,0,0,.24);
+    }
+    button:focus{
+      border-color: var(--borderStrong);
+      box-shadow: 0 0 0 4px rgba(47,124,255,.18), 0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .btn-secondary{border-color: rgba(34,211,238,.22)}
+    .btn-secondary:hover{
+      border-color: rgba(34,211,238,.55);
+      box-shadow: 0 0 0 4px rgba(34,211,238,.12), 0 10px 22px rgba(0,0,0,.24);
+    }
+
     .rightHead{
-      margin-top:2px;
+      margin-top:8px;
       margin-left:auto;
       display:flex;
       flex-direction:column;
       align-items:flex-end;
-      gap:12px;
+      gap:10px;
       min-width:280px;
       flex:0 0 auto;
       align-self:flex-start;
     }
 
     .logo{
-      width:150px;
-      height:50px;
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      background:transparent;
-      border:none;
-      box-shadow:none;
-      overflow:visible;
+      width:130px;height:46px;
+      display:flex;align-items:flex-start;justify-content:flex-end;
+      background:transparent;border:none;box-shadow:none;border-radius:0;overflow:visible;
     }
-
-    .logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      image-rendering:auto
-    }
-
+    .logo img{width:100%;height:100%;object-fit:contain;image-rendering:auto}
     .logo .fallback{
-      font-weight:800;
-      letter-spacing:.4px;
-      color:var(--yssyNavy);
-      font-size:18px;
-      text-align:right;
-      width:100%;
+      font-weight:800;letter-spacing:.4px;
+      background: linear-gradient(90deg, rgba(234,240,255,1), rgba(34,211,238,.85));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      font-size:16px;text-align:right;width:100%;
     }
 
     .actions{
@@ -325,298 +379,169 @@
       align-items:center;
       justify-content:flex-end;
       flex-wrap:wrap;
+      margin-top:0;
     }
 
     .grid{
-      margin-top:18px;
+      margin-top:16px;
       display:grid;
       grid-template-columns: repeat(12, 1fr);
-      gap:16px;
+      gap:12px;
     }
 
     .card{
       position:relative;
-      background:var(--surface);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       border:1px solid var(--border);
-      border-radius:20px;
-      padding:18px;
-      box-shadow:var(--shadowCard);
+      border-radius:16px;
+      padding:14px;
+      box-shadow: var(--shadowSoft);
       overflow:hidden;
-      min-height:90px;
+      min-height: 90px;
     }
-
     .card::before{
       content:"";
       position:absolute;
-      left:0;
-      right:0;
-      top:0;
-      height:3px;
-      background:linear-gradient(90deg, rgba(47,124,255,.95), rgba(34,211,238,.70));
-      opacity:.9;
+      left:0; right:0; top:0;
+      height:2px;
+      background: linear-gradient(90deg, rgba(47,124,255,.9), rgba(34,211,238,.75), rgba(124,58,237,.55));
+      opacity:.55;
     }
 
-    .kpi{
-      grid-column: span 4;
-      min-height: 170px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
+    .kpi{grid-column: span 2;}
+    @media (max-width: 1100px){ .kpi{grid-column: span 3;} }
+    @media (max-width: 980px){ .kpi{grid-column: span 6;} }
+    @media (max-width: 560px){ .kpi{grid-column: span 12;} }
 
-    @media (max-width: 1100px){
-      .kpi{grid-column: span 6;}
-    }
-
-    @media (max-width: 680px){
-      .kpi{grid-column: span 12;}
-    }
-
-    .kpiHead{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:10px;
-    }
-
-    .kpiTitle{
-      min-width:0;
-      flex:1;
-    }
-
-    .kpi .label{
-      color:var(--text);
-      font-size:13px;
-      line-height:1.38;
-      font-weight:800;
-      letter-spacing:.1px;
-      margin:0;
-    }
-
-    .kpi .subLabel{
-      margin-top:5px;
-      color:var(--muted);
-      font-size:11px;
-      line-height:1.35;
-    }
-
-    .kpiIcon{
-      width:56px;
-      height:56px;
-      border-radius:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex:0 0 56px;
-      border:1px solid rgba(15,23,42,.05);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
-    }
-
-    .kpiIcon svg{
-      width:26px;
-      height:26px;
-      stroke-width:2.1;
-    }
-
-    .kpiIcon.blue{
-      background:linear-gradient(180deg, rgba(47,124,255,.12), rgba(47,124,255,.06));
-      color:#2563EB;
-    }
-
-    .kpiIcon.cyan{
-      background:linear-gradient(180deg, rgba(34,211,238,.12), rgba(34,211,238,.05));
-      color:#0891B2;
-    }
-
-    .kpiIcon.violet{
-      background:linear-gradient(180deg, rgba(124,58,237,.12), rgba(124,58,237,.05));
-      color:#7C3AED;
-    }
-
-    .kpiIcon.lime{
-      background:linear-gradient(180deg, rgba(22,163,74,.12), rgba(22,163,74,.05));
-      color:#15803D;
-    }
-
+    .kpi .label{color:var(--muted);font-size:12px;margin-bottom:6px}
     .kpi .value{
-      font-size:32px;
-      font-weight:800;
-      line-height:1.05;
-      letter-spacing:.1px;
-      color:var(--yssyNavy);
-      margin:10px 0 10px 0;
+      font-size:24px;font-weight:750;line-height:1.1;letter-spacing:.2px;
+      background: linear-gradient(90deg, rgba(234,240,255,1), rgba(34,211,238,.85));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
     }
-
-    .kpi .sub{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-      padding-top:10px;
-      border-top:1px solid rgba(15,23,42,.06);
-      min-height:44px;
-    }
+    .kpi .sub{margin-top:8px;color:var(--muted2);font-size:12px}
 
     .panel{grid-column: span 12;}
 
     .row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:8px;
-      align-items:center
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-top:8px; align-items:center
     }
-
     .pill{
-      padding:8px 12px;
-      border-radius:999px;
+      padding:8px 10px; border-radius:12px;
       border:1px solid var(--border);
-      background:var(--surface2);
+      background: linear-gradient(180deg, rgba(47,124,255,.10), rgba(255,255,255,.03));
     }
-
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace
-    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
 
     table{
       width:100%;
       border-collapse: collapse;
       font-size:13px;
-      margin-top:14px;
+      margin-top:10px;
       overflow:hidden;
-      border-radius:16px;
+      border-radius:12px;
       border:1px solid var(--border);
-      background:#fff;
+      background: rgba(0,0,0,.12);
     }
-
     thead th{
-      color:#334155;
-      font-weight:800;
-      background:#F8FAFC;
-      border-bottom:1px solid rgba(15,23,42,.08);
+      color: var(--muted);
+      font-weight:650;
+      background: rgba(47,124,255,.08);
+      border-bottom:1px solid rgba(47,124,255,.20);
     }
-
     th, td{
-      padding:12px 10px;
-      border-bottom:1px solid rgba(15,23,42,.06);
+      padding:10px 10px;
+      border-bottom:1px solid var(--border);
       vertical-align: middle;
       text-align:left;
       white-space:nowrap;
     }
-
-    tbody tr:hover td{background:#F8FBFF}
-    tbody tr.active td{background:#EEF6FF}
-
+    tbody tr:hover td{background: rgba(47,124,255,.07)}
+    tbody tr.active td{background: rgba(47,124,255,.14)}
     .right{text-align:right}
     .muted{color:var(--muted)}
     .error{color: var(--danger)}
 
     .chart{
-      height:280px;
+      height:260px;
       width:100%;
-      background:#fff;
+      background: rgba(0,0,0,.10);
       border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
+      border-radius:14px;
+      padding:12px;
     }
-
     canvas{width:100%;height:100%}
-    .divider{
-      height:1px;
-      background:rgba(15,23,42,.07);
-      margin:18px 0;
-    }
+    .divider{height:1px;background: var(--border);margin:12px 0}
 
-    .galleryWrap,
-    .descBox,
-    .shot{
-      border:1px solid var(--border);
-      border-radius:18px;
-      background:#fff;
-    }
-
-    .galleryWrap{margin-top:14px;padding:14px}
-    .descBox{margin-top:10px;padding:14px}
-    .shot{padding:12px}
-
-    .galleryHead{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .galleryTitle{
-      color:var(--text);
-      font-weight:800;
-      font-size:13px;
-    }
-
-    .galleryHint{
-      color:var(--muted);
-      font-size:11px;
-      line-height:1.45;
-    }
-
-    .galleryGrid{
+    .galleryWrap{
       margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background: rgba(0,0,0,.12);
+      padding:12px;
+    }
+    .galleryHead{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;
+    }
+    .galleryTitle{
+      color:var(--muted);
+      font-weight:650;
+      font-size:12px;
+    }
+    .galleryHint{color:var(--muted2);font-size:11px}
+    .galleryGrid{
+      margin-top:10px;
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:14px;
+      gap:12px;
     }
-
     @media (max-width: 820px){
       .galleryGrid{grid-template-columns:1fr;}
     }
-
+    .shot{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+      padding:10px;
+    }
     .shotLabel{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
       margin-bottom:8px;
       font-size:12px;
       color:var(--muted);
-      font-weight:700;
+      font-weight:650;
     }
-
     .shotSub{
-      font-size:11px;
-      color:var(--muted2);
-      font-weight:500;
+      font-size:11px;color:var(--muted2);font-weight:500;
       max-width: 60%;
       text-align:right;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
     }
-
     .shotLink{
-      margin-top:8px;
+      margin-top:6px;
       font-size:11px;
-      color:var(--accent);
+      color: rgba(234,240,255,.92);
       text-decoration:none;
-      border-bottom:1px dashed rgba(47,124,255,.35);
+      border-bottom: 1px dashed rgba(47,124,255,.45);
       display:inline-block;
       max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
     }
-
-    .shotLink:hover{
-      border-bottom-color: rgba(47,124,255,.65)
-    }
+    .shotLink:hover{border-bottom-color: rgba(34,211,238,.60)}
 
     .shotMedia{
       position: relative;
       width: 100%;
-      height: 420px;
-      border-radius: 14px;
+      height: 520px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      background:#F8FAFC;
+      background: rgba(255,255,255,.03);
       overflow: hidden;
     }
 
@@ -628,8 +553,7 @@
       object-fit: contain;
       object-position: center;
       display: none;
-      background:#F8FAFC;
-      padding:8px;
+      background: rgba(0,0,0,.10);
     }
 
     .shotPlaceholder{
@@ -638,30 +562,37 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      color: var(--muted);
+      color: var(--muted2);
       font-size: 12px;
       text-align:center;
       padding:18px;
-      line-height:1.45;
-      border:1px dashed rgba(148,163,184,.30);
-      border-radius:14px;
-      background:#FCFDFE;
+      line-height:1.4;
+      border:1px dashed rgba(148,163,184,.25);
+      border-radius:12px;
+      background: rgba(255,255,255,.02);
     }
 
+    .descBox{
+      margin-top:10px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background: rgba(0,0,0,.12);
+      padding:12px;
+    }
     .descText{
       margin-top:8px;
       font-size:13px;
-      color: var(--text);
-      line-height:1.6;
+      color: rgba(234,240,255,.92);
+      line-height:1.55;
       white-space:pre-wrap;
       word-break:break-word;
     }
 
     footer{
-      margin-top:20px;
-      padding:16px 0 6px 0;
+      margin-top:16px;
+      padding:14px 0 6px 0;
       border-top:1px solid var(--border);
-      color: var(--muted);
+      color: var(--muted2);
       font-size:11px;
       text-align:center;
       letter-spacing:.2px;
@@ -678,15 +609,18 @@
         border:1px solid #e5e7eb !important;
         background:#ffffff !important
       }
-
       .card::before{display:none !important}
 
-      .kpi .value{color:#111827 !important}
+      .kpi .value{
+        color:#111827 !important;
+        -webkit-text-fill-color:#111827 !important;
+        background:none !important
+      }
+
       table{
         background:#ffffff !important;
         border:1px solid #e5e7eb !important
       }
-
       thead th{background:#f3f4f6 !important; color:#111827 !important}
       th,td{border-bottom:1px solid #e5e7eb !important; color:#111827 !important}
 
@@ -696,9 +630,8 @@
         border:1px solid #e5e7eb !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        height:280px !important;
+        height:260px !important;
       }
-
       canvas{
         display:block !important;
         width:100% !important;
@@ -708,309 +641,715 @@
       }
 
       .galleryWrap{border:1px solid #e5e7eb !important;background:#fff !important}
-      .shot, .shotMedia{border:1px solid #e5e7eb !important}
       .shotPlaceholder{border:1px dashed #d1d5db !important;background:#fff !important;color:#111827 !important}
       #errorBox{display:none !important}
       .shotLink{color:#111827 !important;border-bottom-color:#9ca3af !important}
       .descBox{border:1px solid #e5e7eb !important;background:#fff !important}
       .descText{color:#111827 !important}
     }
+
+    /* ===== Novo Atendimento ===== */
+    #dashboardPage{display:block}
+    #novoAtendimentoPage{display:none;padding:26px 22px 34px}
+    #novoAtendimentoPage .container{max-width:1400px;margin:0 auto}
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:22px;
+      flex-wrap:wrap;
+      padding:18px 20px;
+      border:1px solid rgba(47,124,255,.18);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(47,124,255,.12), rgba(255,255,255,.03));
+      box-shadow:0 18px 42px rgba(0,0,0,.22);
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:30px;
+      line-height:1.1;
+      color:#fff;
+      font-weight:800;
+    }
+
+    .brand p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .actions-top{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .card-header{
+      padding:18px 20px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(47,124,255,.14), rgba(255,255,255,.02));
+    }
+
+    .card-header h2{
+      margin:0;
+      font-size:18px;
+    }
+
+    .card-header p{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .card-body{
+      padding:20px;
+    }
+
+    .col-12{grid-column:span 12}
+    .col-8{grid-column:span 8}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+    .col-3{grid-column:span 3}
+    .col-2{grid-column:span 2}
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    textarea{
+      width:100%;
+      border:1px solid rgba(47,124,255,.22);
+      background:linear-gradient(180deg, rgba(24,33,66,.96), rgba(18,25,51,.96));
+      color:var(--text);
+      border-radius:14px;
+      padding:13px 14px;
+      font-size:14px;
+      outline:none;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03), 0 8px 18px rgba(0,0,0,.16);
+      resize:vertical;
+      min-height:110px;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius:12px;
+      padding:12px 16px;
+      font-size:14px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+    }
+
+    .btn-primary{
+      background:linear-gradient(90deg,var(--primary),var(--primary-2));
+      color:#fff;
+    }
+
+    .btn-danger{
+      background:linear-gradient(90deg,#dc2626,#ef4444);
+      color:#fff;
+    }
+
+    .btn-sm{
+      padding:8px 12px;
+      font-size:12px;
+      border-radius:10px;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .toolbar .left,
+    .toolbar .right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:end;
+    }
+
+    .status{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:14px;
+      display:none;
+    }
+
+    .status.show{display:block}
+    .status.ok{
+      background:rgba(34,197,94,.15);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.25);
+    }
+
+    .status.error{
+      background:rgba(239,68,68,.15);
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.25);
+    }
+
+    .status.info{
+      background:rgba(34,211,238,.12);
+      color:#cffafe;
+      border:1px solid rgba(34,211,238,.22);
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:14px;
+    }
+
+    .field-group{
+      padding:14px;
+      border:1px solid rgba(47,124,255,.14);
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(47,124,255,.08), rgba(255,255,255,.02));
+    }
+    .field-group.highlight{
+      border-color:rgba(34,211,238,.24);
+      box-shadow:0 12px 26px rgba(0,0,0,.16);
+    }
+    .field-help{
+      margin-top:8px;
+      color:var(--muted2);
+      font-size:12px;
+      line-height:1.45
+    }
+    .section-title-inline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px
+    }
+    .section-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:linear-gradient(180deg,var(--primary),var(--primary-2));
+      box-shadow:0 0 0 6px rgba(47,124,255,.10)
+    }
+    .footer-note{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    @media (max-width:1100px){
+      .col-8,.col-6,.col-4,.col-3,.col-2{grid-column:span 12}
+    }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <div class="leftHead">
-        <div class="titleWrap">
-          <div class="titleBadge" title="Dashboard com Indicadores de Atendimento">
-            <img src="./dashboard_indicadores.png" alt="Dashboard com Indicadores de Atendimento"
-                 onerror="this.style.display='none'; document.getElementById('titleIconFallback').style.display='flex';">
-            <div id="titleIconFallback" class="titleIconFallback" style="display:none;">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 19V10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10 19V5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 19V13" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M20 19V8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 19H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <div id="dashboardPage">
+    <div class="wrap">
+      <header>
+        <div class="leftHead">
+          <div class="titleWrap">
+            <div class="titleVisual" aria-hidden="true" title="Dashboard de Indicadores de Atendimento">
+              <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="cardBg2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#081225"/>
+                    <stop offset="100%" stop-color="#0B234A"/>
+                  </linearGradient>
+
+                  <linearGradient id="barBlue2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2F7CFF"/>
+                    <stop offset="100%" stop-color="#1D4ED8"/>
+                  </linearGradient>
+
+                  <linearGradient id="barCyan2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#0891B2"/>
+                  </linearGradient>
+
+                  <linearGradient id="lineGlow2" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#22D3EE"/>
+                    <stop offset="100%" stop-color="#7C3AED"/>
+                  </linearGradient>
+
+                  <filter id="softGlow2">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <rect x="0" y="0" width="240" height="150" rx="22" fill="url(#cardBg2)"/>
+                <rect x="18" y="18" width="90" height="12" rx="6" fill="#EAF0FF" opacity="0.16"/>
+                <rect x="18" y="38" width="62" height="8" rx="4" fill="#EAF0FF" opacity="0.10"/>
+                <rect x="18" y="112" width="204" height="1" fill="rgba(255,255,255,.10)"/>
+
+                <rect x="24" y="88" width="22" height="28" rx="7" fill="url(#barBlue2)"/>
+                <rect x="56" y="74" width="22" height="42" rx="7" fill="url(#barCyan2)"/>
+                <rect x="88" y="56" width="22" height="60" rx="7" fill="url(#barBlue2)"/>
+                <rect x="120" y="42" width="22" height="74" rx="7" fill="url(#barCyan2)"/>
+
+                <path d="M30 98 C55 84, 70 92, 92 76 S 132 48, 164 56 S 198 42, 218 28"
+                      fill="none"
+                      stroke="url(#lineGlow2)"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      filter="url(#softGlow2)"/>
+
+                <circle cx="30" cy="98" r="4.5" fill="#EAF0FF"/>
+                <circle cx="92" cy="76" r="4.5" fill="#EAF0FF"/>
+                <circle cx="164" cy="56" r="4.5" fill="#EAF0FF"/>
+                <circle cx="218" cy="28" r="4.5" fill="#EAF0FF"/>
+
+                <rect x="162" y="84" width="52" height="8" rx="4" fill="#2F7CFF" opacity="0.20"/>
+                <rect x="162" y="98" width="38" height="8" rx="4" fill="#22D3EE" opacity="0.20"/>
+                <rect x="162" y="112" width="28" height="8" rx="4" fill="#7C3AED" opacity="0.16"/>
               </svg>
             </div>
+
+            <div class="title">
+              <h1>Dashboard de Indicadores de Atendimento</h1>
+              <p id="subtitle">Selecione um JSON (Kpis_YYYY-MM.json) para carregar os dados.</p>
+            </div>
           </div>
 
-          <div class="title">
-            <h1>Dashboard com Indicadores de Atendimento</h1>
-            <p id="subtitle">Selecione um JSON (Kpis_YYYY-MM.json) para carregar os dados.</p>
-          </div>
-        </div>
+          <div class="controls">
+            <div class="filterField">
+              <label class="small" for="mesSelect">Mês</label>
+              <select id="mesSelect"></select>
+            </div>
 
-        <div class="controls">
-          <label class="small">Mês:</label>
-          <select id="mesSelect"></select>
+            <div class="filterField">
+              <label class="small" for="anoSelect">Ano</label>
+              <select id="anoSelect"></select>
+            </div>
 
-          <label class="small">Ano:</label>
-          <select id="anoSelect"></select>
+            <div class="filterField">
+              <label class="small" for="idLocalidadeSearch">Id Localidade</label>
+              <input id="idLocalidadeSearch" type="search" placeholder="Ex.: (18123)" autocomplete="off" />
+            </div>
 
-          <label class="small">Id Localidade:</label>
-          <input id="idLocalidadeSearch" type="search" placeholder="Ex.: 18123" autocomplete="off" />
+            <div class="filterField">
+              <label class="small" for="ticketSearch">Nº Ticket</label>
+              <input id="ticketSearch" type="search" placeholder="Ex.: (INC00012345)" autocomplete="off" />
+            </div>
 
-          <label class="small">Nº Ticket:</label>
-          <input id="ticketSearch" type="search" placeholder="Ex.: INC00012345" autocomplete="off" />
-
-          <button id="btnClearSearch" class="btn-secondary" title="Limpar filtros e pesquisas">Limpar</button>
-        </div>
-      </div>
-
-      <div class="rightHead">
-        <div class="logo" title="Logo Yssy">
-          <img id="yssyLogo" src="./yssy_logo.png" alt="Yssy"
-               onerror="this.style.display='none'; document.getElementById('yssyFallback').style.display='block';">
-          <div id="yssyFallback" class="fallback" style="display:none;">YSSY</div>
-        </div>
-
-        <div class="actions">
-          <button id="btnExportPPTX" class="btn-secondary" title="Exportar relatório para PowerPoint (.pptx)">Exportar PPT</button>
-          <button id="btnExportPDF" class="btn-secondary" title="Exportar para PDF (impressão)">Exportar PDF</button>
-          <button id="btnAcoes" class="btn-secondary" title="Cadastrar ações realizadas em campo">Cadastrar Ações</button>
-
-          <label class="fileBtn" for="jsonFile" title="Selecionar arquivo JSON">
-            Carregar KPIs
-            <span class="small fileNote" id="fileName">Arquivo</span>
-          </label>
-          <input id="jsonFile" type="file" accept=".json,application/json" />
-        </div>
-      </div>
-    </header>
-
-    <section class="grid">
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Total de Tickets/Mês</div>
-            <div class="subLabel">Chamados registrados</div>
-          </div>
-          <div class="kpiIcon blue" title="Tickets">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M4 8.5V6.8C4 5.81 4.81 5 5.8 5h12.4C19.19 5 20 5.81 20 6.8v1.7a2 2 0 0 0 0 7v1.7c0 .99-.81 1.8-1.8 1.8H5.8A1.8 1.8 0 0 1 4 17.2v-1.7a2 2 0 0 0 0-7Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 9h6M9 15h3" stroke="currentColor" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiTickets">—</div>
-        <div class="sub" id="kpiTicketsSub">—</div>
-      </div>
-
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Localidades Atendidas/Mês</div>
-            <div class="subLabel">Unidades com atendimento</div>
-          </div>
-          <div class="kpiIcon cyan" title="Localidades">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 13.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiLocais">—</div>
-        <div class="sub">Total de localidades no filtro</div>
-      </div>
-
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Equipamentos Trocados/Mês</div>
-            <div class="subLabel">Substituições realizadas</div>
-          </div>
-          <div class="kpiIcon lime" title="Trocas">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M7 7h11l-2.5-2.5M17 17H6l2.5 2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18 7v0M6 17v0" stroke="currentColor"/>
-              <path d="M18 7 15 4M6 17l3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiEquip">—</div>
-        <div class="sub" id="kpiEquipSub">—</div>
-      </div>
-
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Equipamentos Configurados/Mês</div>
-            <div class="subLabel">Configurações executadas</div>
-          </div>
-          <div class="kpiIcon violet" title="Configuração">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor"/>
-              <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1.2 1.2 0 0 1 0 1.7l-1.6 1.6a1.2 1.2 0 0 1-1.7 0l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1.2 1.2 0 0 1-1.2 1.2h-2.3A1.2 1.2 0 0 1 9.9 20v-.2a1 1 0 0 0-.6-.9 1 1 0 0 0-1.1.2l-.1.1a1.2 1.2 0 0 1-1.7 0l-1.6-1.6a1.2 1.2 0 0 1 0-1.7l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a1.2 1.2 0 0 1-1.2-1.2v-2.3A1.2 1.2 0 0 1 4 9.3h.2a1 1 0 0 0 .9-.6 1 1 0 0 0-.2-1.1l-.1-.1a1.2 1.2 0 0 1 0-1.7l1.6-1.6a1.2 1.2 0 0 1 1.7 0l.1.1a1 1 0 0 0 1.1.2h.1a1 1 0 0 0 .5-.9V4A1.2 1.2 0 0 1 11.1 2.8h2.3A1.2 1.2 0 0 1 14.6 4v.2a1 1 0 0 0 .6.9 1 1 0 0 0 1.1-.2l.1-.1a1.2 1.2 0 0 1 1.7 0l1.6 1.6a1.2 1.2 0 0 1 0 1.7l-.1.1a1 1 0 0 0-.2 1.1 1 1 0 0 0 .9.6h.2A1.2 1.2 0 0 1 21.2 11v2.3a1.2 1.2 0 0 1-1.2 1.2h-.2a1 1 0 0 0-.4.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiEquipCfg">—</div>
-        <div class="sub" id="kpiEquipCfgSub">—</div>
-      </div>
-
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Tempo Gasto (Atividades)</div>
-            <div class="subLabel">Carga horária total</div>
-          </div>
-          <div class="kpiIcon blue" title="Tempo">
-            <svg viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="13" r="8" stroke="currentColor"/>
-              <path d="M12 13V9M12 5V3M9 3h6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M15 16l-3-3" stroke="currentColor" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiTempoHoras">—</div>
-        <div class="sub" id="kpiTempoHorasSub">—</div>
-      </div>
-
-      <div class="card kpi">
-        <div class="kpiHead">
-          <div class="kpiTitle">
-            <div class="label">Total de Pontos de Rede/Mês</div>
-            <div class="subLabel">Infraestrutura atendida</div>
-          </div>
-          <div class="kpiIcon cyan" title="Rede">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 19v-4M6 19v-2M18 19v-2" stroke="currentColor" stroke-linecap="round"/>
-              <rect x="9" y="11" width="6" height="4" rx="1.2" stroke="currentColor"/>
-              <rect x="3" y="17" width="6" height="3" rx="1" stroke="currentColor"/>
-              <rect x="15" y="17" width="6" height="3" rx="1" stroke="currentColor"/>
-              <path d="M12 11V7M12 7H6v3M12 7h6v3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="value" id="kpiMediaPontos">—</div>
-        <div class="sub" id="kpiMediaPontosSub">—</div>
-      </div>
-
-      <div class="card panel">
-        <div class="row">
-          <div>
-            <div class="label">Detalhamento dos Atendimentos</div>
-            <div class="small">Visão consolidada por ticket e localidade, respeitando os filtros aplicados</div>
-          </div>
-          <div class="pill small">
-            <span class="muted">Total no filtro:</span>
-            <span class="mono" id="totalFiltro">—</span>
+            <div class="filterActions">
+              <button id="btnClearSearch" class="btn-secondary" title="Limpar filtros e pesquisas">Limpar filtros</button>
+            </div>
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Nº Ticket</th>
-              <th>Id Localidade</th>
-              <th>Localidade</th>
-              <th class="right">Tempo (Horas)</th>
-              <th class="right">Qtde Equip. Trocados</th>
-              <th class="right">Qtde Equip. Configurados</th>
-              <th class="right">Pontos de Rede</th>
-            </tr>
-          </thead>
-          <tbody id="tbodyLocais">
-            <tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>
-          </tbody>
-        </table>
+        <div class="rightHead">
+          <div class="logo" title="Logo Yssy">
+            <img id="yssyLogo" src="./yssy_logo.png" alt="Yssy"
+                 onerror="this.style.display='none'; document.getElementById('yssyFallback').style.display='block';">
+            <div id="yssyFallback" class="fallback" style="display:none;">YSSY</div>
+          </div>
 
-        <div class="galleryWrap" id="galleryWrap">
-          <div class="galleryHead">
+          <div class="actions">
+            <button id="btnExportPPTX" class="btn-secondary" title="Exportar relatório para PowerPoint (.pptx)">Exportar PPT</button>
+            <button id="btnExportPDF" class="btn-secondary" title="Exportar para PDF (impressão)">Exportar PDF</button>
+            <button id="btnAcoes" class="btn-secondary" title="Abrir formulário de novo atendimento">Novo Atendimento</button>
+
+            <label class="fileBtn" for="jsonFile" title="Selecionar arquivo JSON">
+              Carregar KPIs
+              <span class="small fileNote" id="fileName">Arquivo</span>
+            </label>
+            <input id="jsonFile" type="file" accept=".json,application/json" />
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card kpi">
+          <div class="label">Total de Tickets/Mês</div>
+          <div class="value" id="kpiTickets">—</div>
+          <div class="sub" id="kpiTicketsSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="label">Localidades Atendidas/Mês</div>
+          <div class="value" id="kpiLocais">—</div>
+          <div class="sub">Total (Localidades no filtro)</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="label">Equipamentos Trocados/Mês</div>
+          <div class="value" id="kpiEquip">—</div>
+          <div class="sub" id="kpiEquipSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="label">Equipamentos Configurados/Mês</div>
+          <div class="value" id="kpiEquipCfg">—</div>
+          <div class="sub" id="kpiEquipCfgSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="label">Tempo Gasto (Atividades)</div>
+          <div class="value" id="kpiTempoHoras">—</div>
+          <div class="sub" id="kpiTempoHorasSub">—</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="label">Total de Pontos de Rede/Mês</div>
+          <div class="value" id="kpiMediaPontos">—</div>
+          <div class="sub" id="kpiMediaPontosSub">—</div>
+        </div>
+
+        <div class="card panel">
+          <div class="row">
             <div>
-              <div class="galleryTitle">Fotos — Antes e Depois da Visita Técnica</div>
-              <div class="galleryHint" id="galleryHint">As fotos serão exibidas <b>somente</b> ao filtrar por <b>Id Localidade</b> ou <b>Nº Ticket</b>.</div>
+              <div class="label">Localidades Atendidas e Tempo Gasto</div>
+              <div class="small">Tabela detalhada por localidade (respeita mês, ano e pesquisas)</div>
             </div>
             <div class="pill small">
-              <span class="muted">Selecionado:</span>
-              <span class="mono" id="selectedInfo">—</span>
+              <span class="muted">Total no filtro:</span>
+              <span class="mono" id="totalFiltro">—</span>
             </div>
           </div>
 
-          <div class="galleryGrid">
-            <div class="shot">
-              <div class="shotLabel">
-                <span>Antes</span>
-                <span class="shotSub" id="beforeMeta">—</span>
-              </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Nº Ticket</th>
+                <th>Id Localidade</th>
+                <th>Localidade</th>
+                <th class="right">Tempo (Horas)</th>
+                <th class="right">Qtde Equip. Trocados</th>
+                <th class="right">Qtde Equip. Configurados</th>
+                <th class="right">Pontos de Rede</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyLocais">
+              <tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>
+            </tbody>
+          </table>
 
-              <div class="shotMedia">
-                <div id="beforeBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
-                <img id="beforeImg" class="shotImg" alt="Foto Antes" />
+          <div class="galleryWrap" id="galleryWrap">
+            <div class="galleryHead">
+              <div>
+                <div class="galleryTitle">Fotos — Antes e Depois da Visita Técnica</div>
+                <div class="galleryHint" id="galleryHint">As fotos serão exibidas <b>somente</b> ao filtrar por <b>Id Localidade</b> ou <b>Nº Ticket</b>.</div>
               </div>
-
-              <a id="beforeLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+              <div class="pill small">
+                <span class="muted">Selecionado:</span>
+                <span class="mono" id="selectedInfo">—</span>
+              </div>
             </div>
 
-            <div class="shot">
-              <div class="shotLabel">
-                <span>Depois</span>
-                <span class="shotSub" id="afterMeta">—</span>
+            <div class="galleryGrid">
+              <div class="shot">
+                <div class="shotLabel">
+                  <span>Antes</span>
+                  <span class="shotSub" id="beforeMeta">—</span>
+                </div>
+
+                <div class="shotMedia">
+                  <div id="beforeBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
+                  <img id="beforeImg" class="shotImg" alt="Foto Antes" />
+                </div>
+
+                <a id="beforeLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
               </div>
 
-              <div class="shotMedia">
-                <div id="afterBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
-                <img id="afterImg" class="shotImg" alt="Foto Depois" />
-              </div>
+              <div class="shot">
+                <div class="shotLabel">
+                  <span>Depois</span>
+                  <span class="shotSub" id="afterMeta">—</span>
+                </div>
 
-              <a id="afterLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+                <div class="shotMedia">
+                  <div id="afterBox" class="shotPlaceholder">Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).</div>
+                  <img id="afterImg" class="shotImg" alt="Foto Depois" />
+                </div>
+
+                <a id="afterLink" class="shotLink" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="divider"></div>
+          <div class="divider"></div>
 
-        <div class="row">
-          <div>
-            <div class="label">Análise Visual dos Indicadores</div>
-            <div class="small">Comparativo das 10 principais localidades por tempo, configurações e trocas</div>
-          </div>
-          <div class="small muted">Sem dependências externas (Offline)</div>
-        </div>
-
-        <div class="grid" style="margin-top:10px">
-          <div class="card" style="grid-column: span 12; min-height:auto">
-            <div class="small muted" style="margin-bottom:8px">Tempo por localidade (Top 10) — horas</div>
-            <div class="chart"><canvas id="chartTempo"></canvas></div>
+          <div class="row">
+            <div>
+              <div class="label">Gráficos</div>
+              <div class="small">Top 10 Localidades por Tempo, Configurados e Trocas</div>
+            </div>
+            <div class="small muted">Sem dependências externas (Offline)</div>
           </div>
 
-          <div class="card" style="grid-column: span 12; min-height:auto">
-            <div class="small muted" style="margin-bottom:8px">Equipamentos Configurados por Localidade (Top 10)</div>
-            <div class="chart"><canvas id="chartTickets"></canvas></div>
+          <div class="grid" style="margin-top:10px">
+            <div class="card" style="grid-column: span 12; min-height:auto">
+              <div class="small muted" style="margin-bottom:8px">Tempo por localidade (Top 10) — horas</div>
+              <div class="chart"><canvas id="chartTempo"></canvas></div>
+            </div>
+
+            <div class="card" style="grid-column: span 12; min-height:auto">
+              <div class="small muted" style="margin-bottom:8px">Equipamentos Configurados por Localidade (Top 10)</div>
+              <div class="chart"><canvas id="chartTickets"></canvas></div>
+            </div>
+
+            <div class="card" style="grid-column: span 12; min-height:auto">
+              <div class="small muted" style="margin-bottom:8px">Quantidade de Equipamentos Trocados por Localidade (Top 10)</div>
+              <div class="chart"><canvas id="chartEquip"></canvas></div>
+            </div>
           </div>
 
-          <div class="card" style="grid-column: span 12; min-height:auto">
-            <div class="small muted" style="margin-bottom:8px">Quantidade de Equipamentos Trocados por Localidade (Top 10)</div>
-            <div class="chart"><canvas id="chartEquip"></canvas></div>
+          <div class="divider"></div>
+
+          <div class="row">
+            <div>
+              <div class="label">Descrição do Atendimento</div>
+            </div>
+            <div class="small muted">Atualiza pelo filtro e ao clicar na tabela</div>
           </div>
-        </div>
 
-        <div class="divider"></div>
-
-        <div class="row">
-          <div>
-            <div class="label">Resumo Técnico do Atendimento</div>
+          <div class="descBox">
+            <div class="small muted">Descrição:</div>
+            <div id="descAtendimento" class="descText">—</div>
           </div>
-          <div class="small muted">Atualiza pelo filtro e ao clicar na tabela</div>
+
+          <div class="divider"></div>
+          <div class="small muted" id="errorBox"></div>
         </div>
+      </section>
 
-        <div class="descBox">
-          <div class="small muted">Descrição:</div>
-          <div id="descAtendimento" class="descText">—</div>
-        </div>
-
-        <div class="divider"></div>
-        <div class="small muted" id="errorBox"></div>
-      </div>
-    </section>
-
-    <footer>Copyright © 2026 YSSY. Todos os direitos reservados.</footer>
+      <footer>Copyright © 2026 YSSY. Todos os direitos reservados.</footer>
+    </div>
   </div>
 
+  <section id="novoAtendimentoPage">
+    <div class="container">
+      <div class="topbar">
+        <div class="brand">
+          <h1>Novo Atendimento • YSSY</h1>
+          <p>Integração direta com Google Sheets</p>
+        </div>
+
+        <div class="actions-top">
+          <button class="btn btn-secondary" type="button" onclick="voltarDashboard()">← Voltar</button>
+          <button class="btn btn-secondary" type="button" onclick="carregarAcoes()">Atualizar lista</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <h2>Configuração da integração</h2>
+          <p>Informe a URL do Web App do Google Apps Script vinculado à planilha KPIs_Atendimentos.</p>
+        </div>
+        <div class="card-body">
+          <div class="grid">
+            <div class="col-8">
+              <label for="api_base">URL do Google Apps Script (Web App)</label>
+              <input id="api_base" type="text" value="COLE_AQUI_A_URL_DO_SEU_WEBAPP" />
+            </div>
+            <div class="col-4">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" type="button" onclick="testarConexao()">Testar conexão</button>
+            </div>
+          </div>
+          <div id="statusApi" class="status"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <h2>Novo registro</h2>
+          <p>Os dados serão gravados na planilha <strong>KPIs_Atendimentos</strong>, aba <strong>Atendimentos</strong>.</p>
+        </div>
+        <div class="card-body">
+          <form id="formAcao">
+            <div class="section-title-inline"><span class="section-dot"></span><strong>Preencha os dados do atendimento</strong></div>
+            <div class="field-help">Mapeamento da planilha: Ano, Mês, Dia, Nº Ticket, Id Localidade, Localidade, Tempo (Horas), Qtde Equip. Trocados, Qtde Equip. Configurados, Pontos de Rede, Foto Antes, Foto Depois, Descrição Atendimento.</div>
+
+            <div class="grid" style="margin-top:14px;">
+              <div class="col-2 field-group highlight">
+                <label for="ano">Ano</label>
+                <input id="ano" type="number" min="2020" max="2100" value="2026" required />
+              </div>
+
+              <div class="col-2 field-group highlight">
+                <label for="mes">Mês</label>
+                <select id="mes" required>
+                  <option value="">Selecione</option>
+                  <option value="1">1 - Janeiro</option>
+                  <option value="2">2 - Fevereiro</option>
+                  <option value="3">3 - Março</option>
+                  <option value="4">4 - Abril</option>
+                  <option value="5">5 - Maio</option>
+                  <option value="6">6 - Junho</option>
+                  <option value="7">7 - Julho</option>
+                  <option value="8">8 - Agosto</option>
+                  <option value="9">9 - Setembro</option>
+                  <option value="10">10 - Outubro</option>
+                  <option value="11">11 - Novembro</option>
+                  <option value="12">12 - Dezembro</option>
+                </select>
+              </div>
+
+              <div class="col-2 field-group highlight">
+                <label for="dia">Dia</label>
+                <input id="dia" type="number" min="1" max="31" value="1" required />
+              </div>
+
+              <div class="col-3 field-group highlight">
+                <label for="numero_ticket">Nº Ticket</label>
+                <input id="numero_ticket" type="text" placeholder="Ex.: INC123456" />
+              </div>
+
+              <div class="col-3 field-group highlight">
+                <label for="id_localidade">Id Localidade</label>
+                <input id="id_localidade" type="text" placeholder="Ex.: 1001" />
+              </div>
+
+              <div class="col-6 field-group highlight">
+                <label for="localidade">Localidade</label>
+                <input id="localidade" type="text" placeholder="Ex.: Sabesp Unidade Centro" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="tempo_gasto_horas">Tempo (Horas)</label>
+                <input id="tempo_gasto_horas" type="number" step="0.1" min="0" placeholder="Ex.: 4.5" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="pontos_de_rede">Pontos de Rede</label>
+                <input id="pontos_de_rede" type="number" min="0" placeholder="Ex.: 12" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="equipamentos_trocados">Qtde Equip. Trocados</label>
+                <input id="equipamentos_trocados" type="number" min="0" placeholder="Ex.: 2" />
+              </div>
+
+              <div class="col-3 field-group">
+                <label for="equipamentos_configurados">Qtde Equip. Configurados</label>
+                <input id="equipamentos_configurados" type="number" min="0" placeholder="Ex.: 5" />
+              </div>
+
+              <div class="col-6 field-group">
+                <label for="foto_antes_url">Foto Antes (caminho/URL)</label>
+                <input id="foto_antes_url" type="text" placeholder="Ex.: https://... ou C:\fotos\antes.jpg" />
+              </div>
+
+              <div class="col-6 field-group">
+                <label for="foto_depois_url">Foto Depois (caminho/URL)</label>
+                <input id="foto_depois_url" type="text" placeholder="Ex.: https://... ou C:\fotos\depois.jpg" />
+              </div>
+
+              <div class="col-12 field-group">
+                <label for="descricao_atendimento">Descrição Atendimento</label>
+                <textarea id="descricao_atendimento" placeholder="Descreva a ação realizada em campo"></textarea>
+              </div>
+
+              <div class="col-12">
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button class="btn btn-primary" type="submit">Salvar atendimento</button>
+                  <button class="btn btn-secondary" type="button" onclick="limparFormulario()">Limpar formulário</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div id="statusForm" class="status"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Registros cadastrados</h2>
+          <p>A listagem abaixo é carregada diretamente da planilha pelo Google Apps Script.</p>
+        </div>
+        <div class="card-body">
+          <div class="toolbar">
+            <div class="left">
+              <div>
+                <label for="filtroBusca">Buscar</label>
+                <input id="filtroBusca" type="text" placeholder="Ticket, localidade, descrição..." oninput="aplicarFiltroTabela()" />
+              </div>
+            </div>
+
+            <div class="right">
+              <div>
+                <label for="filtroAno">Ano</label>
+                <input id="filtroAno" type="number" placeholder="Todos" oninput="aplicarFiltroTabela()" />
+              </div>
+              <div>
+                <label for="filtroMes">Mês</label>
+                <input id="filtroMes" type="number" min="1" max="12" placeholder="Todos" oninput="aplicarFiltroTabela()" />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn btn-secondary" type="button" onclick="limparFiltros()">Limpar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ano</th>
+                  <th>Mês</th>
+                  <th>Dia</th>
+                  <th>Nº Ticket</th>
+                  <th>Id Localidade</th>
+                  <th>Localidade</th>
+                  <th>Tempo (Horas)</th>
+                  <th>Qtde Equip. Trocados</th>
+                  <th>Qtde Equip. Configurados</th>
+                  <th>Pontos de Rede</th>
+                  <th>Foto Antes</th>
+                  <th>Foto Depois</th>
+                  <th>Descrição Atendimento</th>
+                </tr>
+              </thead>
+              <tbody id="tbody_acoes">
+                <tr>
+                  <td colspan="13" class="text-center muted">Nenhum registro carregado.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="footer-note">
+            A URL usada acima deve ser a do Web App do Google Apps Script publicado como <strong>Aplicativo da Web</strong>.
+          </div>
+
+          <div id="statusTabela" class="status"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 <script>
+(() => {
   function loadScript(src){
     return new Promise((resolve, reject) => {
       const s = document.createElement("script");
@@ -1041,24 +1380,19 @@
     }
   })();
 
-  const FILE_PREFIX = "Kpis_";
   const els = {
     subtitle: document.getElementById("subtitle"),
     mesSelect: document.getElementById("mesSelect"),
     anoSelect: document.getElementById("anoSelect"),
-
     jsonFile: document.getElementById("jsonFile"),
     fileName: document.getElementById("fileName"),
-
     idLocalidadeSearch: document.getElementById("idLocalidadeSearch"),
     ticketSearch: document.getElementById("ticketSearch"),
     btnClearSearch: document.getElementById("btnClearSearch"),
-
     btnExportPPTX: document.getElementById("btnExportPPTX"),
     btnExportPDF: document.getElementById("btnExportPDF"),
     btnAcoes: document.getElementById("btnAcoes"),
     errorBox: document.getElementById("errorBox"),
-
     kpiTickets: document.getElementById("kpiTickets"),
     kpiTicketsSub: document.getElementById("kpiTicketsSub"),
     kpiLocais: document.getElementById("kpiLocais"),
@@ -1070,14 +1404,11 @@
     kpiTempoHorasSub: document.getElementById("kpiTempoHorasSub"),
     kpiMediaPontos: document.getElementById("kpiMediaPontos"),
     kpiMediaPontosSub: document.getElementById("kpiMediaPontosSub"),
-
     tbody: document.getElementById("tbodyLocais"),
     totalFiltro: document.getElementById("totalFiltro"),
-
     cvTempo: document.getElementById("chartTempo"),
     cvTickets: document.getElementById("chartTickets"),
     cvEquip: document.getElementById("chartEquip"),
-
     selectedInfo: document.getElementById("selectedInfo"),
     galleryHint: document.getElementById("galleryHint"),
     beforeBox: document.getElementById("beforeBox"),
@@ -1088,13 +1419,131 @@
     afterMeta: document.getElementById("afterMeta"),
     beforeLink: document.getElementById("beforeLink"),
     afterLink: document.getElementById("afterLink"),
-
     descAtendimento: document.getElementById("descAtendimento"),
   };
 
   let rawData = null;
   let currentItems = [];
   let selectedIdx = null;
+  let acoesCache = [];
+
+  const STORAGE_KEY = "yssy_dashboard_state_v6";
+  const dashboardPage = document.getElementById("dashboardPage");
+  const novoAtendimentoPage = document.getElementById("novoAtendimentoPage");
+
+  function setPersistedValue(key, value){
+    const serialized = JSON.stringify(value);
+    try{ localStorage.setItem(key, serialized); return true; }catch(_){}
+    try{ sessionStorage.setItem(key, serialized); return true; }catch(_){}
+    return false;
+  }
+
+  function getPersistedValue(key){
+    try{
+      const raw = localStorage.getItem(key) ?? sessionStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function buildPersistedState(){
+    return {
+      rawData: rawData || null,
+      rawJsonText: rawData ? JSON.stringify(rawData) : "",
+      fileName: els.fileName?.textContent || "Arquivo",
+      filters: {
+        mes: els.mesSelect?.value || "all",
+        ano: els.anoSelect?.value || "all",
+        idLocalidade: els.idLocalidadeSearch?.value || "",
+        ticket: els.ticketSearch?.value || ""
+      },
+      ui: {
+        activePage: (novoAtendimentoPage && getComputedStyle(novoAtendimentoPage).display !== "none") ? "novoAtendimento" : "dashboard",
+        apiBase: document.getElementById("api_base")?.value || "COLE_AQUI_A_URL_DO_SEU_WEBAPP"
+      }
+    };
+  }
+
+  function saveDashboardState(){
+    try{
+      setPersistedValue(STORAGE_KEY, buildPersistedState());
+    }catch(err){
+      console.warn("Não foi possível salvar o estado da tela:", err);
+    }
+  }
+
+  function restoreDashboardState(){
+    try{
+      const state = getPersistedValue(STORAGE_KEY);
+      if (!state || typeof state !== "object") return false;
+
+      if (state.ui?.apiBase && document.getElementById("api_base")){
+        document.getElementById("api_base").value = state.ui.apiBase;
+      }
+
+      if (state.filters){
+        els.idLocalidadeSearch.value = state.filters.idLocalidade || "";
+        els.ticketSearch.value = state.filters.ticket || "";
+      }
+
+      const restoredRaw = (state.rawData && Array.isArray(state.rawData.itens))
+        ? state.rawData
+        : (() => {
+            try{
+              const parsed = state.rawJsonText ? JSON.parse(state.rawJsonText) : null;
+              return parsed && Array.isArray(parsed.itens) ? parsed : null;
+            }catch(_){
+              return null;
+            }
+          })();
+
+      if (restoredRaw){
+        rawData = restoredRaw;
+        els.fileName.textContent = state.fileName || "Arquivo restaurado";
+        fillMonthYearSelectors(rawData.itens.map(safeItem));
+        if (state.filters){
+          if (Array.from(els.anoSelect.options).some(o => o.value === String(state.filters.ano || "all"))) {
+            els.anoSelect.value = String(state.filters.ano || "all");
+          }
+          if (Array.from(els.mesSelect.options).some(o => o.value === String(state.filters.mes || "all"))) {
+            els.mesSelect.value = String(state.filters.mes || "all");
+          }
+        }
+        renderAllFromRaw();
+      }
+
+      if (state.ui?.activePage === "novoAtendimento"){
+        abrirNovoAtendimento(false);
+      }else{
+        voltarDashboard(false);
+      }
+
+      return true;
+    }catch(err){
+      console.warn("Não foi possível restaurar o estado da tela:", err);
+      return false;
+    }
+  }
+
+  function abrirNovoAtendimento(scroll = true){
+    dashboardPage.style.display = "none";
+    novoAtendimentoPage.style.display = "block";
+    if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+    saveDashboardState();
+    testarConexao().catch(()=>{});
+    carregarAcoes().catch(()=>{});
+  }
+
+  function voltarDashboard(scroll = true){
+    novoAtendimentoPage.style.display = "none";
+    dashboardPage.style.display = "block";
+    if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+    saveDashboardState();
+    if (typeof history !== "undefined" && history.replaceState) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }
 
   function fmtInt(n){ return (n ?? 0).toLocaleString("pt-BR"); }
   function minutesToHours(min){ return Math.max(0, Number(min||0)) / 60.0; }
@@ -1115,18 +1564,12 @@
   function extractHourLabel(raw){
     const s = String(raw || "").trim();
     if (!s) return "—";
-
     const mTimeOnly = s.match(/\b([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?\b/);
     if (mTimeOnly) return `${mTimeOnly[1]}:${mTimeOnly[2]}`;
-
     const d = new Date(s.replace(" ", "T"));
-    if (!Number.isNaN(d.getTime())){
-      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-    }
-
+    if (!Number.isNaN(d.getTime())) return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
     const mAny = s.match(/([01]\d|2[0-3]):([0-5]\d)/);
     if (mAny) return `${mAny[1]}:${mAny[2]}`;
-
     return "—";
   }
 
@@ -1160,13 +1603,17 @@
       const parts = clean.split("\\");
       return parts[parts.length - 1] || "foto";
     }
-
     const parts = clean.split("/");
     return parts[parts.length - 1] || "foto";
   }
 
   function safeItem(x){
-    const horas = Number(x.tempo_gasto_horas ?? 0);
+    const horas = Number(
+      x.tempo_gasto_horas ??
+      x["Tempo (Horas)"] ??
+      0
+    );
+
     const minutos = Number(x.tempo_gasto_min ?? 0);
     const tempoMin = (horas > 0 && minutos === 0) ? Math.round(horas * 60) : minutos;
 
@@ -1176,32 +1623,31 @@
       x.abertura ?? x.criado_em ?? x.created_at ??
       x.hora ?? x.hr ?? "";
 
-    const ano = Number(x.ano ?? x.Ano ?? x.year ?? 0);
-    const mes = Number(x.mes ?? x.Mes ?? x.month ?? 0);
+    const ano = Number(x.ano ?? x.Ano ?? x.year ?? x["Ano"] ?? 0);
+    const mes = Number(x.mes ?? x.Mes ?? x.month ?? x["Mês (1-12)"] ?? 0);
 
     return {
       ano: Number.isFinite(ano) ? ano : 0,
       mes: Number.isFinite(mes) ? mes : 0,
-
-      numero_ticket: String(x.numero_ticket ?? x.ticket ?? ""),
-      id_localidade: String(x.id_localidade ?? x.idLocalidade ?? x.id ?? ""),
-      localidade: String(x.localidade ?? "N/D"),
+      dia: Number(x.dia ?? x.Dia ?? x["Dia"] ?? 0),
+      numero_ticket: String(x.numero_ticket ?? x.ticket ?? x["Nº Ticket"] ?? ""),
+      id_localidade: String(x.id_localidade ?? x.idLocalidade ?? x.id ?? x["Id Localidade"] ?? ""),
+      localidade: String(x.localidade ?? x["Localidade"] ?? "N/D"),
       tempo_gasto_min: Number.isFinite(tempoMin) ? tempoMin : 0,
-      equipamentos_trocados: Number(x.equipamentos_trocados ?? x.qtde_equip_trocados ?? 0),
-      equipamentos_configurados: Number(x.equipamentos_configurados ?? x.qtde_equip_configurados ?? 0),
-      pontos_de_rede: Number(x.pontos_de_rede ?? 0),
-      tickets: Number(x.tickets ?? 0),
-
-      foto_antes_url: safeUrl(x.foto_antes_url),
-      foto_depois_url: safeUrl(x.foto_depois_url),
-
-      descricao_atendimento: String(x.descricao_atendimento ?? x.descricao ?? x.observacao ?? "").trim(),
-
+      tempo_gasto_horas: horas,
+      equipamentos_trocados: Number(x.equipamentos_trocados ?? x.qtde_equip_trocados ?? x["Qtde Equip. Trocados"] ?? 0),
+      equipamentos_configurados: Number(x.equipamentos_configurados ?? x.qtde_equip_configurados ?? x["Qtde Equip. Configurados"] ?? 0),
+      pontos_de_rede: Number(x.pontos_de_rede ?? x["Pontos de Rede"] ?? 0),
+      foto_antes_url: safeUrl(x.foto_antes_url ?? x["Foto Antes (caminho/URL)"]),
+      foto_depois_url: safeUrl(x.foto_depois_url ?? x["Foto Depois (caminho/URL)"]),
+      descricao_atendimento: String(x.descricao_atendimento ?? x.descricao ?? x.observacao ?? x["Descrição Atendimento"] ?? "").trim(),
       _raw_datetime: String(rawDateTime ?? "").trim(),
     };
   }
 
-  function sum(items, key){ return items.reduce((acc, it) => acc + (Number(it[key]) || 0), 0); }
+  function sum(items, key){
+    return items.reduce((acc, it) => acc + (Number(it[key]) || 0), 0);
+  }
 
   function validateData(data){
     if (!data || typeof data !== "object") return "JSON inválido (objeto raiz).";
@@ -1209,10 +1655,24 @@
     return null;
   }
 
+  function fillMonthYearSelectors(items){
+    const years = [...new Set(items.map(i => Number(i.ano)).filter(Boolean))].sort((a,b)=>a-b);
+    els.anoSelect.innerHTML = `<option value="all">Todos</option>` + years.map(y => `<option value="${y}">${y}</option>`).join("");
+
+    const monthsUsed = [...new Set(items.map(i => Number(i.mes)).filter(m => m >=1 && m <=12))].sort((a,b)=>a-b);
+    const monthNames = {
+      1:"Janeiro",2:"Fevereiro",3:"Março",4:"Abril",5:"Maio",6:"Junho",
+      7:"Julho",8:"Agosto",9:"Setembro",10:"Outubro",11:"Novembro",12:"Dezembro"
+    };
+    els.mesSelect.innerHTML = `<option value="all">Todos</option>` + monthsUsed.map(m => `<option value="${String(m).padStart(2,"0")}">${monthNames[m]}</option>`).join("");
+
+    if (!Array.from(els.anoSelect.options).some(o => o.value === "all")) els.anoSelect.value = "all";
+    if (!Array.from(els.mesSelect.options).some(o => o.value === "all")) els.mesSelect.value = "all";
+  }
+
   function applyMonthYearFilter(items){
     const anoVal = String(els.anoSelect.value || "all");
     const mesVal = String(els.mesSelect.value || "all");
-
     let out = items;
 
     if (anoVal !== "all"){
@@ -1264,7 +1724,6 @@
 
   function pickDescricaoItem(filteredItems){
     if (!filteredItems || !filteredItems.length) return null;
-
     if (selectedIdx !== null && filteredItems[selectedIdx]) return filteredItems[selectedIdx];
 
     const qTicket = String(els.ticketSearch.value || "").trim().toLowerCase();
@@ -1337,7 +1796,6 @@
     }
 
     const href = normalizeImgSrc(s);
-
     el.style.display = "inline-block";
     el.textContent = displayNameFromPath(s);
     el.href = href;
@@ -1370,8 +1828,7 @@
       els.beforeImg.onerror = () => {
         els.beforeImg.style.display = "none";
         els.beforeBox.style.display = "flex";
-        els.beforeBox.innerHTML =
-          "Não foi possível carregar a foto <b>ANTES</b> (foto_antes_url).<br/>Verifique o caminho/URL no JSON.";
+        els.beforeBox.innerHTML = "Não foi possível carregar a foto <b>ANTES</b> (foto_antes_url).<br/>Verifique o caminho/URL no JSON.";
       };
 
       els.beforeImg.style.display = "none";
@@ -1393,8 +1850,7 @@
       els.afterImg.onerror = () => {
         els.afterImg.style.display = "none";
         els.afterBox.style.display = "flex";
-        els.afterBox.innerHTML =
-          "Não foi possível carregar a foto <b>DEPOIS</b> (foto_depois_url).<br/>Verifique o caminho/URL no JSON.";
+        els.afterBox.innerHTML = "Não foi possível carregar a foto <b>DEPOIS</b> (foto_depois_url).<br/>Verifique o caminho/URL no JSON.";
       };
 
       els.afterImg.style.display = "none";
@@ -1451,13 +1907,11 @@
     const totalEquipTrocados = sum(filteredItems, "equipamentos_trocados");
     const totalEquipCfg = sum(filteredItems, "equipamentos_configurados");
     const totalPontosRede = sum(filteredItems, "pontos_de_rede");
-
     const tempoMinTotal = sum(filteredItems, "tempo_gasto_min");
     const tempoHoras = minutesToHours(tempoMinTotal);
 
     const mesVal = String(els.mesSelect.value || "all");
     const anoVal = String(els.anoSelect.value || "all");
-
     const qId = String(els.idLocalidadeSearch.value || "").trim();
     const qTicket = String(els.ticketSearch.value || "").trim();
 
@@ -1468,26 +1922,18 @@
     if (qTicket) scopeBits.push(`Ticket contém: ${qTicket}`);
 
     els.subtitle.textContent = `• Última atualização: ${new Date().toLocaleString("pt-BR")}`;
-
     els.kpiTickets.textContent = fmtInt(tickets);
     els.kpiTicketsSub.textContent = `Filtro: ${scopeBits.join(" • ")}`;
-
     els.kpiLocais.textContent = fmtInt(localidades);
-
     els.kpiEquip.textContent = fmtInt(totalEquipTrocados);
     els.kpiEquipSub.textContent = "Total no filtro";
-
     els.kpiEquipCfg.textContent = fmtInt(totalEquipCfg);
     els.kpiEquipCfgSub.textContent = "Total no filtro";
-
     els.kpiTempoHoras.textContent = `${fmtHours(tempoHoras)} h`;
     els.kpiTempoHorasSub.textContent = "Soma de horas no filtro";
-
     els.kpiMediaPontos.textContent = fmtInt(totalPontosRede);
     els.kpiMediaPontosSub.textContent = "Total no filtro";
-
-    els.totalFiltro.textContent =
-      `${fmtInt(filteredItems.length)} registro(s) • ${fmtHours(tempoHoras)} h • ${fmtInt(totalEquipTrocados)} trocados • ${fmtInt(totalEquipCfg)} configurados`;
+    els.totalFiltro.textContent = `${fmtInt(filteredItems.length)} registro(s) • ${fmtHours(tempoHoras)} h • ${fmtInt(totalEquipTrocados)} trocados • ${fmtInt(totalEquipCfg)} configurados`;
   }
 
   function roundRect(ctx, x, y, w, h, r){
@@ -1505,43 +1951,40 @@
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
     const cssW = canvas.clientWidth || 600;
-    const cssH = canvas.clientHeight || 280;
+    const cssH = canvas.clientHeight || 260;
     canvas.width = Math.floor(cssW * dpr);
     canvas.height = Math.floor(cssH * dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
     ctx.clearRect(0,0,cssW,cssH);
 
-    const padL = 10, padR = 10, padT = 10, padB = 30;
+    const padL = 10, padR = 10, padT = 10, padB = 28;
     const w = cssW - padL - padR;
     const h = cssH - padT - padB;
-
     const maxV = Math.max(...values, 1);
     const n = Math.max(labels.length, 1);
     const gap = 8;
     const barW = Math.max(10, Math.floor((w - gap*(n-1)) / n));
 
-    ctx.strokeStyle = "rgba(148,163,184,.18)";
+    ctx.strokeStyle = "rgba(148,163,184,.14)";
     ctx.lineWidth = 1;
     for (let i=1;i<=3;i++){
       const y = padT + h*(i/4);
-      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+w, y); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL+w, y);
+      ctx.stroke();
     }
 
-    const darkText =
-      (opts?.valueColor)
-      || getComputedStyle(document.documentElement).getPropertyValue("--labelDark").trim()
-      || "#0F172A";
-
-    const topStop = (isA) => isA ? "rgba(47,124,255,.88)" : "rgba(34,211,238,.78)";
-    const midStop = (isA) => isA ? "rgba(47,124,255,.62)" : "rgba(34,211,238,.55)";
-    const botStop = (isA) => isA ? "rgba(47,124,255,.18)" : "rgba(34,211,238,.18)";
+    const darkText = (opts?.valueColor) || getComputedStyle(document.documentElement).getPropertyValue("--labelDark").trim() || "rgba(8, 12, 22, .92)";
+    const topStop = (isA) => isA ? "rgba(196,247,44,.95)" : "rgba(91,129,252,.95)";
+    const midStop = (isA) => isA ? "rgba(196,247,44,.70)" : "rgba(91,129,252,.70)";
+    const botStop = (isA) => isA ? "rgba(196,247,44,.28)" : "rgba(91,129,252,.28)";
 
     for (let i=0;i<n;i++){
       const v = values[i] || 0;
       const barH = (v / maxV) * h;
       const x = padL + i*(barW+gap);
       const y = padT + (h - barH);
-
       const isA = (i % 2 === 0);
 
       const g = ctx.createLinearGradient(x, y, x, padT+h);
@@ -1554,7 +1997,7 @@
       ctx.fill();
 
       const vt = (opts?.valueFormatter ? opts.valueFormatter(v) : String(v));
-      const meta  = (opts?.metaLabels  && opts.metaLabels[i])  ? String(opts.metaLabels[i])  : "";
+      const meta = (opts?.metaLabels && opts.metaLabels[i]) ? String(opts.metaLabels[i]) : "";
       const meta2 = (opts?.metaLabels2 && opts.metaLabels2[i]) ? String(opts.metaLabels2[i]) : "";
 
       ctx.fillStyle = darkText;
@@ -1571,7 +2014,7 @@
       if (vt) ctx.fillText(vt, x + 8, line3Y);
 
       const lab = labels[i] || "";
-      ctx.fillStyle = "rgba(100,116,139,.95)";
+      ctx.fillStyle = "rgba(167,176,199,.92)";
       ctx.font = "11px ui-sans-serif, system-ui";
       const short = (lab.length>14) ? (lab.slice(0,14)+"…") : lab;
       ctx.fillText(short, x, padT+h+18);
@@ -1579,17 +2022,13 @@
   }
 
   function renderCharts(filteredItems){
-    const dark = "#0F172A";
+    const dark = getComputedStyle(document.documentElement).getPropertyValue("--labelDark").trim() || "rgba(8, 12, 22, .92)";
 
-    const topTempo = [...filteredItems]
-      .sort((a,b)=> (b.tempo_gasto_min||0) - (a.tempo_gasto_min||0))
-      .slice(0,10);
-
+    const topTempo = [...filteredItems].sort((a,b)=> (b.tempo_gasto_min||0) - (a.tempo_gasto_min||0)).slice(0,10);
     const labelsTempo = topTempo.map(x=>x.localidade);
     const tempoHoras  = topTempo.map(x=>Number(minutesToHours(x.tempo_gasto_min)));
     const ticketsTempoLbl = topTempo.map(it => ticketLabel(it));
-    const hourTempoLbl    = topTempo.map(it => extractHourLabel(it._raw_datetime));
-
+    const hourTempoLbl = topTempo.map(it => extractHourLabel(it._raw_datetime));
     drawBarChart(els.cvTempo, labelsTempo, tempoHoras, {
       valueFormatter: (v)=>`${fmtHours(v)} h`,
       valueColor: dark,
@@ -1603,17 +2042,17 @@
       .slice(0,10);
 
     if (topCfg.length){
-      const labelsCfg = topCfg.map(x=>x.localidade);
-      const valuesCfg = topCfg.map(x=>Number(x.equipamentos_configurados||0));
-      const ticketsCfgLbl = topCfg.map(it => ticketLabel(it));
-      const hourCfgLbl    = topCfg.map(it => extractHourLabel(it._raw_datetime));
-
-      drawBarChart(els.cvTickets, labelsCfg, valuesCfg, {
-        valueFormatter: (v)=>String(v),
-        valueColor: dark,
-        metaLabels: ticketsCfgLbl,
-        metaLabels2: hourCfgLbl
-      });
+      drawBarChart(
+        els.cvTickets,
+        topCfg.map(x=>x.localidade),
+        topCfg.map(x=>Number(x.equipamentos_configurados||0)),
+        {
+          valueFormatter: (v)=>String(v),
+          valueColor: dark,
+          metaLabels: topCfg.map(it => ticketLabel(it)),
+          metaLabels2: topCfg.map(it => extractHourLabel(it._raw_datetime))
+        }
+      );
     } else {
       drawBarChart(els.cvTickets, ["Sem dados"], [0], {
         valueFormatter: ()=>"",
@@ -1629,17 +2068,17 @@
       .slice(0,10);
 
     if (topTroc.length){
-      const labelsTroc = topTroc.map(x=>x.localidade);
-      const valuesTroc = topTroc.map(x=>Number(x.equipamentos_trocados||0));
-      const ticketsTrocLbl = topTroc.map(it => ticketLabel(it));
-      const hourTrocLbl    = topTroc.map(it => extractHourLabel(it._raw_datetime));
-
-      drawBarChart(els.cvEquip, labelsTroc, valuesTroc, {
-        valueFormatter: (v)=>String(v),
-        valueColor: dark,
-        metaLabels: ticketsTrocLbl,
-        metaLabels2: hourTrocLbl
-      });
+      drawBarChart(
+        els.cvEquip,
+        topTroc.map(x=>x.localidade),
+        topTroc.map(x=>Number(x.equipamentos_trocados||0)),
+        {
+          valueFormatter: (v)=>String(v),
+          valueColor: dark,
+          metaLabels: topTroc.map(it => ticketLabel(it)),
+          metaLabels2: topTroc.map(it => extractHourLabel(it._raw_datetime))
+        }
+      );
     } else {
       drawBarChart(els.cvEquip, ["Sem dados"], [0], {
         valueFormatter: ()=>"",
@@ -1652,11 +2091,9 @@
 
   function exportPDF(){
     const prevTitle = document.title;
-
     const anoVal = String(els.anoSelect.value || "all");
     const mesVal = String(els.mesSelect.value || "all");
     const mesRef = `${yearLabel(anoVal)}-${monthLabel(mesVal)}`;
-
     const idPart = String(els.idLocalidadeSearch.value||"").trim() ? `id_${els.idLocalidadeSearch.value}` : "todosIds";
     const tPart = String(els.ticketSearch.value||"").trim() ? `ticket_${els.ticketSearch.value}` : "todosTickets";
     document.title = `KPIs_${mesRef}_${idPart}_${tPart}`.replace(/[\\/:*?"<>|]/g,"_");
@@ -1664,93 +2101,20 @@
     setTimeout(()=>{ document.title = prevTitle; }, 800);
   }
 
-  function hasActiveSearch(){
-    const qId = String(els.idLocalidadeSearch.value || "").trim();
-    const qTicket = String(els.ticketSearch.value || "").trim();
-    return !!(qId || qTicket);
-  }
-
-  function pickGalleryItem(filteredItems){
-    if (!filteredItems || !filteredItems.length) return null;
-    if (selectedIdx !== null && filteredItems[selectedIdx]) return filteredItems[selectedIdx];
-
-    const qTicket = String(els.ticketSearch.value || "").trim().toLowerCase();
-    if (qTicket){
-      const match = filteredItems.find(i => String(i.numero_ticket || "").toLowerCase().includes(qTicket));
-      if (match) return match;
-    }
-    return filteredItems[0];
-  }
-
-  function updateGalleryFromFilters(filteredItems){
-    if (!hasActiveSearch()){
-      resetGallery();
-      return;
-    }
-
-    const it = pickGalleryItem(filteredItems);
-    if (!it){
-      resetGallery();
-      els.galleryHint.textContent = "Nenhum registro encontrado para o filtro informado.";
-      return;
-    }
-
-    showGalleryFor(it);
-  }
-
-  const LOCAL_ACTIONS_KEY = "yssy_acoes_campo_v1";
-
-  function getLocalActions(){
-    try{
-      const raw = localStorage.getItem(LOCAL_ACTIONS_KEY);
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    }catch(_){
-      return [];
-    }
-  }
-
-  function mergeDedupByKey(fileItens, localItens){
-    const out = [];
-    const seen = new Set();
-
-    function keyOf(x){
-      const t = String(x?.numero_ticket || x?.ticket || "").trim().toLowerCase();
-      const id = String(x?.id_localidade || x?.idLocalidade || x?.id || "").trim().toLowerCase();
-      const a = String(x?.ano ?? "").trim();
-      const m = String(x?.mes ?? "").trim();
-      const dt = String(x?.data_hora ?? x?.dataHora ?? x?.datetime ?? x?._raw_datetime ?? "").trim().toLowerCase();
-      const loc = String(x?.localidade ?? "").trim().toLowerCase();
-      return [t,id,a,m,dt,loc].join("|");
-    }
-
-    [...(fileItens||[]), ...(localItens||[])].forEach(it => {
-      const k = keyOf(it);
-      if (seen.has(k)) return;
-      seen.add(k);
-      out.push(it);
-    });
-
-    return out;
-  }
-
   function renderAllFromRaw(){
     if (!rawData) return;
-
-    const localActions = getLocalActions();
-    const mergedRawItens = mergeDedupByKey(rawData.itens || [], localActions);
-
-    const allItems = (mergedRawItens || []).map(safeItem);
-
+    const allItems = (rawData.itens || []).map(safeItem);
     const byYm = applyMonthYearFilter(allItems);
     const filtered = applySearchFilters(byYm, els.idLocalidadeSearch.value, els.ticketSearch.value);
-
     renderKPIsFromItems(filtered);
     renderTable(filtered);
     renderCharts(filtered);
-
-    updateGalleryFromFilters(filtered);
+    if (!els.idLocalidadeSearch.value.trim() && !els.ticketSearch.value.trim()) {
+      resetGallery();
+    } else {
+      const it = filtered[0];
+      if (it) showGalleryFor(it); else resetGallery();
+    }
     renderDescricaoAtendimentoFromItems(filtered);
   }
 
@@ -1768,17 +2132,27 @@
       if (err) throw new Error(err);
 
       rawData = data;
+      fillMonthYearSelectors(rawData.itens.map(safeItem));
 
       const m = String(file.name || "").match(/(\d{4})-(\d{2})/);
       if (m){
-        const year = m[1], month = m[2];
-        if (Array.from(els.anoSelect.options).some(o=>o.value===year)) els.anoSelect.value = year;
-        if (Array.from(els.mesSelect.options).some(o=>o.value===month)) els.mesSelect.value = month;
+        const year = m[1];
+        const month = m[2];
+
+        if (Array.from(els.anoSelect.options).some(o => o.value === year)) {
+          els.anoSelect.value = year;
+        }
+        if (Array.from(els.mesSelect.options).some(o => o.value === month)) {
+          els.mesSelect.value = month;
+        }
+      } else {
+        els.anoSelect.value = "all";
+        els.mesSelect.value = "all";
       }
 
       els.fileName.textContent = file.name;
-
       renderAllFromRaw();
+      saveDashboardState();
       resetGallery();
       els.descAtendimento.textContent = "—";
     }catch(e){
@@ -1796,6 +2170,7 @@
     _tDeb = setTimeout(() => {
       selectedIdx = null;
       renderAllFromRaw();
+      saveDashboardState();
     }, 140);
   }
 
@@ -1807,6 +2182,7 @@
     renderAllFromRaw();
     resetGallery();
     els.descAtendimento.textContent = "—";
+    saveDashboardState();
   });
 
   els.anoSelect.addEventListener("change", () => {
@@ -1814,6 +2190,7 @@
     renderAllFromRaw();
     resetGallery();
     els.descAtendimento.textContent = "—";
+    saveDashboardState();
   });
 
   els.btnClearSearch.addEventListener("click", () => {
@@ -1825,6 +2202,7 @@
     renderAllFromRaw();
     resetGallery();
     els.descAtendimento.textContent = "—";
+    saveDashboardState();
     els.ticketSearch.focus();
   });
 
@@ -1837,15 +2215,15 @@
   window.addEventListener("keydown", (e) => {
     const isRefresh = (e.key === "F5") || (e.ctrlKey && (e.key.toLowerCase() === "r"));
     if (!isRefresh) return;
-    e.preventDefault();
-    window.location.reload();
+    saveDashboardState();
+  });
+
+  window.addEventListener("beforeunload", () => {
+    saveDashboardState();
   });
 
   els.btnExportPDF.addEventListener("click", exportPDF);
-
-  els.btnAcoes.addEventListener("click", () => {
-    window.open("./cadastrar_acoes.html", "_blank");
-  });
+  els.btnAcoes.addEventListener("click", abrirNovoAtendimento);
 
   function sanitizeFilename(name){
     return String(name || "KPIs")
@@ -1861,13 +2239,10 @@
   function loadImageAsBase64_FileSafe(srcPath){
     const src = String(srcPath || "").trim();
     if (!src) return Promise.resolve(null);
-
     const resolved = normalizeImgSrc(src);
-
     return new Promise((resolve) => {
       const img = new Image();
       if (/^https?:/i.test(resolved)) img.crossOrigin = "anonymous";
-
       img.onload = () => {
         try{
           const c = document.createElement("canvas");
@@ -1881,7 +2256,6 @@
         }
       };
       img.onerror = () => resolve(null);
-
       img.src = resolved;
     });
   }
@@ -1898,18 +2272,15 @@
 
     const pptx = new window.PptxGenJS();
     pptx.layout = "LAYOUT_WIDE";
-
     pptx.author = "YSSY";
     pptx.company = "YSSY";
     pptx.subject = "KPIs de Atendimentos";
-    pptx.title = "Dashboard com Indicadores de Atendimento";
+    pptx.title = "Dashboard de Indicadores de Atendimento";
 
     const anoVal = String(els.anoSelect.value || "all");
     const mesVal = String(els.mesSelect.value || "all");
     const mesRef = `${yearLabel(anoVal)}-${monthLabel(mesVal)}`;
-
     const now = new Date().toLocaleString("pt-BR");
-
     const qId = String(els.idLocalidadeSearch.value||"").trim();
     const qTicket = String(els.ticketSearch.value||"").trim();
     const scopeBits = [];
@@ -1919,63 +2290,44 @@
     if (qTicket) scopeBits.push(`Ticket contém: ${qTicket}`);
     const scopeTxt = `Filtro: ${scopeBits.join(" • ")}`;
 
-    const NAVY   = "001B60";
-    const BLUE   = "5B81FC";
-    const CYAN   = "22D3EE";
-    const GRAY   = "6B7280";
-    const GRAY2  = "9CA3AF";
-    const LINE   = "E5E7EB";
-    const WHITE  = "FFFFFF";
+    const NAVY = "001B60";
+    const BLUE = "5B81FC";
+    const LIME = "C4F72C";
+    const GRAY = "6B7280";
+    const GRAY2 = "9CA3AF";
+    const LINE = "E5E7EB";
+    const WHITE = "FFFFFF";
 
     const logoBase64 = await loadImageAsBase64_FileSafe("./yssy_logo.png");
 
     const s = pptx.addSlide();
     s.background = { color: WHITE };
-
     s.addShape(pptx.ShapeType.rect, { x:0, y:0, w:13.333, h:0.78, fill:{ color:NAVY }, line:{ color:NAVY } });
-
-    s.addText("Dashboard com Indicadores de Atendimento", {
-      x:0.7, y:0.17, w:9.2, h:0.45,
-      fontFace:"Calibri", fontSize:22, bold:true, color:WHITE
+    s.addText("Dashboard de Indicadores de Atendimento", {
+      x:0.7, y:0.17, w:9.5, h:0.45, fontFace:"Calibri", fontSize:24, bold:true, color:WHITE
     });
 
     if (logoBase64) {
-      s.addImage({
-        data: logoBase64,
-        x: 11.1,
-        y: 0.16,
-        w: 1.55,
-        h: 0.46
-      });
+      s.addImage({ data: logoBase64, x: 11.033, y: 0.16, w: 1.6, h: 0.46 });
+    } else {
+      s.addText("YSSY", { x:11.9, y:0.2, w:1.4, h:0.35, fontFace:"Calibri", fontSize:16, bold:true, color:WHITE, align:"right" });
     }
 
-    s.addText(`Ref: ${mesRef}`, {
-      x:10.6, y:0.18, w:1.3, h:0.22,
-      fontFace:"Calibri", fontSize:11, color:WHITE, bold:true, align:"right"
-    });
-
-    s.addText(`${now}`, {
-      x:10.0, y:0.42, w:1.9, h:0.22,
-      fontFace:"Calibri", fontSize:10, color:"D1D5DB", align:"right"
-    });
-
+    s.addText(`Ref: ${mesRef}`, { x:10.9, y:0.18, w:1.9, h:0.22, fontFace:"Calibri", fontSize:11, color:WHITE, bold:true, align:"right" });
+    s.addText(`${now}`, { x:10.5, y:0.42, w:2.3, h:0.22, fontFace:"Calibri", fontSize:10, color:"D1D5DB", align:"right" });
     s.addText(scopeTxt, { x:0.7, y:0.95, w:12.0, h:0.3, fontFace:"Calibri", fontSize:12, color:GRAY });
     s.addShape(pptx.ShapeType.rect, { x:0.7, y:1.28, w:12.0, h:0.02, fill:{color:LINE}, line:{color:LINE} });
 
     const kpis = [
-      {label:"Total de Tickets/Mês", value:kpiTextValue(els.kpiTickets), accent:BLUE},
-      {label:"Localidades Atendidas/Mês", value:kpiTextValue(els.kpiLocais), accent:CYAN},
-      {label:"Equipamentos Trocados/Mês", value:kpiTextValue(els.kpiEquip), accent:BLUE},
-      {label:"Equipamentos Configurados/Mês", value:kpiTextValue(els.kpiEquipCfg), accent:CYAN},
-      {label:"Tempo Gasto (Atividades)", value:kpiTextValue(els.kpiTempoHoras), accent:BLUE},
-      {label:"Total de Pontos de Rede/Mês", value:kpiTextValue(els.kpiMediaPontos), accent:CYAN},
+      {label:"Total de Tickets/Mês", value:kpiTextValue(els.kpiTickets), accent:LIME},
+      {label:"Localidades Atendidas/Mês", value:kpiTextValue(els.kpiLocais), accent:BLUE},
+      {label:"Equipamentos Trocados/Mês", value:kpiTextValue(els.kpiEquip), accent:LIME},
+      {label:"Equipamentos Configurados/Mês", value:kpiTextValue(els.kpiEquipCfg), accent:BLUE},
+      {label:"Tempo Gasto (Atividades)", value:kpiTextValue(els.kpiTempoHoras), accent:LIME},
+      {label:"Total de Pontos de Rede/Mês", value:kpiTextValue(els.kpiMediaPontos), accent:BLUE},
     ];
 
-    const startX = 0.7;
-    const startY = 1.55;
-    const gapX = 0.35;
-    const gapY = 0.35;
-
+    const startX = 0.7, startY = 1.55, gapX = 0.35, gapY = 0.35;
     const cardW = (12.0 - (2 * gapX)) / 3;
     const cardH = 2.25;
 
@@ -2005,15 +2357,18 @@
       });
 
       s.addText((k.value || "—"), {
-        x:x+0.28, y:y+0.82, w:cardW-0.56, h:0.85,
-        fontFace:"Calibri", fontSize:34, color:NAVY, bold:true
+        x:x+0.28, y:y+0.78, w:cardW-0.56, h:0.85,
+        fontFace:"Calibri", fontSize:36, color:NAVY, bold:true
       });
 
       s.addText("Indicador do filtro selecionado", {
-        x:x+0.28, y:y+1.72, w:cardW-0.56, h:0.25,
+        x:x+0.28, y:y+1.70, w:cardW-0.56, h:0.25,
         fontFace:"Calibri", fontSize:11, color:GRAY2
       });
     });
+
+    s.addShape(pptx.ShapeType.rect, { x:0, y:7.25, w:13.333, h:0.25, fill:{color:"F9FAFB"}, line:{color:"F9FAFB"} });
+    s.addText("YSSY • KPIs de Atendimentos", { x:0.7, y:7.28, w:12.0, h:0.2, fontFace:"Calibri", fontSize:10, color:GRAY2 });
 
     const outName = sanitizeFilename(filename) + ".pptx";
     await pptx.writeFile({ fileName: outName });
@@ -2021,21 +2376,14 @@
 
   els.btnExportPPTX.addEventListener("click", async () => {
     if (!rawData) return;
-
-    const localActions = getLocalActions();
-    const mergedRawItens = mergeDedupByKey(rawData.itens || [], localActions);
-
-    const allItems = (mergedRawItens || []).map(safeItem);
+    const allItems = (rawData.itens || []).map(safeItem);
     const byYm = applyMonthYearFilter(allItems);
     const filtered = applySearchFilters(byYm, els.idLocalidadeSearch.value, els.ticketSearch.value);
-
     const anoVal = String(els.anoSelect.value || "all");
     const mesVal = String(els.mesSelect.value || "all");
     const mesRef = `${yearLabel(anoVal)}-${monthLabel(mesVal)}`;
-
     const idPart = String(els.idLocalidadeSearch.value||"").trim() ? `id_${els.idLocalidadeSearch.value}` : "todosIds";
     const tPart = String(els.ticketSearch.value||"").trim() ? `ticket_${els.ticketSearch.value}` : "todosTickets";
-
     const name = `KPIs_${mesRef}_${idPart}_${tPart}`.replace(/[\\/:*?"<>|]/g,"_");
     try{
       els.errorBox.textContent = "";
@@ -2045,26 +2393,329 @@
     }
   });
 
-  (function init(){
-    const months = [
-      {label:"Todos", value:"all"},
-      {label:"Janeiro", value:"01"},{label:"Fevereiro", value:"02"},{label:"Março", value:"03"},
-      {label:"Abril", value:"04"},{label:"Maio", value:"05"},{label:"Junho", value:"06"},
-      {label:"Julho", value:"07"},{label:"Agosto", value:"08"},{label:"Setembro", value:"09"},
-      {label:"Outubro", value:"10"},{label:"Novembro", value:"11"},{label:"Dezembro", value:"12"},
-    ];
-    els.mesSelect.innerHTML = months.map(m => `<option value="${m.value}">${m.label}</option>`).join("");
+  function initDashboardSelectors(){
+    els.mesSelect.innerHTML = `
+      <option value="all">Todos</option>
+      <option value="01">Janeiro</option>
+      <option value="02">Fevereiro</option>
+      <option value="03">Março</option>
+      <option value="04">Abril</option>
+      <option value="05">Maio</option>
+      <option value="06">Junho</option>
+      <option value="07">Julho</option>
+      <option value="08">Agosto</option>
+      <option value="09">Setembro</option>
+      <option value="10">Outubro</option>
+      <option value="11">Novembro</option>
+      <option value="12">Dezembro</option>
+    `;
 
-    const years = [{label:"Todos", value:"all"}];
-    for (let y=2025; y<=2040; y++) years.push({label:String(y), value:String(y)});
-    els.anoSelect.innerHTML = years.map(y => `<option value="${y.value}">${y.label}</option>`).join("");
+    els.anoSelect.innerHTML = `
+      <option value="all">Todos</option>
+      <option value="2025">2025</option>
+      <option value="2026">2026</option>
+      <option value="2027">2027</option>
+      <option value="2028">2028</option>
+      <option value="2029">2029</option>
+      <option value="2030">2030</option>
+      <option value="2031">2031</option>
+      <option value="2032">2032</option>
+      <option value="2033">2033</option>
+      <option value="2034">2034</option>
+      <option value="2035">2035</option>
+      <option value="2036">2036</option>
+      <option value="2037">2037</option>
+      <option value="2038">2038</option>
+      <option value="2039">2039</option>
+      <option value="2040">2040</option>
+    `;
 
     els.anoSelect.value = "all";
     els.mesSelect.value = "all";
-
     resetGallery();
     els.descAtendimento.textContent = "—";
-  })();
+  }
+
+  function getApiBase() {
+    return document.getElementById("api_base").value.trim().replace(/\/+$/, "");
+  }
+
+  function mostrarStatus(elementId, mensagem, tipo = "info") {
+    const el = document.getElementById(elementId);
+    el.className = `status show ${tipo}`;
+    el.textContent = mensagem;
+  }
+
+  function esconderStatus(elementId) {
+    const el = document.getElementById(elementId);
+    el.className = "status";
+    el.textContent = "";
+  }
+
+  async function testarConexao() {
+    esconderStatus("statusApi");
+    const API_BASE = getApiBase();
+
+    if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP") {
+      mostrarStatus("statusApi", "Informe a URL do Web App do Google Sheets.", "error");
+      return;
+    }
+
+    try {
+      const resp = await fetch(API_BASE, { method: "GET" });
+
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      console.log("Conexão:", data);
+
+      if (Array.isArray(data) || data.ok === true) {
+        mostrarStatus("statusApi", "Conexão com Google Sheets realizada com sucesso.", "ok");
+      } else {
+        mostrarStatus("statusApi", "Web App respondeu, mas retornou erro.", "error");
+      }
+    } catch (error) {
+      console.error("Erro ao testar conexão:", error);
+      mostrarStatus(
+        "statusApi",
+        "Não foi possível conectar ao Google Sheets. Verifique a URL do Web App e a implantação.",
+        "error"
+      );
+    }
+  }
+
+  function obterPayloadFormulario() {
+    return {
+      ano: Number(document.getElementById("ano").value || 0),
+      mes: Number(document.getElementById("mes").value || 0),
+      dia: Number(document.getElementById("dia").value || 0),
+      numero_ticket: document.getElementById("numero_ticket").value.trim(),
+      id_localidade: document.getElementById("id_localidade").value.trim(),
+      localidade: document.getElementById("localidade").value.trim(),
+      tempo_gasto_horas: Number(document.getElementById("tempo_gasto_horas").value || 0),
+      equipamentos_trocados: Number(document.getElementById("equipamentos_trocados").value || 0),
+      equipamentos_configurados: Number(document.getElementById("equipamentos_configurados").value || 0),
+      pontos_de_rede: Number(document.getElementById("pontos_de_rede").value || 0),
+      foto_antes_url: document.getElementById("foto_antes_url").value.trim(),
+      foto_depois_url: document.getElementById("foto_depois_url").value.trim(),
+      descricao_atendimento: document.getElementById("descricao_atendimento").value.trim()
+    };
+  }
+
+  function validarPayload(payload) {
+    if (!payload.ano || payload.ano < 2020) return "Informe um ano válido.";
+    if (!payload.mes || payload.mes < 1 || payload.mes > 12) return "Informe um mês válido.";
+    if (!payload.dia || payload.dia < 1 || payload.dia > 31) return "Informe um dia válido.";
+    if (!payload.numero_ticket && !payload.localidade && !payload.descricao_atendimento) {
+      return "Preencha ao menos Nº Ticket, Localidade ou Descrição.";
+    }
+    return null;
+  }
+
+  async function salvarAcao(event) {
+    if (event) event.preventDefault();
+    esconderStatus("statusForm");
+
+    const API_BASE = getApiBase();
+    const payload = obterPayloadFormulario();
+    const erroValidacao = validarPayload(payload);
+
+    if (erroValidacao) {
+      mostrarStatus("statusForm", erroValidacao, "error");
+      return;
+    }
+
+    if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP") {
+      mostrarStatus("statusForm", "Informe a URL do Web App do Google Sheets.", "error");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_BASE, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const texto = await response.text();
+        throw new Error(texto || `Erro HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        throw new Error(data.error || "Falha ao salvar no Google Sheets.");
+      }
+
+      mostrarStatus("statusForm", "Atendimento cadastrado com sucesso no Google Sheets.", "ok");
+      limparFormulario(false);
+      await carregarAcoes();
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+      mostrarStatus(
+        "statusForm",
+        "Erro ao salvar no Google Sheets. Verifique a URL do Web App, a implantação e as permissões.",
+        "error"
+      );
+    }
+  }
+
+  function limparFormulario(limparStatus = true) {
+    document.getElementById("formAcao").reset();
+    document.getElementById("ano").value = "2026";
+    document.getElementById("dia").value = "1";
+    if (limparStatus) esconderStatus("statusForm");
+  }
+
+  async function carregarAcoes() {
+    esconderStatus("statusTabela");
+    const API_BASE = getApiBase();
+    const tbody = document.getElementById("tbody_acoes");
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="13" class="text-center muted">Carregando registros...</td>
+      </tr>
+    `;
+
+    if (!API_BASE || API_BASE === "COLE_AQUI_A_URL_DO_SEU_WEBAPP") {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="13" class="text-center muted">Informe a URL do Web App para carregar os registros.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    try {
+      const response = await fetch(API_BASE, { method: "GET" });
+
+      if (!response.ok) {
+        const texto = await response.text();
+        throw new Error(texto || `HTTP ${response.status}`);
+      }
+
+      const lista = await response.json();
+
+      if (!Array.isArray(lista)) {
+        throw new Error("Resposta inválida ao carregar registros.");
+      }
+
+      acoesCache = lista;
+      renderizarTabela(acoesCache);
+      mostrarStatus("statusTabela", `${acoesCache.length} registro(s) carregado(s).`, "info");
+    } catch (error) {
+      console.error("Erro ao carregar ações:", error);
+      acoesCache = [];
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="13" class="text-center muted">Erro ao carregar registros.</td>
+        </tr>
+      `;
+      mostrarStatus("statusTabela", "Erro ao carregar registros do Google Sheets.", "error");
+    }
+  }
+
+  function renderizarTabela(lista) {
+    const tbody = document.getElementById("tbody_acoes");
+
+    if (!lista.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="13" class="text-center muted">Nenhum registro encontrado.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = lista.map(item => {
+      const fotoAntesValor = String(item["Foto Antes (caminho/URL)"] || "").trim();
+      const fotoDepoisValor = String(item["Foto Depois (caminho/URL)"] || "").trim();
+
+      const fotoAntes = fotoAntesValor
+        ? `<a href="${escapeHtml(fotoAntesValor)}" target="_blank" rel="noopener noreferrer">Abrir</a>`
+        : `<span class="muted">-</span>`;
+
+      const fotoDepois = fotoDepoisValor
+        ? `<a href="${escapeHtml(fotoDepoisValor)}" target="_blank" rel="noopener noreferrer">Abrir</a>`
+        : `<span class="muted">-</span>`;
+
+      return `
+        <tr>
+          <td>${escapeHtml(item["Ano"] ?? "")}</td>
+          <td>${escapeHtml(item["Mês (1-12)"] ?? "")}</td>
+          <td>${escapeHtml(item["Dia"] ?? "")}</td>
+          <td>${escapeHtml(item["Nº Ticket"] ?? "")}</td>
+          <td>${escapeHtml(item["Id Localidade"] ?? "")}</td>
+          <td>${escapeHtml(item["Localidade"] ?? "")}</td>
+          <td>${escapeHtml(item["Tempo (Horas)"] ?? "")}</td>
+          <td>${escapeHtml(item["Qtde Equip. Trocados"] ?? "")}</td>
+          <td>${escapeHtml(item["Qtde Equip. Configurados"] ?? "")}</td>
+          <td>${escapeHtml(item["Pontos de Rede"] ?? "")}</td>
+          <td>${fotoAntes}</td>
+          <td>${fotoDepois}</td>
+          <td>${escapeHtml(item["Descrição Atendimento"] ?? "")}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function aplicarFiltroTabela() {
+    const busca = document.getElementById("filtroBusca").value.trim().toLowerCase();
+    const ano = document.getElementById("filtroAno").value.trim();
+    const mes = document.getElementById("filtroMes").value.trim();
+
+    const filtrada = acoesCache.filter(item => {
+      const texto = [
+        item["Nº Ticket"],
+        item["Id Localidade"],
+        item["Localidade"],
+        item["Descrição Atendimento"]
+      ].join(" ").toLowerCase();
+
+      const okBusca = !busca || texto.includes(busca);
+      const okAno = !ano || String(item["Ano"]) === String(ano);
+      const okMes = !mes || String(item["Mês (1-12)"]) === String(mes);
+
+      return okBusca && okAno && okMes;
+    });
+
+    renderizarTabela(filtrada);
+    mostrarStatus("statusTabela", `${filtrada.length} registro(s) exibido(s) após filtro.`, "info");
+  }
+
+  function limparFiltros() {
+    document.getElementById("filtroBusca").value = "";
+    document.getElementById("filtroAno").value = "";
+    document.getElementById("filtroMes").value = "";
+    renderizarTabela(acoesCache);
+    mostrarStatus("statusTabela", `${acoesCache.length} registro(s) exibido(s).`, "info");
+  }
+
+  document.getElementById("formAcao").addEventListener("submit", salvarAcao);
+
+  window.voltarDashboard = voltarDashboard;
+  window.carregarAcoes = carregarAcoes;
+  window.testarConexao = testarConexao;
+  window.limparFormulario = limparFormulario;
+  window.aplicarFiltroTabela = aplicarFiltroTabela;
+  window.limparFiltros = limparFiltros;
+
+  initDashboardSelectors();
+
+  const restored = restoreDashboardState();
+  if (!restored && !rawData) {
+    voltarDashboard(false);
+  }
+
+  resetGallery();
+  els.descAtendimento.textContent = "—";
+})();
 </script>
 </body>
 </html>
