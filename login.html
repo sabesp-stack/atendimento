@@ -210,7 +210,7 @@
   </div>
 
   <script>
-    const API_URL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT_EXEC';
+    const API_URL = 'SUA_URL_REAL_DO_APPS_SCRIPT_EXEC';
     const STORAGE_KEY = 'dashboard_auth_session';
 
     const form = document.getElementById('loginForm');
@@ -252,16 +252,10 @@
     }
 
     async function fazerLogin(usuario, senha) {
-      const resp = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify({
-          action: 'login',
-          usuario,
-          senha
-        })
+      const url = `${API_URL}?action=login&usuario=${encodeURIComponent(usuario)}&senha=${encodeURIComponent(senha)}`;
+
+      const resp = await fetch(url, {
+        method: 'GET'
       });
 
       const data = await resp.json();
