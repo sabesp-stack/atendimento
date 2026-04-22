@@ -205,9 +205,32 @@ body{
 .actions{
   display:flex;
   gap:8px;
-  align-items:center;
+  align-items:flex-start;
   justify-content:flex-end;
   flex-wrap:wrap;
+}
+
+.uploadLogoutGroup{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:stretch;
+}
+
+.uploadLogoutGroup .fileBtn,
+.uploadLogoutGroup #btnLogout{
+  min-width:220px;
+  width:220px;
+  text-align:center;
+  justify-content:center;
+}
+
+.uploadLogoutGroup .fileBtn{
+  min-height:38px;
+}
+
+.uploadLogoutGroup #btnLogout{
+  min-height:38px;
 }
 
 /* ===== Campos e botões ===== */
@@ -853,6 +876,11 @@ label{
   .title h1{font-size:18px}
   .title p{font-size:11px}
   .controls{grid-template-columns: repeat(2, minmax(140px, 1fr))}
+  .uploadLogoutGroup .fileBtn,
+  .uploadLogoutGroup #btnLogout{
+    width:100%;
+    min-width:unset;
+  }
 }
 
 @media (max-width:680px){

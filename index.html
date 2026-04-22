@@ -13,7 +13,6 @@
         <div class="leftHead">
           <div class="titleWrap">
             <div class="title">
-              <span class="eyebrow">Painel Operacional</span>
               <h1>Dashboard Sabesp</h1>
               <p id="subtitle">Selecione um arquivo JSON no padrão Kpis_YYYY-MM para visualizar os indicadores.</p>
             </div>
@@ -47,18 +46,6 @@
         </div>
 
         <div class="rightHead">
-          <div class="authUserBar" style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px; background:rgba(15,23,42,.7); border:1px solid rgba(148,163,184,.18); color:#EAF0FF; font-size:14px;">
-              <span>Usuário:</span>
-              <strong data-auth="nome">-</strong>
-              <span style="opacity:.65;">|</span>
-              <span>Perfil:</span>
-              <strong data-auth="perfil">-</strong>
-            </div>
-
-            <button id="btnLogout" class="btn-secondary" type="button" title="Encerrar sessão">Sair</button>
-          </div>
-
           <div class="logo" title="Logo Yssy">
             <img id="yssyLogo" src="./yssy_logo.png" alt="Yssy">
             <div id="yssyFallback" class="fallback" style="display:none;">YSSY</div>
@@ -69,11 +56,15 @@
             <button id="btnExportPDF" class="btn-secondary" title="Exportar para PDF (impressão)">Exportar PDF</button>
             <button id="btnAcoes" class="btn-secondary" title="Abrir formulário de novo atendimento">Novo Atendimento</button>
 
-            <label class="fileBtn" for="jsonFile" title="Selecionar arquivo JSON">
-              Carregar KPIs
-              <span class="small fileNote" id="fileName">Arquivo</span>
-            </label>
-            <input id="jsonFile" type="file" accept=".json,application/json" />
+            <div class="uploadLogoutGroup">
+              <label class="fileBtn" for="jsonFile" title="Selecionar arquivo JSON">
+                Carregar KPIs
+                <span class="small fileNote" id="fileName">Arquivo</span>
+              </label>
+              <input id="jsonFile" type="file" accept=".json,application/json" />
+
+              <button id="btnLogout" class="btn-secondary" type="button" title="Encerrar sessão">Sair</button>
+            </div>
           </div>
         </div>
       </header>
