@@ -66,13 +66,17 @@ function safeText(v, fallback = "") {
 }
 
 function safeNumber(v, fallback = 0) {
+  if (typeof v === "string") {
+    const normalized = v.replace(",", ".");
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : fallback;
+  }
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
 }
 
 function safeUrl(v) {
-  const s = safeText(v, "");
-  return s;
+  return safeText(v, "");
 }
 
 function fmtInt(n) {
@@ -115,9 +119,14 @@ function setEmptyState() {
   els.kpiMediaPontosSub.textContent = "—";
   els.totalFiltro.textContent = "—";
 
-  els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>`;
+  if (els.tbody) {
+    els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>`;
+  }
 
-  els.descAtendimento.textContent = "—";
+  if (els.descAtendimento) {
+    els.descAtendimento.textContent = "—";
+  }
+
   clearGallery();
   clearCanvas(els.cvTempo);
   clearCanvas(els.cvTickets);
@@ -131,21 +140,27 @@ function validateData(data) {
 }
 
 function normalizeItem(x, fallbackAno = 0, fallbackMes = 0) {
-  const ano = safeNumber(x.ano ?? x.Ano ?? x.year ?? x.ano_referencia, fallbackAno);
-  const mes = safeNumber(x.mes ?? x.Mes ?? x.month ?? x.mes_referencia, fallbackMes);
+  const ano = safeNumber(
+    x.ano ?? x.Ano ?? x.year ?? x.ano_referencia,
+    fallbackAno
+  );
 
-  const tempoHoras =
-    safeNumber(
-      x.tempo_gasto_horas ??
-      x["tempo_gasto_horas"] ??
-      x["Tempo (Horas)"] ??
-      x.tempo_horas ??
-      x.horas ??
-      x.tempo ??
-      x["Tempo"] ??
-      0,
-      0
-    );
+  const mes = safeNumber(
+    x.mes ?? x.Mes ?? x.month ?? x.mes_referencia,
+    fallbackMes
+  );
+
+  const tempoHoras = safeNumber(
+    x.tempo_gasto_horas ??
+    x["tempo_gasto_horas"] ??
+    x["Tempo (Horas)"] ??
+    x.tempo_horas ??
+    x.horas ??
+    x.tempo ??
+    x["Tempo"] ??
+    0,
+    0
+  );
 
   return {
     ano,
@@ -175,64 +190,63 @@ function normalizeItem(x, fallbackAno = 0, fallbackMes = 0) {
   };
 }
 
+function initSelectPlaceholders() {
+  if (els.mesSelect) {
+    els.mesSelect.innerHTML = `
+      <option value="all" selected>Todos</option>
+      <option value="1">01 - Janeiro</option>
+      <option value="2">02 - Fevereiro</option>
+      <option value="3">03 - Março</option>
+      <option value="4">04 - Abril</option>
+      <option value="5">05 - Maio</option>
+      <option value="6">06 - Junho</option>
+      <option value="7">07 - Julho</option>
+      <option value="8">08 - Agosto</option>
+      <option value="9">09 - Setembro</option>
+      <option value="10">10 - Outubro</option>
+      <option value="11">11 - Novembro</option>
+      <option value="12">12 - Dezembro</option>
+    `;
+  }
+
+  if (els.anoSelect) {
+    els.anoSelect.innerHTML = `<option value="all" selected>Todos</option>`;
+    for (let ano = 2025; ano <= 2035; ano++) {
+      const op = document.createElement("option");
+      op.value = String(ano);
+      op.textContent = String(ano);
+      els.anoSelect.appendChild(op);
+    }
+  }
+}
+
 function buildFilterOptions(items, fileName = "") {
   const fallback = parseMonthFromFilename(fileName);
 
-  const anosSet = new Set();
-  const mesesSet = new Set();
+  if (els.anoSelect) {
+    if (fallback.ano >= 2025 && fallback.ano <= 2035) {
+      els.anoSelect.value = String(fallback.ano);
+    } else {
+      els.anoSelect.value = "all";
+    }
+  }
 
-  items.forEach((it) => {
-    if (safeNumber(it.ano, 0) > 0) anosSet.add(Number(it.ano));
-    if (safeNumber(it.mes, 0) > 0) mesesSet.add(Number(it.mes));
-  });
-
-  if (anosSet.size === 0 && fallback.ano) anosSet.add(fallback.ano);
-  if (mesesSet.size === 0 && fallback.mes) mesesSet.add(fallback.mes);
-
-  const anos = Array.from(anosSet).sort((a, b) => b - a);
-  const meses = Array.from(mesesSet).sort((a, b) => a - b);
-
-  els.anoSelect.innerHTML = "";
-  els.mesSelect.innerHTML = "";
-
-  const anoAll = document.createElement("option");
-  anoAll.value = "all";
-  anoAll.textContent = anos.length ? "Todos" : "Ano";
-  els.anoSelect.appendChild(anoAll);
-
-  const mesAll = document.createElement("option");
-  mesAll.value = "all";
-  mesAll.textContent = meses.length ? "Todos" : "Mês";
-  els.mesSelect.appendChild(mesAll);
-
-  anos.forEach((ano) => {
-    const op = document.createElement("option");
-    op.value = String(ano);
-    op.textContent = String(ano);
-    els.anoSelect.appendChild(op);
-  });
-
-  meses.forEach((mes) => {
-    const op = document.createElement("option");
-    op.value = String(mes);
-    op.textContent = `${String(mes).padStart(2, "0")} - ${monthName(mes)}`;
-    els.mesSelect.appendChild(op);
-  });
-
-  if (anos.length === 1) els.anoSelect.value = String(anos[0]);
-  else els.anoSelect.value = "all";
-
-  if (meses.length === 1) els.mesSelect.value = String(meses[0]);
-  else els.mesSelect.value = "all";
+  if (els.mesSelect) {
+    if (fallback.mes >= 1 && fallback.mes <= 12) {
+      els.mesSelect.value = String(fallback.mes);
+    } else {
+      els.mesSelect.value = "all";
+    }
+  }
 }
 
 function applyFilters(items) {
   let out = [...items];
 
-  const anoVal = String(els.anoSelect.value || "all");
-  const mesVal = String(els.mesSelect.value || "all");
-  const idQuery = safeText(els.idLocalidadeSearch.value).toLowerCase();
-  const ticketQuery = safeText(els.ticketSearch.value).toLowerCase();
+  const anoVal = String(els.anoSelect?.value || "all");
+  const mesVal = String(els.mesSelect?.value || "all");
+  const idQuery = safeText(els.idLocalidadeSearch?.value).toLowerCase();
+  const ticketQuery = safeText(els.ticketSearch?.value).toLowerCase();
 
   if (anoVal !== "all") {
     out = out.filter((i) => Number(i.ano) === Number(anoVal));
@@ -280,11 +294,21 @@ function renderKPIs(items) {
   els.kpiTempoHorasSub.textContent = totalHoras ? "Horas acumuladas no filtro" : "Sem horas no filtro";
   els.kpiMediaPontos.textContent = fmtInt(totalPontos);
   els.kpiMediaPontosSub.textContent = totalPontos ? "Total de pontos de rede no filtro" : "Sem pontos no filtro";
-
   els.totalFiltro.textContent = fmtInt(totalTickets);
 }
 
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function renderTable(items) {
+  if (!els.tbody) return;
+
   if (!items.length) {
     els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Nenhum registro encontrado para o filtro atual.</td></tr>`;
     return;
@@ -310,59 +334,71 @@ function renderTable(items) {
   });
 }
 
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 function selectItem(idx) {
   selectedIdx = idx;
-  [...els.tbody.querySelectorAll("tr[data-idx]")].forEach((tr) => {
-    tr.classList.toggle("active", Number(tr.dataset.idx) === idx);
-  });
+
+  if (els.tbody) {
+    [...els.tbody.querySelectorAll("tr[data-idx]")].forEach((tr) => {
+      tr.classList.toggle("active", Number(tr.dataset.idx) === idx);
+    });
+  }
 
   const item = filteredItems[idx];
   if (!item) {
-    els.descAtendimento.textContent = "—";
+    if (els.descAtendimento) els.descAtendimento.textContent = "—";
     clearGallery();
     return;
   }
 
-  els.descAtendimento.textContent = item.descricao_atendimento || "—";
+  if (els.descAtendimento) {
+    els.descAtendimento.textContent = item.descricao_atendimento || "—";
+  }
+
   renderGallery(item);
 }
 
 function clearGallery() {
-  els.selectedInfo.textContent = "—";
-  els.beforeMeta.textContent = "—";
-  els.afterMeta.textContent = "—";
+  if (els.selectedInfo) els.selectedInfo.textContent = "—";
+  if (els.beforeMeta) els.beforeMeta.textContent = "—";
+  if (els.afterMeta) els.afterMeta.textContent = "—";
 
-  els.beforeImg.style.display = "none";
-  els.afterImg.style.display = "none";
-  els.beforeImg.removeAttribute("src");
-  els.afterImg.removeAttribute("src");
+  if (els.beforeImg) {
+    els.beforeImg.style.display = "none";
+    els.beforeImg.removeAttribute("src");
+  }
 
-  els.beforeBox.style.display = "flex";
-  els.afterBox.style.display = "flex";
+  if (els.afterImg) {
+    els.afterImg.style.display = "none";
+    els.afterImg.removeAttribute("src");
+  }
 
-  els.beforeLink.style.display = "none";
-  els.afterLink.style.display = "none";
-  els.beforeLink.removeAttribute("href");
-  els.afterLink.removeAttribute("href");
-  els.beforeLink.textContent = "—";
-  els.afterLink.textContent = "—";
+  if (els.beforeBox) els.beforeBox.style.display = "flex";
+  if (els.afterBox) els.afterBox.style.display = "flex";
 
-  els.galleryHint.innerHTML = `As fotos serão exibidas <b>somente</b> ao filtrar por <b>Id Localidade</b> ou <b>Nº Ticket</b>.`;
+  if (els.beforeLink) {
+    els.beforeLink.style.display = "none";
+    els.beforeLink.removeAttribute("href");
+    els.beforeLink.textContent = "—";
+  }
+
+  if (els.afterLink) {
+    els.afterLink.style.display = "none";
+    els.afterLink.removeAttribute("href");
+    els.afterLink.textContent = "—";
+  }
+
+  if (els.galleryHint) {
+    els.galleryHint.innerHTML = `As fotos serão exibidas <b>somente</b> ao filtrar por <b>Id Localidade</b> ou <b>Nº Ticket</b>.`;
+  }
 }
 
 function renderGallery(item) {
-  els.selectedInfo.textContent = `${item.numero_ticket || "—"} / ${item.id_localidade || "—"}`;
-  els.beforeMeta.textContent = item.id_localidade || "—";
-  els.afterMeta.textContent = item.id_localidade || "—";
+  if (els.selectedInfo) {
+    els.selectedInfo.textContent = `${item.numero_ticket || "—"} / ${item.id_localidade || "—"}`;
+  }
+
+  if (els.beforeMeta) els.beforeMeta.textContent = item.id_localidade || "—";
+  if (els.afterMeta) els.afterMeta.textContent = item.id_localidade || "—";
 
   if (item.foto_antes_url) {
     els.beforeImg.src = item.foto_antes_url;
@@ -390,11 +426,14 @@ function renderGallery(item) {
     els.afterLink.style.display = "none";
   }
 
-  els.galleryHint.innerHTML = `Fotos do item selecionado na tabela.`;
+  if (els.galleryHint) {
+    els.galleryHint.innerHTML = `Fotos do item selecionado na tabela.`;
+  }
 }
 
 function aggregateByLocalidade(items, field) {
   const map = new Map();
+
   items.forEach((it) => {
     const key = safeText(it.localidade || it.id_localidade || "N/D");
     if (!map.has(key)) {
@@ -411,19 +450,24 @@ function aggregateByLocalidade(items, field) {
 
 function clearCanvas(canvas) {
   if (!canvas) return;
+
   const ctx = canvas.getContext("2d");
   const ratio = window.devicePixelRatio || 1;
   const w = canvas.clientWidth || 600;
   const h = canvas.clientHeight || 260;
+
   canvas.width = Math.floor(w * ratio);
   canvas.height = Math.floor(h * ratio);
+
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.clearRect(0, 0, w, h);
 }
 
 function drawBarChart(canvas, data, valueFormatter = (v) => String(v)) {
   if (!canvas) return;
+
   clearCanvas(canvas);
+
   const ctx = canvas.getContext("2d");
   const w = canvas.clientWidth || 600;
   const h = canvas.clientHeight || 260;
@@ -483,7 +527,7 @@ function renderAll() {
     selectItem(0);
   } else {
     selectedIdx = null;
-    els.descAtendimento.textContent = "—";
+    if (els.descAtendimento) els.descAtendimento.textContent = "—";
     clearGallery();
   }
 
@@ -511,9 +555,21 @@ async function handleJsonFile(file) {
     rawData = data;
     allItems = data.itens.map((it) => normalizeItem(it, fallback.ano, fallback.mes));
 
-    els.fileName.textContent = file.name;
+    if (els.fileName) {
+      els.fileName.textContent = file.name;
+    }
+
+    initSelectPlaceholders();
     buildFilterOptions(allItems, file.name);
     renderAll();
+
+    console.log("JSON carregado com sucesso:", {
+      file: file.name,
+      totalItens: allItems.length,
+      anos: [...new Set(allItems.map(i => i.ano))],
+      meses: [...new Set(allItems.map(i => i.mes))]
+    });
+
   } catch (e) {
     console.error(e);
     showError("Falha ao ler o JSON. Verifique se o arquivo está válido.");
@@ -524,10 +580,10 @@ async function handleJsonFile(file) {
 }
 
 function clearFilters() {
-  els.idLocalidadeSearch.value = "";
-  els.ticketSearch.value = "";
-  els.anoSelect.value = "all";
-  els.mesSelect.value = "all";
+  if (els.idLocalidadeSearch) els.idLocalidadeSearch.value = "";
+  if (els.ticketSearch) els.ticketSearch.value = "";
+  if (els.anoSelect) els.anoSelect.value = "all";
+  if (els.mesSelect) els.mesSelect.value = "all";
   renderAll();
 }
 
@@ -569,11 +625,6 @@ function bindEvents() {
   window.addEventListener("resize", () => {
     if (filteredItems.length) renderCharts(filteredItems);
   });
-}
-
-function initSelectPlaceholders() {
-  els.mesSelect.innerHTML = `<option value="all">Mês</option>`;
-  els.anoSelect.innerHTML = `<option value="all">Ano</option>`;
 }
 
 function init() {
