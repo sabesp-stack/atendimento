@@ -642,8 +642,7 @@ async function handleJsonFile(file) {
 /* ===== Integração Google Sheets / Novo Atendimento ===== */
 
 function getApiBase() {
-  const apiInput = document.getElementById("api_base");
-  return (apiInput?.value || "").trim();
+  return "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 }
 
 function showFormStatus(message, type = "info") {
@@ -726,7 +725,15 @@ async function testarConexaoAppsScript() {
 
   try {
     const resp = await fetch(`${apiBase}?action=ping`, { method: "GET" });
-    const data = await resp.json();
+    const text = await resp.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("Resposta bruta da API:", text);
+      throw new Error("A API não retornou JSON válido.");
+    }
 
     if (data.success) {
       showApiStatus("Conexão com API realizada com sucesso.", "ok");
@@ -734,14 +741,17 @@ async function testarConexaoAppsScript() {
       showApiStatus(data.message || "Falha ao testar conexão.", "error");
     }
   } catch (err) {
-    console.error(err);
-    showApiStatus("Não foi possível conectar à API.", "error");
+    console.error("Erro detalhado ao testar conexão:", err);
+    showApiStatus(`Não foi possível conectar à API. ${err?.message || ""}`, "error");
   }
 }
 
 async function salvarAtendimentoGoogleSheets(payload) {
   const apiBase = getApiBase();
-  if (!apiBase) throw new Error("URL do Apps Script não informada.");
+
+  if (!apiBase) {
+    throw new Error("URL do Apps Script não informada.");
+  }
 
   const params = new URLSearchParams({
     action: "add_atendimento",
@@ -749,17 +759,45 @@ async function salvarAtendimentoGoogleSheets(payload) {
   });
 
   const url = `${apiBase}?${params.toString()}`;
-  const resp = await fetch(url, { method: "GET" });
-  const data = await resp.json();
+
+  const resp = await fetch(url, {
+    method: "GET"
+  });
+
+  const text = await resp.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error("Resposta bruta da API:", text);
+    throw new Error("A API não retornou JSON válido.");
+  }
+
   return data;
 }
 
 async function listarAtendimentosGoogleSheets() {
   const apiBase = getApiBase();
-  if (!apiBase) throw new Error("URL do Apps Script não informada.");
 
-  const resp = await fetch(`${apiBase}?action=list_atendimentos`, { method: "GET" });
-  const data = await resp.json();
+  if (!apiBase) {
+    throw new Error("URL do Apps Script não informada.");
+  }
+
+  const resp = await fetch(`${apiBase}?action=list_atendimentos`, {
+    method: "GET"
+  });
+
+  const text = await resp.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error("Resposta bruta da API:", text);
+    throw new Error("A API não retornou JSON válido ao listar atendimentos.");
+  }
+
   return data;
 }
 
@@ -893,8 +931,8 @@ function bindFormAcao() {
         showFormStatus(result.message || "Falha ao salvar atendimento.", "error");
       }
     } catch (err) {
-      console.error(err);
-      showFormStatus("Erro ao enviar dados para o Google Sheets.", "error");
+      console.error("Erro detalhado ao salvar atendimento:", err);
+      showFormStatus(`Erro ao enviar dados para o Google Sheets. ${err?.message || ""}`, "error");
     }
   });
 
