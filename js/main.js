@@ -639,6 +639,260 @@ async function handleJsonFile(file) {
   }
 }
 
+/* ===== Integração Google Sheets / Novo Atendimento ===== */
+
+function getApiBase() {
+  const apiInput = document.getElementById("api_base");
+  return (apiInput?.value || "").trim();
+}
+
+function showFormStatus(message, type = "info") {
+  const el = document.getElementById("statusForm");
+  if (!el) return;
+
+  if (!message) {
+    el.textContent = "";
+    el.className = "status";
+    return;
+  }
+
+  el.textContent = message;
+  el.className = `status show ${type}`;
+}
+
+function showApiStatus(message, type = "info") {
+  const el = document.getElementById("statusApi");
+  if (!el) return;
+
+  if (!message) {
+    el.textContent = "";
+    el.className = "status";
+    return;
+  }
+
+  el.textContent = message;
+  el.className = `status show ${type}`;
+}
+
+function showTableStatus(message, type = "info") {
+  const el = document.getElementById("statusTabela");
+  if (!el) return;
+
+  if (!message) {
+    el.textContent = "";
+    el.className = "status";
+    return;
+  }
+
+  el.textContent = message;
+  el.className = `status show ${type}`;
+}
+
+function getFormPayload() {
+  return {
+    ano: document.getElementById("ano")?.value?.trim() || "",
+    mes: document.getElementById("mes")?.value?.trim() || "",
+    dia: document.getElementById("dia")?.value?.trim() || "",
+    numero_ticket: document.getElementById("numero_ticket")?.value?.trim() || "",
+    id_localidade: document.getElementById("id_localidade")?.value?.trim() || "",
+    localidade: document.getElementById("localidade")?.value?.trim() || "",
+    tempo_gasto_horas: document.getElementById("tempo_gasto_horas")?.value?.trim() || "0",
+    equipamentos_trocados: document.getElementById("equipamentos_trocados")?.value?.trim() || "0",
+    equipamentos_configurados: document.getElementById("equipamentos_configurados")?.value?.trim() || "0",
+    pontos_de_rede: document.getElementById("pontos_de_rede")?.value?.trim() || "0",
+    foto_antes_url: document.getElementById("foto_antes_url")?.value?.trim() || "",
+    foto_depois_url: document.getElementById("foto_depois_url")?.value?.trim() || "",
+    descricao_atendimento: document.getElementById("descricao_atendimento")?.value?.trim() || ""
+  };
+}
+
+function validateFormPayload(p) {
+  if (!p.ano || !p.mes || !p.dia) return "Preencha Ano, Mês e Dia.";
+  if (!p.numero_ticket) return "Preencha o Nº Ticket.";
+  if (!p.id_localidade) return "Preencha o Id Localidade.";
+  if (!p.localidade) return "Preencha a Localidade.";
+  return "";
+}
+
+async function testarConexaoAppsScript() {
+  const apiBase = getApiBase();
+
+  if (!apiBase) {
+    showApiStatus("Informe a URL do Google Apps Script.", "error");
+    return;
+  }
+
+  showApiStatus("Testando conexão...", "info");
+
+  try {
+    const resp = await fetch(`${apiBase}?action=ping`, { method: "GET" });
+    const data = await resp.json();
+
+    if (data.success) {
+      showApiStatus("Conexão com API realizada com sucesso.", "ok");
+    } else {
+      showApiStatus(data.message || "Falha ao testar conexão.", "error");
+    }
+  } catch (err) {
+    console.error(err);
+    showApiStatus("Não foi possível conectar à API.", "error");
+  }
+}
+
+async function salvarAtendimentoGoogleSheets(payload) {
+  const apiBase = getApiBase();
+  if (!apiBase) throw new Error("URL do Apps Script não informada.");
+
+  const params = new URLSearchParams({
+    action: "add_atendimento",
+    ...payload
+  });
+
+  const url = `${apiBase}?${params.toString()}`;
+  const resp = await fetch(url, { method: "GET" });
+  const data = await resp.json();
+  return data;
+}
+
+async function listarAtendimentosGoogleSheets() {
+  const apiBase = getApiBase();
+  if (!apiBase) throw new Error("URL do Apps Script não informada.");
+
+  const resp = await fetch(`${apiBase}?action=list_atendimentos`, { method: "GET" });
+  const data = await resp.json();
+  return data;
+}
+
+function limparFormularioAtendimento() {
+  document.getElementById("formAcao")?.reset();
+
+  const ano = document.getElementById("ano");
+  const dia = document.getElementById("dia");
+
+  if (ano) ano.value = "2026";
+  if (dia) dia.value = "1";
+}
+
+function normalizeAtendimentoItem(x) {
+  return {
+    ano: safeText(x.ano ?? x.Ano),
+    mes: safeText(x.mes ?? x.Mes),
+    dia: safeText(x.dia ?? x.Dia),
+    numero_ticket: safeText(x.numero_ticket ?? x.ticket ?? x["Nº Ticket"]),
+    id_localidade: safeText(x.id_localidade ?? x["Id Localidade"]),
+    localidade: safeText(x.localidade ?? x["Localidade"]),
+    tempo_gasto_horas: safeText(x.tempo_gasto_horas ?? x["Tempo (Horas)"]),
+    equipamentos_trocados: safeText(x.equipamentos_trocados ?? x["Qtde Equip. Trocados"]),
+    equipamentos_configurados: safeText(x.equipamentos_configurados ?? x["Qtde Equip. Configurados"]),
+    pontos_de_rede: safeText(x.pontos_de_rede ?? x["Pontos de Rede"]),
+    foto_antes_url: safeText(x.foto_antes_url ?? x["Foto Antes (caminho/URL)"]),
+    foto_depois_url: safeText(x.foto_depois_url ?? x["Foto Depois (caminho/URL)"]),
+    descricao_atendimento: safeText(x.descricao_atendimento ?? x["Descrição Atendimento"]),
+  };
+}
+
+function renderTabelaAtendimentos(lista) {
+  const tbody = document.getElementById("tbody_acoes");
+  if (!tbody) return;
+
+  if (!Array.isArray(lista) || !lista.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="13" class="muted">Nenhum registro carregado.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = lista.map((raw) => {
+    const item = normalizeAtendimentoItem(raw);
+    return `
+      <tr>
+        <td>${escapeHtml(item.ano)}</td>
+        <td>${escapeHtml(item.mes)}</td>
+        <td>${escapeHtml(item.dia)}</td>
+        <td>${escapeHtml(item.numero_ticket)}</td>
+        <td>${escapeHtml(item.id_localidade)}</td>
+        <td>${escapeHtml(item.localidade)}</td>
+        <td>${escapeHtml(item.tempo_gasto_horas)}</td>
+        <td>${escapeHtml(item.equipamentos_trocados)}</td>
+        <td>${escapeHtml(item.equipamentos_configurados)}</td>
+        <td>${escapeHtml(item.pontos_de_rede)}</td>
+        <td>${escapeHtml(item.foto_antes_url)}</td>
+        <td>${escapeHtml(item.foto_depois_url)}</td>
+        <td>${escapeHtml(item.descricao_atendimento)}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function carregarListaAtendimentos() {
+  try {
+    showTableStatus("Carregando registros...", "info");
+
+    const data = await listarAtendimentosGoogleSheets();
+
+    if (data.success) {
+      renderTabelaAtendimentos(data.itens || []);
+      showTableStatus("Registros carregados com sucesso.", "ok");
+    } else {
+      showTableStatus(data.message || "Falha ao carregar registros.", "error");
+    }
+  } catch (err) {
+    console.error(err);
+    showTableStatus("Erro ao carregar registros da planilha.", "error");
+  }
+}
+
+function bindFormAcao() {
+  const form = document.getElementById("formAcao");
+  const btnLimpar = document.getElementById("btnLimparFormulario");
+  const btnTestarConexao = document.getElementById("btnTestarConexao");
+  const btnAtualizarLista = document.getElementById("btnAtualizarLista");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const payload = getFormPayload();
+    const validationError = validateFormPayload(payload);
+
+    if (validationError) {
+      showFormStatus(validationError, "error");
+      return;
+    }
+
+    showFormStatus("Salvando atendimento...", "info");
+
+    try {
+      const result = await salvarAtendimentoGoogleSheets(payload);
+
+      if (result.success) {
+        showFormStatus("Atendimento salvo com sucesso na planilha.", "ok");
+        limparFormularioAtendimento();
+        await carregarListaAtendimentos();
+      } else {
+        showFormStatus(result.message || "Falha ao salvar atendimento.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showFormStatus("Erro ao enviar dados para o Google Sheets.", "error");
+    }
+  });
+
+  btnLimpar?.addEventListener("click", () => {
+    limparFormularioAtendimento();
+    showFormStatus("", "info");
+  });
+
+  btnTestarConexao?.addEventListener("click", async () => {
+    await testarConexaoAppsScript();
+  });
+
+  btnAtualizarLista?.addEventListener("click", async () => {
+    await carregarListaAtendimentos();
+  });
+}
+
 function clearFilters() {
   if (els.idLocalidadeSearch) els.idLocalidadeSearch.value = "";
   if (els.ticketSearch) els.ticketSearch.value = "";
@@ -661,13 +915,15 @@ function bindEvents() {
 
   els.btnExportPDF?.addEventListener("click", () => window.print());
 
-  els.btnAcoes?.addEventListener("click", () => {
+  els.btnAcoes?.addEventListener("click", async () => {
     const dashboardPage = document.getElementById("dashboardPage");
     const novoAtendimentoPage = document.getElementById("novoAtendimentoPage");
+
     if (dashboardPage && novoAtendimentoPage) {
       dashboardPage.style.display = "none";
       novoAtendimentoPage.style.display = "block";
       window.scrollTo({ top: 0, behavior: "smooth" });
+      await carregarListaAtendimentos();
     }
   });
 
@@ -690,6 +946,7 @@ function bindEvents() {
 function init() {
   initSelectPlaceholders();
   bindEvents();
+  bindFormAcao();
   setEmptyState();
 
   const saved = loadJsonFromStorage();
