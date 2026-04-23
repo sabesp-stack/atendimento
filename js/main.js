@@ -1,4 +1,6 @@
 const FILE_PREFIX = "Kpis_";
+const STORAGE_JSON_KEY = "dashboard_sabesp_json_data";
+const STORAGE_JSON_NAME_KEY = "dashboard_sabesp_json_name";
 
 const els = {
   subtitle: document.getElementById("subtitle"),
@@ -105,19 +107,54 @@ function showError(msg = "") {
   els.errorBox.textContent = msg || "";
 }
 
+function saveJsonToStorage(fileName, jsonText) {
+  try {
+    localStorage.setItem(STORAGE_JSON_KEY, jsonText);
+    localStorage.setItem(STORAGE_JSON_NAME_KEY, fileName || "Kpis_local.json");
+  } catch (e) {
+    console.warn("Não foi possível salvar o JSON no navegador.", e);
+  }
+}
+
+function loadJsonFromStorage() {
+  try {
+    const jsonText = localStorage.getItem(STORAGE_JSON_KEY);
+    const fileName = localStorage.getItem(STORAGE_JSON_NAME_KEY) || "Kpis_local.json";
+
+    if (!jsonText) return null;
+
+    return {
+      fileName,
+      jsonText
+    };
+  } catch (e) {
+    console.warn("Não foi possível recuperar o JSON do navegador.", e);
+    return null;
+  }
+}
+
+function clearJsonFromStorage() {
+  try {
+    localStorage.removeItem(STORAGE_JSON_KEY);
+    localStorage.removeItem(STORAGE_JSON_NAME_KEY);
+  } catch (e) {
+    console.warn("Não foi possível limpar o JSON salvo.", e);
+  }
+}
+
 function setEmptyState() {
-  els.kpiTickets.textContent = "—";
-  els.kpiTicketsSub.textContent = "—";
-  els.kpiLocais.textContent = "—";
-  els.kpiEquip.textContent = "—";
-  els.kpiEquipSub.textContent = "—";
-  els.kpiEquipCfg.textContent = "—";
-  els.kpiEquipCfgSub.textContent = "—";
-  els.kpiTempoHoras.textContent = "—";
-  els.kpiTempoHorasSub.textContent = "—";
-  els.kpiMediaPontos.textContent = "—";
-  els.kpiMediaPontosSub.textContent = "—";
-  els.totalFiltro.textContent = "—";
+  if (els.kpiTickets) els.kpiTickets.textContent = "—";
+  if (els.kpiTicketsSub) els.kpiTicketsSub.textContent = "—";
+  if (els.kpiLocais) els.kpiLocais.textContent = "—";
+  if (els.kpiEquip) els.kpiEquip.textContent = "—";
+  if (els.kpiEquipSub) els.kpiEquipSub.textContent = "—";
+  if (els.kpiEquipCfg) els.kpiEquipCfg.textContent = "—";
+  if (els.kpiEquipCfgSub) els.kpiEquipCfgSub.textContent = "—";
+  if (els.kpiTempoHoras) els.kpiTempoHoras.textContent = "—";
+  if (els.kpiTempoHorasSub) els.kpiTempoHorasSub.textContent = "—";
+  if (els.kpiMediaPontos) els.kpiMediaPontos.textContent = "—";
+  if (els.kpiMediaPontosSub) els.kpiMediaPontosSub.textContent = "—";
+  if (els.totalFiltro) els.totalFiltro.textContent = "—";
 
   if (els.tbody) {
     els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>`;
@@ -283,18 +320,18 @@ function renderKPIs(items) {
   const totalHoras = sum(items, "tempo_gasto_horas");
   const totalPontos = sum(items, "pontos_de_rede");
 
-  els.kpiTickets.textContent = fmtInt(totalTickets);
-  els.kpiTicketsSub.textContent = totalTickets ? "Tickets no filtro atual" : "Sem dados no filtro";
-  els.kpiLocais.textContent = fmtInt(totalLocais);
-  els.kpiEquip.textContent = fmtInt(totalEquipTroc);
-  els.kpiEquipSub.textContent = totalEquipTroc ? "Total de trocas no filtro" : "Sem trocas no filtro";
-  els.kpiEquipCfg.textContent = fmtInt(totalEquipCfg);
-  els.kpiEquipCfgSub.textContent = totalEquipCfg ? "Total de configurações no filtro" : "Sem configurações no filtro";
-  els.kpiTempoHoras.textContent = fmtHours(totalHoras);
-  els.kpiTempoHorasSub.textContent = totalHoras ? "Horas acumuladas no filtro" : "Sem horas no filtro";
-  els.kpiMediaPontos.textContent = fmtInt(totalPontos);
-  els.kpiMediaPontosSub.textContent = totalPontos ? "Total de pontos de rede no filtro" : "Sem pontos no filtro";
-  els.totalFiltro.textContent = fmtInt(totalTickets);
+  if (els.kpiTickets) els.kpiTickets.textContent = fmtInt(totalTickets);
+  if (els.kpiTicketsSub) els.kpiTicketsSub.textContent = totalTickets ? "Tickets no filtro atual" : "Sem dados no filtro";
+  if (els.kpiLocais) els.kpiLocais.textContent = fmtInt(totalLocais);
+  if (els.kpiEquip) els.kpiEquip.textContent = fmtInt(totalEquipTroc);
+  if (els.kpiEquipSub) els.kpiEquipSub.textContent = totalEquipTroc ? "Total de trocas no filtro" : "Sem trocas no filtro";
+  if (els.kpiEquipCfg) els.kpiEquipCfg.textContent = fmtInt(totalEquipCfg);
+  if (els.kpiEquipCfgSub) els.kpiEquipCfgSub.textContent = totalEquipCfg ? "Total de configurações no filtro" : "Sem configurações no filtro";
+  if (els.kpiTempoHoras) els.kpiTempoHoras.textContent = fmtHours(totalHoras);
+  if (els.kpiTempoHorasSub) els.kpiTempoHorasSub.textContent = totalHoras ? "Horas acumuladas no filtro" : "Sem horas no filtro";
+  if (els.kpiMediaPontos) els.kpiMediaPontos.textContent = fmtInt(totalPontos);
+  if (els.kpiMediaPontosSub) els.kpiMediaPontosSub.textContent = totalPontos ? "Total de pontos de rede no filtro" : "Sem pontos no filtro";
+  if (els.totalFiltro) els.totalFiltro.textContent = fmtInt(totalTickets);
 }
 
 function escapeHtml(str) {
@@ -401,29 +438,37 @@ function renderGallery(item) {
   if (els.afterMeta) els.afterMeta.textContent = item.id_localidade || "—";
 
   if (item.foto_antes_url) {
-    els.beforeImg.src = item.foto_antes_url;
-    els.beforeImg.style.display = "block";
-    els.beforeBox.style.display = "none";
-    els.beforeLink.href = item.foto_antes_url;
-    els.beforeLink.textContent = item.foto_antes_url;
-    els.beforeLink.style.display = "inline-block";
+    if (els.beforeImg) {
+      els.beforeImg.src = item.foto_antes_url;
+      els.beforeImg.style.display = "block";
+    }
+    if (els.beforeBox) els.beforeBox.style.display = "none";
+    if (els.beforeLink) {
+      els.beforeLink.href = item.foto_antes_url;
+      els.beforeLink.textContent = item.foto_antes_url;
+      els.beforeLink.style.display = "inline-block";
+    }
   } else {
-    els.beforeImg.style.display = "none";
-    els.beforeBox.style.display = "flex";
-    els.beforeLink.style.display = "none";
+    if (els.beforeImg) els.beforeImg.style.display = "none";
+    if (els.beforeBox) els.beforeBox.style.display = "flex";
+    if (els.beforeLink) els.beforeLink.style.display = "none";
   }
 
   if (item.foto_depois_url) {
-    els.afterImg.src = item.foto_depois_url;
-    els.afterImg.style.display = "block";
-    els.afterBox.style.display = "none";
-    els.afterLink.href = item.foto_depois_url;
-    els.afterLink.textContent = item.foto_depois_url;
-    els.afterLink.style.display = "inline-block";
+    if (els.afterImg) {
+      els.afterImg.src = item.foto_depois_url;
+      els.afterImg.style.display = "block";
+    }
+    if (els.afterBox) els.afterBox.style.display = "none";
+    if (els.afterLink) {
+      els.afterLink.href = item.foto_depois_url;
+      els.afterLink.textContent = item.foto_depois_url;
+      els.afterLink.style.display = "inline-block";
+    }
   } else {
-    els.afterImg.style.display = "none";
-    els.afterBox.style.display = "flex";
-    els.afterLink.style.display = "none";
+    if (els.afterImg) els.afterImg.style.display = "none";
+    if (els.afterBox) els.afterBox.style.display = "flex";
+    if (els.afterLink) els.afterLink.style.display = "none";
   }
 
   if (els.galleryHint) {
@@ -470,9 +515,8 @@ function drawBarChart(canvas, data, valueFormatter = (v) => String(v)) {
 
   const ctx = canvas.getContext("2d");
   const w = canvas.clientWidth || 600;
-  const h = canvas.clientHeight || 260;
 
-  ctx.clearRect(0, 0, w, h);
+  ctx.clearRect(0, 0, w, 260);
 
   if (!data.length) {
     ctx.fillStyle = "#A7B0C7";
@@ -534,12 +578,9 @@ function renderAll() {
   showError("");
 }
 
-async function handleJsonFile(file) {
-  if (!file) return;
-
+function processJsonData(jsonText, fileName = "Kpis_local.json", saveToStorage = false) {
   try {
-    const text = await file.text();
-    const data = JSON.parse(text);
+    const data = JSON.parse(jsonText);
 
     const err = validateData(data);
     if (err) {
@@ -550,26 +591,45 @@ async function handleJsonFile(file) {
       return;
     }
 
-    const fallback = parseMonthFromFilename(file.name);
+    const fallback = parseMonthFromFilename(fileName);
 
     rawData = data;
     allItems = data.itens.map((it) => normalizeItem(it, fallback.ano, fallback.mes));
 
     if (els.fileName) {
-      els.fileName.textContent = file.name;
+      els.fileName.textContent = fileName;
     }
 
     initSelectPlaceholders();
-    buildFilterOptions(allItems, file.name);
+    buildFilterOptions(allItems, fileName);
     renderAll();
 
+    if (saveToStorage) {
+      saveJsonToStorage(fileName, jsonText);
+    }
+
     console.log("JSON carregado com sucesso:", {
-      file: file.name,
+      file: fileName,
       totalItens: allItems.length,
       anos: [...new Set(allItems.map(i => i.ano))],
       meses: [...new Set(allItems.map(i => i.mes))]
     });
 
+  } catch (e) {
+    console.error(e);
+    showError("Falha ao processar o JSON salvo/carregado.");
+    rawData = null;
+    allItems = [];
+    setEmptyState();
+  }
+}
+
+async function handleJsonFile(file) {
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    processJsonData(text, file.name, true);
   } catch (e) {
     console.error(e);
     showError("Falha ao ler o JSON. Verifique se o arquivo está válido.");
@@ -631,6 +691,11 @@ function init() {
   initSelectPlaceholders();
   bindEvents();
   setEmptyState();
+
+  const saved = loadJsonFromStorage();
+  if (saved && saved.jsonText) {
+    processJsonData(saved.jsonText, saved.fileName, false);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);
