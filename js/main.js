@@ -776,7 +776,7 @@ function limparFormularioAtendimento() {
 function normalizeAtendimentoItem(x) {
   return {
     ano: safeText(x.ano ?? x.Ano),
-    mes: safeText(x.mes ?? x.Mes),
+    mes: safeText(x.mes ?? x.Mês ?? x["Mês (1-12)"]),
     dia: safeText(x.dia ?? x.Dia),
     numero_ticket: safeText(x.numero_ticket ?? x.ticket ?? x["Nº Ticket"]),
     id_localidade: safeText(x.id_localidade ?? x["Id Localidade"]),
@@ -791,20 +791,39 @@ function normalizeAtendimentoItem(x) {
   };
 }
 
+function filtrarAtendimentosDoDia(lista) {
+  const hoje = new Date();
+  const anoHoje = String(hoje.getFullYear());
+  const mesHoje = String(hoje.getMonth() + 1);
+  const diaHoje = String(hoje.getDate());
+
+  return (lista || []).filter((raw) => {
+    const item = normalizeAtendimentoItem(raw);
+
+    const anoItem = String(item.ano).trim();
+    const mesItem = String(Number(item.mes));
+    const diaItem = String(Number(item.dia));
+
+    return anoItem === anoHoje && mesItem === mesHoje && diaItem === diaHoje;
+  });
+}
+
 function renderTabelaAtendimentos(lista) {
   const tbody = document.getElementById("tbody_acoes");
   if (!tbody) return;
 
-  if (!Array.isArray(lista) || !lista.length) {
+  const listaDoDia = filtrarAtendimentosDoDia(lista);
+
+  if (!Array.isArray(listaDoDia) || !listaDoDia.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="13" class="muted">Nenhum registro carregado.</td>
+        <td colspan="13" class="muted">Nenhum registro encontrado para hoje.</td>
       </tr>
     `;
     return;
   }
 
-  tbody.innerHTML = lista.map((raw) => {
+  tbody.innerHTML = listaDoDia.map((raw) => {
     const item = normalizeAtendimentoItem(raw);
     return `
       <tr>
