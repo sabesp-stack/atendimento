@@ -103,11 +103,12 @@ body{
   color:#8FB7FF;
 }
 
-.title h1{
+.title h1,
+.dashboardTitle{
   margin:0;
-  font-size:22px;
+  font-size:88px;
   letter-spacing:.1px;
-  line-height:1.12;
+  line-height:1.02;
   font-weight:700;
   color:#FFFFFF;
 }
@@ -873,8 +874,8 @@ label{
 }
 
 @media (max-width:760px){
-  .title h1{font-size:18px}
-  .title p{font-size:11px}
+  .title h1,
+  .dashboardTitle{font-size:56px}
   .controls{grid-template-columns: repeat(2, minmax(140px, 1fr))}
   .uploadLogoutGroup .fileBtn,
   .uploadLogoutGroup #btnLogout{
@@ -888,7 +889,8 @@ label{
 }
 
 @media (max-width:520px){
-  .title h1{font-size:16px}
+  .title h1,
+  .dashboardTitle{font-size:40px}
   .controls{grid-template-columns:1fr}
 }
 
