@@ -1,6 +1,6 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 
-console.log("MAIN.JS CARREGADO - VERSAO FOTOS 2026-04-24");
+console.log("MAIN.JS CARREGADO - VERSAO FOTOS 2026-04-24-04");
 
 const els = {
   subtitle: document.getElementById("subtitle"),
@@ -1157,7 +1157,7 @@ function renderTabelaAtendimentos(lista) {
   if (!Array.isArray(listaDoDia) || !listaDoDia.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="13" class="muted">Nenhum registro encontrado para hoje.</td>
+        <td colspan="12" class="muted">Nenhum registro encontrado para hoje.</td>
       </tr>
     `;
     return;
@@ -1191,7 +1191,6 @@ function renderTabelaAtendimentos(lista) {
         <td>${escapeHtml(item.pontos_de_rede)}</td>
         <td>${fotoAntes}</td>
         <td>${fotoDepois}</td>
-        <td>${escapeHtml(item.descricao_atendimento)}</td>
       </tr>
     `;
   }).join("");
