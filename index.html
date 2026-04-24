@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dashboard Sabesp</title>
-  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/style.css?v=20260424-03" />
 </head>
+
 <body data-protected="true">
   <div id="dashboardPage">
     <div class="wrap">
@@ -378,31 +379,31 @@
               </div>
 
               <div class="col-6 field-group">
-                <label>Foto Antes</label>
+                <label for="foto_antes_file">Foto Antes</label>
 
                 <div class="photoUploadBox">
-                  <input id="foto_antes_file" class="inputFileHidden" type="file" accept="image/*" />
+                  <input id="foto_antes_file" name="foto_antes_file" class="inputFileHidden" type="file" accept="image/*" />
                   <label for="foto_antes_file" class="btn btn-secondary fileUploadBtn">
                     Carregar Foto Antes
                   </label>
                   <span id="fotoAntesFileName" class="uploadFileName">Nenhum arquivo selecionado</span>
                 </div>
 
-                <input id="foto_antes_url" type="hidden" />
+                <input id="foto_antes_url" name="foto_antes_url" type="hidden" />
               </div>
 
               <div class="col-6 field-group">
-                <label>Foto Depois</label>
+                <label for="foto_depois_file">Foto Depois</label>
 
                 <div class="photoUploadBox">
-                  <input id="foto_depois_file" class="inputFileHidden" type="file" accept="image/*" />
+                  <input id="foto_depois_file" name="foto_depois_file" class="inputFileHidden" type="file" accept="image/*" />
                   <label for="foto_depois_file" class="btn btn-secondary fileUploadBtn">
                     Carregar Foto Depois
                   </label>
                   <span id="fotoDepoisFileName" class="uploadFileName">Nenhum arquivo selecionado</span>
                 </div>
 
-                <input id="foto_depois_url" type="hidden" />
+                <input id="foto_depois_url" name="foto_depois_url" type="hidden" />
               </div>
 
               <div class="col-12 field-group">
@@ -487,7 +488,7 @@
     </div>
   </section>
 
-  <script src="./auth.js"></script>
-  <script type="module" src="./js/main.js"></script>
+  <script src="./auth.js?v=20260424-03"></script>
+  <script type="module" src="./js/main.js?v=20260424-03"></script>
 </body>
 </html>
