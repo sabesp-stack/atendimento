@@ -824,10 +824,12 @@ tbody tr.active {
 
 .photoUploadBox {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
-  min-height: 42px;
+  min-height: 46px;
+  width: 100%;
   padding: 10px;
   border: 1px dashed rgba(148, 163, 184, 0.22);
   border-radius: 14px;
@@ -839,43 +841,39 @@ tbody tr.active {
 }
 
 .fileUploadBtn {
+  flex: 0 0 auto;
+  min-width: 150px;
   min-height: 34px;
   padding: 8px 14px;
   font-size: 12px;
   border-radius: 10px;
+  text-align: center;
+  justify-content: center;
 }
 
 .uploadFileName {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.35;
-  word-break: break-word;
-  max-width: 100%;
+  word-break: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* =========================================================
-   Foto Antes / Foto Depois lado a lado - Novo Atendimento
-   ========================================================= */
-
-#novoAtendimentoPage .field-group:has(#foto_antes_file),
-#novoAtendimentoPage .field-group:has(#foto_depois_file) {
+/* Garante que Foto Antes e Foto Depois fiquem lado a lado */
+#novoAtendimentoPage .formGrid .col-6:has(#foto_antes_file),
+#novoAtendimentoPage .formGrid .col-6:has(#foto_depois_file) {
   grid-column: span 6;
 }
 
-#novoAtendimentoPage .photoUploadBox {
-  min-height: 58px;
-  align-items: center;
-}
-
-#novoAtendimentoPage .fileUploadBtn {
-  min-width: 170px;
-  justify-content: center;
-  text-align: center;
-}
-
-#novoAtendimentoPage .uploadFileName {
-  flex: 1;
-  min-width: 150px;
+/* Navegadores sem suporte a :has() ainda usam .col-6 normalmente */
+#novoAtendimentoPage #foto_antes_file,
+#novoAtendimentoPage #foto_depois_file {
+  display: none;
 }
 
 .status {
@@ -1057,9 +1055,17 @@ footer {
     grid-column: 1 / -1;
   }
 
-  #novoAtendimentoPage .field-group:has(#foto_antes_file),
-  #novoAtendimentoPage .field-group:has(#foto_depois_file) {
+  #novoAtendimentoPage .formGrid .col-6:has(#foto_antes_file),
+  #novoAtendimentoPage .formGrid .col-6:has(#foto_depois_file) {
     grid-column: 1 / -1;
+  }
+
+  #novoAtendimentoPage .photoUploadBox {
+    flex-wrap: wrap;
+  }
+
+  #novoAtendimentoPage .fileUploadBtn {
+    width: auto;
   }
 }
 
@@ -1086,11 +1092,17 @@ footer {
   .photoUploadBox {
     align-items: stretch;
     flex-direction: column;
+    flex-wrap: wrap;
   }
 
   .fileUploadBtn {
     width: 100%;
     justify-content: center;
+  }
+
+  .uploadFileName {
+    width: 100%;
+    white-space: normal;
   }
 
   .chart {
