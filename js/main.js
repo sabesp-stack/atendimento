@@ -1,14 +1,9 @@
-const FILE_PREFIX = "Kpis_";
-const STORAGE_JSON_KEY = "dashboard_sabesp_json_data";
-const STORAGE_JSON_NAME_KEY = "dashboard_sabesp_json_name";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 
 const els = {
   subtitle: document.getElementById("subtitle"),
   mesSelect: document.getElementById("mesSelect"),
   anoSelect: document.getElementById("anoSelect"),
-
-  jsonFile: document.getElementById("jsonFile"),
-  fileName: document.getElementById("fileName"),
 
   idLocalidadeSearch: document.getElementById("idLocalidadeSearch"),
   ticketSearch: document.getElementById("ticketSearch"),
@@ -73,6 +68,7 @@ function safeNumber(v, fallback = 0) {
     const n = Number(normalized);
     return Number.isFinite(n) ? n : fallback;
   }
+
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
 }
@@ -93,53 +89,9 @@ function monthName(m) {
   return MESES[safeNumber(m, 0)] || `Mês ${m}`;
 }
 
-function parseMonthFromFilename(name) {
-  const m = String(name || "").match(/Kpis_(\d{4})-(\d{2})/i);
-  if (!m) return { ano: 0, mes: 0 };
-  return {
-    ano: Number(m[1]),
-    mes: Number(m[2])
-  };
-}
-
 function showError(msg = "") {
   if (!els.errorBox) return;
   els.errorBox.textContent = msg || "";
-}
-
-function saveJsonToStorage(fileName, jsonText) {
-  try {
-    localStorage.setItem(STORAGE_JSON_KEY, jsonText);
-    localStorage.setItem(STORAGE_JSON_NAME_KEY, fileName || "Kpis_local.json");
-  } catch (e) {
-    console.warn("Não foi possível salvar o JSON no navegador.", e);
-  }
-}
-
-function loadJsonFromStorage() {
-  try {
-    const jsonText = localStorage.getItem(STORAGE_JSON_KEY);
-    const fileName = localStorage.getItem(STORAGE_JSON_NAME_KEY) || "Kpis_local.json";
-
-    if (!jsonText) return null;
-
-    return {
-      fileName,
-      jsonText
-    };
-  } catch (e) {
-    console.warn("Não foi possível recuperar o JSON do navegador.", e);
-    return null;
-  }
-}
-
-function clearJsonFromStorage() {
-  try {
-    localStorage.removeItem(STORAGE_JSON_KEY);
-    localStorage.removeItem(STORAGE_JSON_NAME_KEY);
-  } catch (e) {
-    console.warn("Não foi possível limpar o JSON salvo.", e);
-  }
 }
 
 function setEmptyState() {
@@ -157,7 +109,7 @@ function setEmptyState() {
   if (els.totalFiltro) els.totalFiltro.textContent = "—";
 
   if (els.tbody) {
-    els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregue um JSON em “Carregar KPIs”.</td></tr>`;
+    els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregando dados do Google Sheets...</td></tr>`;
   }
 
   if (els.descAtendimento) {
@@ -171,8 +123,8 @@ function setEmptyState() {
 }
 
 function validateData(data) {
-  if (!data || typeof data !== "object") return "JSON inválido (objeto raiz).";
-  if (!Array.isArray(data.itens)) return "JSON inválido: campo 'itens' precisa ser uma lista.";
+  if (!data || typeof data !== "object") return "Dados inválidos: objeto raiz não encontrado.";
+  if (!Array.isArray(data.itens)) return "Dados inválidos: campo 'itens' precisa ser uma lista.";
   return null;
 }
 
@@ -183,7 +135,7 @@ function normalizeItem(x, fallbackAno = 0, fallbackMes = 0) {
   );
 
   const mes = safeNumber(
-    x.mes ?? x.Mes ?? x.month ?? x.mes_referencia,
+    x.mes ?? x.Mes ?? x["Mês"] ?? x["Mês (1-12)"] ?? x.month ?? x.mes_referencia,
     fallbackMes
   );
 
@@ -202,6 +154,7 @@ function normalizeItem(x, fallbackAno = 0, fallbackMes = 0) {
   return {
     ano,
     mes,
+    dia: safeNumber(x.dia ?? x.Dia, 0),
     numero_ticket: safeText(x.numero_ticket ?? x.ticket ?? x["Nº Ticket"] ?? x["numero_ticket"]),
     id_localidade: safeText(x.id_localidade ?? x.idLocalidade ?? x["Id Localidade"] ?? x.id),
     localidade: safeText(x.localidade ?? x["Localidade"], "N/D"),
@@ -248,31 +201,12 @@ function initSelectPlaceholders() {
 
   if (els.anoSelect) {
     els.anoSelect.innerHTML = `<option value="all" selected>Todos</option>`;
+
     for (let ano = 2025; ano <= 2035; ano++) {
       const op = document.createElement("option");
       op.value = String(ano);
       op.textContent = String(ano);
       els.anoSelect.appendChild(op);
-    }
-  }
-}
-
-function buildFilterOptions(items, fileName = "") {
-  const fallback = parseMonthFromFilename(fileName);
-
-  if (els.anoSelect) {
-    if (fallback.ano >= 2025 && fallback.ano <= 2035) {
-      els.anoSelect.value = String(fallback.ano);
-    } else {
-      els.anoSelect.value = "all";
-    }
-  }
-
-  if (els.mesSelect) {
-    if (fallback.mes >= 1 && fallback.mes <= 12) {
-      els.mesSelect.value = String(fallback.mes);
-    } else {
-      els.mesSelect.value = "all";
     }
   }
 }
@@ -322,15 +256,21 @@ function renderKPIs(items) {
 
   if (els.kpiTickets) els.kpiTickets.textContent = fmtInt(totalTickets);
   if (els.kpiTicketsSub) els.kpiTicketsSub.textContent = totalTickets ? "Tickets no filtro atual" : "Sem dados no filtro";
+
   if (els.kpiLocais) els.kpiLocais.textContent = fmtInt(totalLocais);
+
   if (els.kpiEquip) els.kpiEquip.textContent = fmtInt(totalEquipTroc);
   if (els.kpiEquipSub) els.kpiEquipSub.textContent = totalEquipTroc ? "Total de trocas no filtro" : "Sem trocas no filtro";
+
   if (els.kpiEquipCfg) els.kpiEquipCfg.textContent = fmtInt(totalEquipCfg);
   if (els.kpiEquipCfgSub) els.kpiEquipCfgSub.textContent = totalEquipCfg ? "Total de configurações no filtro" : "Sem configurações no filtro";
+
   if (els.kpiTempoHoras) els.kpiTempoHoras.textContent = fmtHours(totalHoras);
   if (els.kpiTempoHorasSub) els.kpiTempoHorasSub.textContent = totalHoras ? "Horas acumuladas no filtro" : "Sem horas no filtro";
+
   if (els.kpiMediaPontos) els.kpiMediaPontos.textContent = fmtInt(totalPontos);
   if (els.kpiMediaPontosSub) els.kpiMediaPontosSub.textContent = totalPontos ? "Total de pontos de rede no filtro" : "Sem pontos no filtro";
+
   if (els.totalFiltro) els.totalFiltro.textContent = fmtInt(totalTickets);
 }
 
@@ -381,6 +321,7 @@ function selectItem(idx) {
   }
 
   const item = filteredItems[idx];
+
   if (!item) {
     if (els.descAtendimento) els.descAtendimento.textContent = "—";
     clearGallery();
@@ -442,7 +383,9 @@ function renderGallery(item) {
       els.beforeImg.src = item.foto_antes_url;
       els.beforeImg.style.display = "block";
     }
+
     if (els.beforeBox) els.beforeBox.style.display = "none";
+
     if (els.beforeLink) {
       els.beforeLink.href = item.foto_antes_url;
       els.beforeLink.textContent = item.foto_antes_url;
@@ -459,7 +402,9 @@ function renderGallery(item) {
       els.afterImg.src = item.foto_depois_url;
       els.afterImg.style.display = "block";
     }
+
     if (els.afterBox) els.afterBox.style.display = "none";
+
     if (els.afterLink) {
       els.afterLink.href = item.foto_depois_url;
       els.afterLink.textContent = item.foto_depois_url;
@@ -481,9 +426,11 @@ function aggregateByLocalidade(items, field) {
 
   items.forEach((it) => {
     const key = safeText(it.localidade || it.id_localidade || "N/D");
+
     if (!map.has(key)) {
       map.set(key, 0);
     }
+
     map.set(key, map.get(key) + safeNumber(it[field], 0));
   });
 
@@ -624,6 +571,7 @@ function renderCharts(items) {
 
 function renderAll() {
   filteredItems = applyFilters(allItems);
+
   renderKPIs(filteredItems);
   renderTable(filteredItems);
   renderCharts(filteredItems);
@@ -632,79 +580,100 @@ function renderAll() {
     selectItem(0);
   } else {
     selectedIdx = null;
-    if (els.descAtendimento) els.descAtendimento.textContent = "—";
+
+    if (els.descAtendimento) {
+      els.descAtendimento.textContent = "—";
+    }
+
     clearGallery();
   }
 
   showError("");
 }
 
-function processJsonData(jsonText, fileName = "Kpis_local.json", saveToStorage = false) {
+/* ===== Integração Google Sheets ===== */
+
+function getApiBase() {
+  return GOOGLE_SCRIPT_URL;
+}
+
+async function requestJson(url, errorMessage = "A API não retornou JSON válido.") {
+  const resp = await fetch(url, {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  const text = await resp.text();
+
+  let data;
   try {
-    const data = JSON.parse(jsonText);
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error("Resposta bruta da API:", text);
+    throw new Error(errorMessage);
+  }
+
+  return data;
+}
+
+async function listarAtendimentosGoogleSheets() {
+  const apiBase = getApiBase();
+
+  if (!apiBase) {
+    throw new Error("URL do Apps Script não informada.");
+  }
+
+  const url = `${apiBase}?action=list_atendimentos`;
+  return await requestJson(url, "A API não retornou JSON válido ao listar atendimentos.");
+}
+
+async function carregarDashboardGoogleSheets() {
+  try {
+    showError("Carregando dados do Google Sheets...");
+
+    if (els.tbody) {
+      els.tbody.innerHTML = `<tr><td colspan="7" class="muted">Carregando dados do Google Sheets...</td></tr>`;
+    }
+
+    const data = await listarAtendimentosGoogleSheets();
+
+    if (!data.success) {
+      throw new Error(data.message || "Falha ao carregar dados do Google Sheets.");
+    }
 
     const err = validateData(data);
-    if (err) {
-      showError(err);
-      rawData = null;
-      allItems = [];
-      setEmptyState();
-      return;
-    }
 
-    const fallback = parseMonthFromFilename(fileName);
+    if (err) {
+      throw new Error(err);
+    }
 
     rawData = data;
-    allItems = data.itens.map((it) => normalizeItem(it, fallback.ano, fallback.mes));
+    allItems = (data.itens || []).map((it) => normalizeItem(it));
+    filteredItems = [];
+    selectedIdx = null;
 
-    if (els.fileName) {
-      els.fileName.textContent = fileName;
-    }
-
-    initSelectPlaceholders();
-    buildFilterOptions(allItems, fileName);
     renderAll();
 
-    if (saveToStorage) {
-      saveJsonToStorage(fileName, jsonText);
-    }
-
-    console.log("JSON carregado com sucesso:", {
-      file: fileName,
+    console.log("Dados do Google Sheets carregados com sucesso:", {
       totalItens: allItems.length,
       anos: [...new Set(allItems.map(i => i.ano))],
       meses: [...new Set(allItems.map(i => i.mes))]
     });
 
-  } catch (e) {
-    console.error(e);
-    showError("Falha ao processar o JSON salvo/carregado.");
+  } catch (err) {
+    console.error("Erro ao carregar dashboard via Google Sheets:", err);
+
     rawData = null;
     allItems = [];
+    filteredItems = [];
+    selectedIdx = null;
+
     setEmptyState();
+    showError(`Erro ao carregar dados do Google Sheets. ${err?.message || ""}`);
   }
 }
 
-async function handleJsonFile(file) {
-  if (!file) return;
-
-  try {
-    const text = await file.text();
-    processJsonData(text, file.name, true);
-  } catch (e) {
-    console.error(e);
-    showError("Falha ao ler o JSON. Verifique se o arquivo está válido.");
-    rawData = null;
-    allItems = [];
-    setEmptyState();
-  }
-}
-
-/* ===== Integração Google Sheets / Novo Atendimento ===== */
-
-function getApiBase() {
-  return "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
-}
+/* ===== Novo Atendimento ===== */
 
 function showFormStatus(message, type = "info") {
   const el = document.getElementById("statusForm");
@@ -785,16 +754,7 @@ async function testarConexaoAppsScript() {
   showApiStatus("Testando conexão...", "info");
 
   try {
-    const resp = await fetch(`${apiBase}?action=ping`, { method: "GET" });
-    const text = await resp.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("Resposta bruta da API:", text);
-      throw new Error("A API não retornou JSON válido.");
-    }
+    const data = await requestJson(`${apiBase}?action=ping`);
 
     if (data.success) {
       showApiStatus("Conexão com API realizada com sucesso.", "ok");
@@ -821,45 +781,7 @@ async function salvarAtendimentoGoogleSheets(payload) {
 
   const url = `${apiBase}?${params.toString()}`;
 
-  const resp = await fetch(url, {
-    method: "GET"
-  });
-
-  const text = await resp.text();
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    console.error("Resposta bruta da API:", text);
-    throw new Error("A API não retornou JSON válido.");
-  }
-
-  return data;
-}
-
-async function listarAtendimentosGoogleSheets() {
-  const apiBase = getApiBase();
-
-  if (!apiBase) {
-    throw new Error("URL do Apps Script não informada.");
-  }
-
-  const resp = await fetch(`${apiBase}?action=list_atendimentos`, {
-    method: "GET"
-  });
-
-  const text = await resp.text();
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    console.error("Resposta bruta da API:", text);
-    throw new Error("A API não retornou JSON válido ao listar atendimentos.");
-  }
-
-  return data;
+  return await requestJson(url, "A API não retornou JSON válido ao salvar atendimento.");
 }
 
 function limparFormularioAtendimento() {
@@ -868,8 +790,8 @@ function limparFormularioAtendimento() {
   const ano = document.getElementById("ano");
   const dia = document.getElementById("dia");
 
-  if (ano) ano.value = "2026";
-  if (dia) dia.value = "1";
+  if (ano) ano.value = String(new Date().getFullYear());
+  if (dia) dia.value = String(new Date().getDate());
 }
 
 function normalizeAtendimentoItem(x) {
@@ -909,6 +831,7 @@ function filtrarAtendimentosDoDia(lista) {
 
 function renderTabelaAtendimentos(lista) {
   const tbody = document.getElementById("tbody_acoes");
+
   if (!tbody) return;
 
   const listaDoDia = filtrarAtendimentosDoDia(lista);
@@ -924,6 +847,7 @@ function renderTabelaAtendimentos(lista) {
 
   tbody.innerHTML = listaDoDia.map((raw) => {
     const item = normalizeAtendimentoItem(raw);
+
     return `
       <tr>
         <td>${escapeHtml(item.ano)}</td>
@@ -987,7 +911,9 @@ function bindFormAcao() {
       if (result.success) {
         showFormStatus("Atendimento salvo com sucesso na planilha.", "ok");
         limparFormularioAtendimento();
+
         await carregarListaAtendimentos();
+        await carregarDashboardGoogleSheets();
       } else {
         showFormStatus(result.message || "Falha ao salvar atendimento.", "error");
       }
@@ -1011,20 +937,18 @@ function bindFormAcao() {
   });
 }
 
+/* ===== Eventos gerais ===== */
+
 function clearFilters() {
   if (els.idLocalidadeSearch) els.idLocalidadeSearch.value = "";
   if (els.ticketSearch) els.ticketSearch.value = "";
   if (els.anoSelect) els.anoSelect.value = "all";
   if (els.mesSelect) els.mesSelect.value = "all";
+
   renderAll();
 }
 
 function bindEvents() {
-  els.jsonFile?.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    handleJsonFile(file);
-  });
-
   els.anoSelect?.addEventListener("change", renderAll);
   els.mesSelect?.addEventListener("change", renderAll);
   els.idLocalidadeSearch?.addEventListener("input", renderAll);
@@ -1041,25 +965,34 @@ function bindEvents() {
       dashboardPage.style.display = "none";
       novoAtendimentoPage.style.display = "block";
       window.scrollTo({ top: 0, behavior: "smooth" });
+
       await carregarListaAtendimentos();
     }
   });
 
   const btnVoltarDashboard = document.getElementById("btnVoltarDashboard");
-  btnVoltarDashboard?.addEventListener("click", () => {
+
+  btnVoltarDashboard?.addEventListener("click", async () => {
     const dashboardPage = document.getElementById("dashboardPage");
     const novoAtendimentoPage = document.getElementById("novoAtendimentoPage");
+
     if (dashboardPage && novoAtendimentoPage) {
       dashboardPage.style.display = "block";
       novoAtendimentoPage.style.display = "none";
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      await carregarDashboardGoogleSheets();
     }
   });
 
   window.addEventListener("resize", () => {
-    if (filteredItems.length) renderCharts(filteredItems);
+    if (filteredItems.length) {
+      renderCharts(filteredItems);
+    }
   });
 }
+
+/* ===== Inicialização ===== */
 
 function init() {
   initSelectPlaceholders();
@@ -1067,10 +1000,7 @@ function init() {
   bindFormAcao();
   setEmptyState();
 
-  const saved = loadJsonFromStorage();
-  if (saved && saved.jsonText) {
-    processJsonData(saved.jsonText, saved.fileName, false);
-  }
+  carregarDashboardGoogleSheets();
 }
 
 document.addEventListener("DOMContentLoaded", init);
