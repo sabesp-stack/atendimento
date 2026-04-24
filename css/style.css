@@ -792,6 +792,25 @@ tbody tr.active {
   background: rgba(47, 124, 255, 0.06);
 }
 
+/* Campo Mês - Novo Atendimento com azul padrão */
+#novoAtendimentoPage #mes {
+  background: linear-gradient(135deg, rgba(47, 124, 255, 0.32), rgba(47, 124, 255, 0.16));
+  border-color: rgba(47, 124, 255, 0.70);
+  color: #EAF0FF;
+  font-weight: 800;
+}
+
+#novoAtendimentoPage #mes:focus {
+  background: linear-gradient(135deg, rgba(47, 124, 255, 0.40), rgba(47, 124, 255, 0.20));
+  border-color: #2F7CFF;
+  box-shadow: 0 0 0 4px rgba(47, 124, 255, 0.18);
+}
+
+#novoAtendimentoPage #mes option {
+  background: #0B1020;
+  color: #EAF0FF;
+}
+
 .formActions {
   display: flex;
   flex-wrap: wrap;
