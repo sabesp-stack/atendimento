@@ -1,5 +1,7 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAu0TEQPL2TwAgyf2Hf-7cxhgqtRYGJNxaZTPKSCEgE8cIrLh_sgqt0nItZj9kz--nQQ/exec";
 
+console.log("MAIN.JS CARREGADO - VERSAO FOTOS 2026-04-24");
+
 const els = {
   subtitle: document.getElementById("subtitle"),
   mesSelect: document.getElementById("mesSelect"),
@@ -90,6 +92,37 @@ function safeNumber(v, fallback = 0) {
 
 function safeUrl(v) {
   return safeText(v, "");
+}
+
+/*
+  Normaliza links do Google Drive para exibição em <img src="">.
+
+  Suporta:
+  - https://drive.google.com/thumbnail?id=ID&sz=w1600
+  - https://drive.google.com/uc?export=view&id=ID
+  - https://drive.google.com/file/d/ID/view
+  - https://drive.google.com/open?id=ID
+*/
+function normalizeDriveImageUrl(url) {
+  const value = safeText(url);
+
+  if (!value) return "";
+
+  if (!value.includes("drive.google.com")) {
+    return value;
+  }
+
+  const idMatch =
+    value.match(/[?&]id=([^&]+)/) ||
+    value.match(/\/file\/d\/([^/]+)/) ||
+    value.match(/\/d\/([^/]+)/);
+
+  if (idMatch && idMatch[1]) {
+    const fileId = decodeURIComponent(idMatch[1]);
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+  }
+
+  return value;
 }
 
 function fmtInt(n) {
@@ -433,15 +466,26 @@ function clearGallery() {
   if (els.beforeImg) {
     els.beforeImg.style.display = "none";
     els.beforeImg.removeAttribute("src");
+    els.beforeImg.onerror = null;
+    els.beforeImg.onload = null;
   }
 
   if (els.afterImg) {
     els.afterImg.style.display = "none";
     els.afterImg.removeAttribute("src");
+    els.afterImg.onerror = null;
+    els.afterImg.onload = null;
   }
 
-  if (els.beforeBox) els.beforeBox.style.display = "flex";
-  if (els.afterBox) els.afterBox.style.display = "flex";
+  if (els.beforeBox) {
+    els.beforeBox.style.display = "flex";
+    els.beforeBox.innerHTML = `Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).`;
+  }
+
+  if (els.afterBox) {
+    els.afterBox.style.display = "flex";
+    els.afterBox.innerHTML = `Nenhuma foto exibida.<br/>Digite um filtro (Id Localidade ou Nº Ticket).`;
+  }
 
   if (els.beforeLink) {
     els.beforeLink.style.display = "none";
@@ -461,6 +505,15 @@ function clearGallery() {
 }
 
 function renderGallery(item) {
+  const fotoAntesUrl = normalizeDriveImageUrl(item.foto_antes_url);
+  const fotoDepoisUrl = normalizeDriveImageUrl(item.foto_depois_url);
+
+  console.log("RenderGallery item:", item);
+  console.log("Foto Antes URL original:", item.foto_antes_url);
+  console.log("Foto Antes URL normalizada:", fotoAntesUrl);
+  console.log("Foto Depois URL original:", item.foto_depois_url);
+  console.log("Foto Depois URL normalizada:", fotoDepoisUrl);
+
   if (els.selectedInfo) {
     els.selectedInfo.textContent = `${item.numero_ticket || "—"} / ${item.id_localidade || "—"}`;
   }
@@ -468,41 +521,83 @@ function renderGallery(item) {
   if (els.beforeMeta) els.beforeMeta.textContent = item.id_localidade || "—";
   if (els.afterMeta) els.afterMeta.textContent = item.id_localidade || "—";
 
-  if (item.foto_antes_url) {
+  if (fotoAntesUrl) {
     if (els.beforeImg) {
-      els.beforeImg.src = item.foto_antes_url;
+      els.beforeImg.onerror = () => {
+        console.error("Falha ao carregar Foto Antes:", fotoAntesUrl);
+
+        els.beforeImg.style.display = "none";
+
+        if (els.beforeBox) {
+          els.beforeBox.style.display = "flex";
+          els.beforeBox.innerHTML = `Não foi possível carregar a foto.<br/>Use o link abaixo para abrir no Drive.`;
+        }
+      };
+
+      els.beforeImg.onload = () => {
+        if (els.beforeBox) els.beforeBox.style.display = "none";
+        els.beforeImg.style.display = "block";
+      };
+
+      els.beforeImg.src = fotoAntesUrl;
       els.beforeImg.style.display = "block";
     }
 
     if (els.beforeBox) els.beforeBox.style.display = "none";
 
     if (els.beforeLink) {
-      els.beforeLink.href = item.foto_antes_url;
-      els.beforeLink.textContent = item.foto_antes_url;
+      els.beforeLink.href = fotoAntesUrl;
+      els.beforeLink.textContent = fotoAntesUrl;
       els.beforeLink.style.display = "inline-block";
     }
   } else {
     if (els.beforeImg) els.beforeImg.style.display = "none";
-    if (els.beforeBox) els.beforeBox.style.display = "flex";
+
+    if (els.beforeBox) {
+      els.beforeBox.style.display = "flex";
+      els.beforeBox.innerHTML = `Nenhuma foto exibida.<br/>Sem link de Foto Antes na planilha.`;
+    }
+
     if (els.beforeLink) els.beforeLink.style.display = "none";
   }
 
-  if (item.foto_depois_url) {
+  if (fotoDepoisUrl) {
     if (els.afterImg) {
-      els.afterImg.src = item.foto_depois_url;
+      els.afterImg.onerror = () => {
+        console.error("Falha ao carregar Foto Depois:", fotoDepoisUrl);
+
+        els.afterImg.style.display = "none";
+
+        if (els.afterBox) {
+          els.afterBox.style.display = "flex";
+          els.afterBox.innerHTML = `Não foi possível carregar a foto.<br/>Use o link abaixo para abrir no Drive.`;
+        }
+      };
+
+      els.afterImg.onload = () => {
+        if (els.afterBox) els.afterBox.style.display = "none";
+        els.afterImg.style.display = "block";
+      };
+
+      els.afterImg.src = fotoDepoisUrl;
       els.afterImg.style.display = "block";
     }
 
     if (els.afterBox) els.afterBox.style.display = "none";
 
     if (els.afterLink) {
-      els.afterLink.href = item.foto_depois_url;
-      els.afterLink.textContent = item.foto_depois_url;
+      els.afterLink.href = fotoDepoisUrl;
+      els.afterLink.textContent = fotoDepoisUrl;
       els.afterLink.style.display = "inline-block";
     }
   } else {
     if (els.afterImg) els.afterImg.style.display = "none";
-    if (els.afterBox) els.afterBox.style.display = "flex";
+
+    if (els.afterBox) {
+      els.afterBox.style.display = "flex";
+      els.afterBox.innerHTML = `Nenhuma foto exibida.<br/>Sem link de Foto Depois na planilha.`;
+    }
+
     if (els.afterLink) els.afterLink.style.display = "none";
   }
 
@@ -892,6 +987,8 @@ function bindFotoUploadLabels() {
     if (fotoAntesFileName) {
       fotoAntesFileName.textContent = file ? file.name : "Nenhum arquivo selecionado";
     }
+
+    console.log("Foto Antes selecionada:", file);
   });
 
   fotoDepoisFile?.addEventListener("change", () => {
@@ -900,6 +997,8 @@ function bindFotoUploadLabels() {
     if (fotoDepoisFileName) {
       fotoDepoisFileName.textContent = file ? file.name : "Nenhum arquivo selecionado";
     }
+
+    console.log("Foto Depois selecionada:", file);
   });
 }
 
@@ -913,6 +1012,11 @@ async function getFormPayload() {
 
   const fotoAntesPayload = await fileToBase64Payload(fotoAntesFile);
   const fotoDepoisPayload = await fileToBase64Payload(fotoDepoisFile);
+
+  console.log("Foto Antes File:", fotoAntesFile);
+  console.log("Foto Depois File:", fotoDepoisFile);
+  console.log("Foto Antes Base64 tamanho:", fotoAntesPayload.base64.length);
+  console.log("Foto Depois Base64 tamanho:", fotoDepoisPayload.base64.length);
 
   return {
     ano: document.getElementById("ano")?.value?.trim() || "",
@@ -1062,12 +1166,15 @@ function renderTabelaAtendimentos(lista) {
   tbody.innerHTML = listaDoDia.map((raw) => {
     const item = normalizeAtendimentoItem(raw);
 
-    const fotoAntes = item.foto_antes_url
-      ? `<a href="${escapeHtml(item.foto_antes_url)}" target="_blank" rel="noopener">Abrir</a>`
+    const fotoAntesUrl = normalizeDriveImageUrl(item.foto_antes_url);
+    const fotoDepoisUrl = normalizeDriveImageUrl(item.foto_depois_url);
+
+    const fotoAntes = fotoAntesUrl
+      ? `<a href="${escapeHtml(fotoAntesUrl)}" target="_blank" rel="noopener">Abrir</a>`
       : "—";
 
-    const fotoDepois = item.foto_depois_url
-      ? `<a href="${escapeHtml(item.foto_depois_url)}" target="_blank" rel="noopener">Abrir</a>`
+    const fotoDepois = fotoDepoisUrl
+      ? `<a href="${escapeHtml(fotoDepoisUrl)}" target="_blank" rel="noopener">Abrir</a>`
       : "—";
 
     return `
@@ -1132,8 +1239,15 @@ function bindFormAcao() {
 
       const result = await salvarAtendimentoGoogleSheets(payload);
 
+      console.log("Resultado Apps Script:", result);
+
       if (result.success) {
-        showFormStatus("Atendimento salvo com sucesso na planilha.", "ok");
+        if (result.warning) {
+          showFormStatus(`${result.message} Detalhe: ${result.warning}`, "error");
+        } else {
+          showFormStatus("Atendimento salvo com sucesso na planilha.", "ok");
+        }
+
         limparFormularioAtendimento();
 
         await carregarListaAtendimentos();
