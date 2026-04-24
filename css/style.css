@@ -853,6 +853,31 @@ tbody tr.active {
   max-width: 100%;
 }
 
+/* =========================================================
+   Foto Antes / Foto Depois lado a lado - Novo Atendimento
+   ========================================================= */
+
+#novoAtendimentoPage .field-group:has(#foto_antes_file),
+#novoAtendimentoPage .field-group:has(#foto_depois_file) {
+  grid-column: span 6;
+}
+
+#novoAtendimentoPage .photoUploadBox {
+  min-height: 58px;
+  align-items: center;
+}
+
+#novoAtendimentoPage .fileUploadBtn {
+  min-width: 170px;
+  justify-content: center;
+  text-align: center;
+}
+
+#novoAtendimentoPage .uploadFileName {
+  flex: 1;
+  min-width: 150px;
+}
+
 .status {
   display: none;
   margin-top: 14px;
@@ -1029,6 +1054,11 @@ footer {
   .col-4,
   .col-6,
   .col-12 {
+    grid-column: 1 / -1;
+  }
+
+  #novoAtendimentoPage .field-group:has(#foto_antes_file),
+  #novoAtendimentoPage .field-group:has(#foto_depois_file) {
     grid-column: 1 / -1;
   }
 }
