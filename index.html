@@ -292,7 +292,7 @@
       <div class="topbar">
         <div class="brand">
           <h1>Novo Atendimento • YSSY</h1>
-          <p>Integração direta com Google Sheets</p>
+          <p>Integração direta com Google Sheets e Google Drive</p>
         </div>
 
         <div class="actions-top">
@@ -304,8 +304,9 @@
       <div class="card pageCard">
         <div class="card-header">
           <h2>Novo registro</h2>
-          <p>Os dados serão gravados na planilha <strong>KPIs_Atendimentos</strong>, aba <strong>Atendimentos</strong>.</p>
+          <p>Os dados serão gravados na planilha <strong>KPIs_Atendimentos</strong>, aba <strong>Atendimentos</strong>. As fotos serão armazenadas no <strong>Google Drive</strong>, e os links serão registrados na planilha.</p>
         </div>
+
         <div class="card-body">
           <form id="formAcao">
             <div class="section-title-inline"><span class="section-dot"></span><strong>Preencha os dados do atendimento</strong></div>
@@ -377,13 +378,31 @@
               </div>
 
               <div class="col-6 field-group">
-                <label for="foto_antes_url">Foto Antes (caminho/URL)</label>
-                <input id="foto_antes_url" type="text" placeholder="Ex.: https://... ou C:\fotos\antes.jpg" />
+                <label>Foto Antes</label>
+
+                <div class="photoUploadBox">
+                  <input id="foto_antes_file" class="inputFileHidden" type="file" accept="image/*" />
+                  <label for="foto_antes_file" class="btn btn-secondary fileUploadBtn">
+                    Carregar Foto Antes
+                  </label>
+                  <span id="fotoAntesFileName" class="uploadFileName">Nenhum arquivo selecionado</span>
+                </div>
+
+                <input id="foto_antes_url" type="hidden" />
               </div>
 
               <div class="col-6 field-group">
-                <label for="foto_depois_url">Foto Depois (caminho/URL)</label>
-                <input id="foto_depois_url" type="text" placeholder="Ex.: https://... ou C:\fotos\depois.jpg" />
+                <label>Foto Depois</label>
+
+                <div class="photoUploadBox">
+                  <input id="foto_depois_file" class="inputFileHidden" type="file" accept="image/*" />
+                  <label for="foto_depois_file" class="btn btn-secondary fileUploadBtn">
+                    Carregar Foto Depois
+                  </label>
+                  <span id="fotoDepoisFileName" class="uploadFileName">Nenhum arquivo selecionado</span>
+                </div>
+
+                <input id="foto_depois_url" type="hidden" />
               </div>
 
               <div class="col-12 field-group">
@@ -409,6 +428,7 @@
           <h2>Registros cadastrados</h2>
           <p>A listagem abaixo é carregada diretamente da planilha pelo Google Apps Script.</p>
         </div>
+
         <div class="card-body">
           <div class="toolbar">
             <div class="left">

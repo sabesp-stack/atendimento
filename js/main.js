@@ -54,9 +54,24 @@ let filteredItems = [];
 let selectedIdx = null;
 
 const MESES = [
-  "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  "",
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro"
 ];
+
+/* =========================================================
+   Helpers gerais
+   ========================================================= */
 
 function safeText(v, fallback = "") {
   return String(v ?? fallback).trim();
@@ -94,6 +109,19 @@ function showError(msg = "") {
   els.errorBox.textContent = msg || "";
 }
 
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/* =========================================================
+   Estado vazio / validação
+   ========================================================= */
+
 function setEmptyState() {
   if (els.kpiTickets) els.kpiTickets.textContent = "—";
   if (els.kpiTicketsSub) els.kpiTicketsSub.textContent = "—";
@@ -123,8 +151,14 @@ function setEmptyState() {
 }
 
 function validateData(data) {
-  if (!data || typeof data !== "object") return "Dados inválidos: objeto raiz não encontrado.";
-  if (!Array.isArray(data.itens)) return "Dados inválidos: campo 'itens' precisa ser uma lista.";
+  if (!data || typeof data !== "object") {
+    return "Dados inválidos: objeto raiz não encontrado.";
+  }
+
+  if (!Array.isArray(data.itens)) {
+    return "Dados inválidos: campo 'itens' precisa ser uma lista.";
+  }
+
   return null;
 }
 
@@ -155,30 +189,74 @@ function normalizeItem(x, fallbackAno = 0, fallbackMes = 0) {
     ano,
     mes,
     dia: safeNumber(x.dia ?? x.Dia, 0),
-    numero_ticket: safeText(x.numero_ticket ?? x.ticket ?? x["Nº Ticket"] ?? x["numero_ticket"]),
-    id_localidade: safeText(x.id_localidade ?? x.idLocalidade ?? x["Id Localidade"] ?? x.id),
-    localidade: safeText(x.localidade ?? x["Localidade"], "N/D"),
+
+    numero_ticket: safeText(
+      x.numero_ticket ??
+      x.ticket ??
+      x["Nº Ticket"] ??
+      x["numero_ticket"]
+    ),
+
+    id_localidade: safeText(
+      x.id_localidade ??
+      x.idLocalidade ??
+      x["Id Localidade"] ??
+      x.id
+    ),
+
+    localidade: safeText(
+      x.localidade ??
+      x["Localidade"],
+      "N/D"
+    ),
+
     tempo_gasto_horas: tempoHoras,
+
     equipamentos_trocados: safeNumber(
-      x.equipamentos_trocados ?? x.qtde_equip_trocados ?? x["Qtde Equip. Trocados"],
+      x.equipamentos_trocados ??
+      x.qtde_equip_trocados ??
+      x["Qtde Equip. Trocados"],
       0
     ),
+
     equipamentos_configurados: safeNumber(
-      x.equipamentos_configurados ?? x.qtde_equip_configurados ?? x["Qtde Equip. Configurados"],
+      x.equipamentos_configurados ??
+      x.qtde_equip_configurados ??
+      x["Qtde Equip. Configurados"],
       0
     ),
+
     pontos_de_rede: safeNumber(
-      x.pontos_de_rede ?? x["Pontos de Rede"],
+      x.pontos_de_rede ??
+      x["Pontos de Rede"],
       0
     ),
-    foto_antes_url: safeUrl(x.foto_antes_url ?? x["Foto Antes (caminho/URL)"] ?? x.foto_antes),
-    foto_depois_url: safeUrl(x.foto_depois_url ?? x["Foto Depois (caminho/URL)"] ?? x.foto_depois),
+
+    foto_antes_url: safeUrl(
+      x.foto_antes_url ??
+      x["Foto Antes (caminho/URL)"] ??
+      x.foto_antes
+    ),
+
+    foto_depois_url: safeUrl(
+      x.foto_depois_url ??
+      x["Foto Depois (caminho/URL)"] ??
+      x.foto_depois
+    ),
+
     descricao_atendimento: safeText(
-      x.descricao_atendimento ?? x.descricao ?? x.observacao ?? x["Descrição Atendimento"],
+      x.descricao_atendimento ??
+      x.descricao ??
+      x.observacao ??
+      x["Descrição Atendimento"],
       ""
     ),
   };
 }
+
+/* =========================================================
+   Selects / filtros
+   ========================================================= */
 
 function initSelectPlaceholders() {
   if (els.mesSelect) {
@@ -238,6 +316,19 @@ function applyFilters(items) {
   return out;
 }
 
+function clearFilters() {
+  if (els.idLocalidadeSearch) els.idLocalidadeSearch.value = "";
+  if (els.ticketSearch) els.ticketSearch.value = "";
+  if (els.anoSelect) els.anoSelect.value = "all";
+  if (els.mesSelect) els.mesSelect.value = "all";
+
+  renderAll();
+}
+
+/* =========================================================
+   KPIs
+   ========================================================= */
+
 function sum(items, key) {
   return items.reduce((acc, it) => acc + safeNumber(it[key], 0), 0);
 }
@@ -274,14 +365,9 @@ function renderKPIs(items) {
   if (els.totalFiltro) els.totalFiltro.textContent = fmtInt(totalTickets);
 }
 
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+/* =========================================================
+   Tabela do dashboard
+   ========================================================= */
 
 function renderTable(items) {
   if (!els.tbody) return;
@@ -334,6 +420,10 @@ function selectItem(idx) {
 
   renderGallery(item);
 }
+
+/* =========================================================
+   Galeria de fotos
+   ========================================================= */
 
 function clearGallery() {
   if (els.selectedInfo) els.selectedInfo.textContent = "—";
@@ -420,6 +510,10 @@ function renderGallery(item) {
     els.galleryHint.innerHTML = `Fotos do item selecionado na tabela.`;
   }
 }
+
+/* =========================================================
+   Gráficos
+   ========================================================= */
 
 function aggregateByLocalidade(items, field) {
   const map = new Map();
@@ -569,6 +663,10 @@ function renderCharts(items) {
   drawBarChart(els.cvEquip, trocData, (v) => fmtInt(v));
 }
 
+/* =========================================================
+   Render geral
+   ========================================================= */
+
 function renderAll() {
   filteredItems = applyFilters(allItems);
 
@@ -591,7 +689,9 @@ function renderAll() {
   showError("");
 }
 
-/* ===== Integração Google Sheets ===== */
+/* =========================================================
+   Integração Google Sheets / Apps Script
+   ========================================================= */
 
 function getApiBase() {
   return GOOGLE_SCRIPT_URL;
@@ -606,6 +706,30 @@ async function requestJson(url, errorMessage = "A API não retornou JSON válido
   const text = await resp.text();
 
   let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error("Resposta bruta da API:", text);
+    throw new Error(errorMessage);
+  }
+
+  return data;
+}
+
+async function postJson(url, payload, errorMessage = "A API não retornou JSON válido.") {
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const text = await resp.text();
+
+  let data;
+
   try {
     data = JSON.parse(text);
   } catch (e) {
@@ -673,7 +797,9 @@ async function carregarDashboardGoogleSheets() {
   }
 }
 
-/* ===== Novo Atendimento ===== */
+/* =========================================================
+   Status da tela Novo Atendimento
+   ========================================================= */
 
 function showFormStatus(message, type = "info") {
   const el = document.getElementById("statusForm");
@@ -717,7 +843,77 @@ function showTableStatus(message, type = "info") {
   el.className = `status show ${type}`;
 }
 
-function getFormPayload() {
+/* =========================================================
+   Upload de Fotos
+   ========================================================= */
+
+function fileToBase64Payload(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      resolve({
+        base64: "",
+        nome: "",
+        tipo: ""
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",")[1] : "";
+
+      resolve({
+        base64,
+        nome: file.name || "foto.jpg",
+        tipo: file.type || "image/jpeg"
+      });
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Falha ao ler o arquivo de imagem."));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function bindFotoUploadLabels() {
+  const fotoAntesFile = document.getElementById("foto_antes_file");
+  const fotoDepoisFile = document.getElementById("foto_depois_file");
+
+  const fotoAntesFileName = document.getElementById("fotoAntesFileName");
+  const fotoDepoisFileName = document.getElementById("fotoDepoisFileName");
+
+  fotoAntesFile?.addEventListener("change", () => {
+    const file = fotoAntesFile.files?.[0];
+
+    if (fotoAntesFileName) {
+      fotoAntesFileName.textContent = file ? file.name : "Nenhum arquivo selecionado";
+    }
+  });
+
+  fotoDepoisFile?.addEventListener("change", () => {
+    const file = fotoDepoisFile.files?.[0];
+
+    if (fotoDepoisFileName) {
+      fotoDepoisFileName.textContent = file ? file.name : "Nenhum arquivo selecionado";
+    }
+  });
+}
+
+/* =========================================================
+   Formulário Novo Atendimento
+   ========================================================= */
+
+async function getFormPayload() {
+  const fotoAntesFile = document.getElementById("foto_antes_file")?.files?.[0] || null;
+  const fotoDepoisFile = document.getElementById("foto_depois_file")?.files?.[0] || null;
+
+  const fotoAntesPayload = await fileToBase64Payload(fotoAntesFile);
+  const fotoDepoisPayload = await fileToBase64Payload(fotoDepoisFile);
+
   return {
     ano: document.getElementById("ano")?.value?.trim() || "",
     mes: document.getElementById("mes")?.value?.trim() || "",
@@ -729,9 +925,15 @@ function getFormPayload() {
     equipamentos_trocados: document.getElementById("equipamentos_trocados")?.value?.trim() || "0",
     equipamentos_configurados: document.getElementById("equipamentos_configurados")?.value?.trim() || "0",
     pontos_de_rede: document.getElementById("pontos_de_rede")?.value?.trim() || "0",
-    foto_antes_url: document.getElementById("foto_antes_url")?.value?.trim() || "",
-    foto_depois_url: document.getElementById("foto_depois_url")?.value?.trim() || "",
-    descricao_atendimento: document.getElementById("descricao_atendimento")?.value?.trim() || ""
+    descricao_atendimento: document.getElementById("descricao_atendimento")?.value?.trim() || "",
+
+    foto_antes_base64: fotoAntesPayload.base64,
+    foto_antes_nome: fotoAntesPayload.nome,
+    foto_antes_tipo: fotoAntesPayload.tipo,
+
+    foto_depois_base64: fotoDepoisPayload.base64,
+    foto_depois_nome: fotoDepoisPayload.nome,
+    foto_depois_tipo: fotoDepoisPayload.tipo
   };
 }
 
@@ -774,14 +976,16 @@ async function salvarAtendimentoGoogleSheets(payload) {
     throw new Error("URL do Apps Script não informada.");
   }
 
-  const params = new URLSearchParams({
+  const body = {
     action: "add_atendimento",
     ...payload
-  });
+  };
 
-  const url = `${apiBase}?${params.toString()}`;
-
-  return await requestJson(url, "A API não retornou JSON válido ao salvar atendimento.");
+  return await postJson(
+    apiBase,
+    body,
+    "A API não retornou JSON válido ao salvar atendimento."
+  );
 }
 
 function limparFormularioAtendimento() {
@@ -792,7 +996,17 @@ function limparFormularioAtendimento() {
 
   if (ano) ano.value = String(new Date().getFullYear());
   if (dia) dia.value = String(new Date().getDate());
+
+  const fotoAntesFileName = document.getElementById("fotoAntesFileName");
+  const fotoDepoisFileName = document.getElementById("fotoDepoisFileName");
+
+  if (fotoAntesFileName) fotoAntesFileName.textContent = "Nenhum arquivo selecionado";
+  if (fotoDepoisFileName) fotoDepoisFileName.textContent = "Nenhum arquivo selecionado";
 }
+
+/* =========================================================
+   Tabela de registros cadastrados
+   ========================================================= */
 
 function normalizeAtendimentoItem(x) {
   return {
@@ -848,6 +1062,14 @@ function renderTabelaAtendimentos(lista) {
   tbody.innerHTML = listaDoDia.map((raw) => {
     const item = normalizeAtendimentoItem(raw);
 
+    const fotoAntes = item.foto_antes_url
+      ? `<a href="${escapeHtml(item.foto_antes_url)}" target="_blank" rel="noopener">Abrir</a>`
+      : "—";
+
+    const fotoDepois = item.foto_depois_url
+      ? `<a href="${escapeHtml(item.foto_depois_url)}" target="_blank" rel="noopener">Abrir</a>`
+      : "—";
+
     return `
       <tr>
         <td>${escapeHtml(item.ano)}</td>
@@ -860,8 +1082,8 @@ function renderTabelaAtendimentos(lista) {
         <td>${escapeHtml(item.equipamentos_trocados)}</td>
         <td>${escapeHtml(item.equipamentos_configurados)}</td>
         <td>${escapeHtml(item.pontos_de_rede)}</td>
-        <td>${escapeHtml(item.foto_antes_url)}</td>
-        <td>${escapeHtml(item.foto_depois_url)}</td>
+        <td>${fotoAntes}</td>
+        <td>${fotoDepois}</td>
         <td>${escapeHtml(item.descricao_atendimento)}</td>
       </tr>
     `;
@@ -895,17 +1117,19 @@ function bindFormAcao() {
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const payload = getFormPayload();
-    const validationError = validateFormPayload(payload);
-
-    if (validationError) {
-      showFormStatus(validationError, "error");
-      return;
-    }
-
-    showFormStatus("Salvando atendimento...", "info");
+    showFormStatus("Preparando dados e fotos...", "info");
 
     try {
+      const payload = await getFormPayload();
+      const validationError = validateFormPayload(payload);
+
+      if (validationError) {
+        showFormStatus(validationError, "error");
+        return;
+      }
+
+      showFormStatus("Salvando atendimento e enviando fotos...", "info");
+
       const result = await salvarAtendimentoGoogleSheets(payload);
 
       if (result.success) {
@@ -937,16 +1161,9 @@ function bindFormAcao() {
   });
 }
 
-/* ===== Eventos gerais ===== */
-
-function clearFilters() {
-  if (els.idLocalidadeSearch) els.idLocalidadeSearch.value = "";
-  if (els.ticketSearch) els.ticketSearch.value = "";
-  if (els.anoSelect) els.anoSelect.value = "all";
-  if (els.mesSelect) els.mesSelect.value = "all";
-
-  renderAll();
-}
+/* =========================================================
+   Eventos gerais
+   ========================================================= */
 
 function bindEvents() {
   els.anoSelect?.addEventListener("change", renderAll);
@@ -992,12 +1209,15 @@ function bindEvents() {
   });
 }
 
-/* ===== Inicialização ===== */
+/* =========================================================
+   Inicialização
+   ========================================================= */
 
 function init() {
   initSelectPlaceholders();
   bindEvents();
   bindFormAcao();
+  bindFotoUploadLabels();
   setEmptyState();
 
   carregarDashboardGoogleSheets();

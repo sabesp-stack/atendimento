@@ -212,6 +212,7 @@ textarea::placeholder {
   color: rgba(167, 176, 199, 0.58);
 }
 
+/* Botão Limpar filtros abaixo dos filtros */
 .filterActions {
   width: 100%;
   flex-basis: 100%;
@@ -255,6 +256,7 @@ textarea::placeholder {
   max-width: 430px;
 }
 
+/* Botão Sair abaixo dos botões principais */
 .uploadLogoutGroup {
   width: 100%;
   flex-basis: 100%;
@@ -303,6 +305,7 @@ textarea::placeholder {
   background: linear-gradient(135deg, #3B82F6, #1D4ED8);
 }
 
+/* Botão Limpar filtros menor */
 #btnClearSearch {
   min-height: 32px;
   padding: 7px 13px;
@@ -310,6 +313,7 @@ textarea::placeholder {
   border-radius: 10px;
 }
 
+/* Botão Sair menor */
 #btnLogout {
   min-height: 30px;
   padding: 6px 13px;
@@ -795,6 +799,41 @@ tbody tr.active {
   margin-top: 6px;
 }
 
+/* =========================================================
+   Upload de Fotos - Novo Atendimento
+   ========================================================= */
+
+.photoUploadBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px;
+  border: 1px dashed rgba(148, 163, 184, 0.22);
+  border-radius: 14px;
+  background: rgba(7, 10, 18, 0.30);
+}
+
+.inputFileHidden {
+  display: none;
+}
+
+.fileUploadBtn {
+  min-height: 34px;
+  padding: 8px 14px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+
+.uploadFileName {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  word-break: break-word;
+  max-width: 100%;
+}
+
 .status {
   display: none;
   margin-top: 14px;
@@ -993,6 +1032,16 @@ footer {
 
   #btnLogout {
     width: 100%;
+  }
+
+  .photoUploadBox {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .fileUploadBtn {
+    width: 100%;
+    justify-content: center;
   }
 
   .chart {
