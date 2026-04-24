@@ -508,6 +508,23 @@ function clearCanvas(canvas) {
   ctx.clearRect(0, 0, w, h);
 }
 
+function getCssVar(name, fallback) {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + w, y, x + w, y + h, radius);
+  ctx.arcTo(x + w, y + h, x, y + h, radius);
+  ctx.arcTo(x, y + h, x, y, radius);
+  ctx.arcTo(x, y, x + w, y, radius);
+  ctx.closePath();
+}
+
 function drawBarChart(canvas, data, valueFormatter = (v) => String(v)) {
   if (!canvas) return;
 
@@ -515,12 +532,27 @@ function drawBarChart(canvas, data, valueFormatter = (v) => String(v)) {
 
   const ctx = canvas.getContext("2d");
   const w = canvas.clientWidth || 600;
+  const h = canvas.clientHeight || 260;
 
-  ctx.clearRect(0, 0, w, 260);
+  ctx.clearRect(0, 0, w, h);
+
+  const chartGridLine = getCssVar("--chart-grid-line", "rgba(148,163,184,.14)");
+  const chartAxisLabel = getCssVar("--chart-axis-label", "rgba(167,176,199,.92)");
+  const chartLabelDark = getCssVar("--chart-label-dark", "rgba(8, 12, 22, .92)");
+
+  const limeTop = getCssVar("--chart-lime-top", "rgba(196,247,44,.95)");
+  const limeMid = getCssVar("--chart-lime-mid", "rgba(196,247,44,.70)");
+  const limeBottom = getCssVar("--chart-lime-bottom", "rgba(196,247,44,.28)");
+
+  const blueTop = getCssVar("--chart-blue-top", "rgba(91,129,252,.95)");
+  const blueMid = getCssVar("--chart-blue-mid", "rgba(91,129,252,.70)");
+  const blueBottom = getCssVar("--chart-blue-bottom", "rgba(91,129,252,.28)");
+
+  const emptyTextColor = getCssVar("--muted", "#A7B0C7");
 
   if (!data.length) {
-    ctx.fillStyle = "#A7B0C7";
-    ctx.font = "12px Arial";
+    ctx.fillStyle = emptyTextColor;
+    ctx.font = "12px ui-sans-serif, system-ui, Arial";
     ctx.fillText("Sem dados para exibir.", 16, 24);
     return;
   }
@@ -528,27 +560,56 @@ function drawBarChart(canvas, data, valueFormatter = (v) => String(v)) {
   const left = 180;
   const top = 16;
   const right = 18;
+  const bottom = 10;
   const rowH = 22;
   const gap = 8;
   const chartW = Math.max(120, w - left - right);
-  const maxVal = Math.max(...data.map(d => d.value), 1);
+  const maxVal = Math.max(...data.map(d => safeNumber(d.value, 0)), 1);
 
-  ctx.font = "12px Arial";
+  ctx.save();
+
+  ctx.strokeStyle = chartGridLine;
+  ctx.lineWidth = 1;
+
+  for (let i = 1; i <= 4; i++) {
+    const x = left + chartW * (i / 4);
+    ctx.beginPath();
+    ctx.moveTo(x, top - 4);
+    ctx.lineTo(x, Math.min(h - bottom, top + data.length * (rowH + gap)));
+    ctx.stroke();
+  }
+
+  ctx.font = "12px ui-sans-serif, system-ui, Arial";
 
   data.forEach((d, i) => {
     const y = top + i * (rowH + gap);
+    const value = safeNumber(d.value, 0);
+    const label = safeText(d.label || "N/D");
+    const shortLabel = label.length > 28 ? `${label.slice(0, 28)}…` : label;
 
-    ctx.fillStyle = "#A7B0C7";
-    ctx.fillText(d.label.slice(0, 28), 10, y + 14);
+    ctx.fillStyle = chartAxisLabel;
+    ctx.fillText(shortLabel, 10, y + 14);
 
-    const bw = Math.max(2, (d.value / maxVal) * chartW);
+    const bw = Math.max(2, (value / maxVal) * chartW);
+    const isLime = i % 2 === 0;
 
-    ctx.fillStyle = "rgba(47,124,255,.85)";
-    ctx.fillRect(left, y, bw, rowH);
+    const grad = ctx.createLinearGradient(left, y, left + bw, y);
+    grad.addColorStop(0, isLime ? limeTop : blueTop);
+    grad.addColorStop(0.55, isLime ? limeMid : blueMid);
+    grad.addColorStop(1, isLime ? limeBottom : blueBottom);
 
-    ctx.fillStyle = "rgba(8,12,22,.92)";
-    ctx.fillText(valueFormatter(d.value), left + 8, y + 14);
+    ctx.fillStyle = grad;
+    roundRect(ctx, left, y, bw, rowH, 7);
+    ctx.fill();
+
+    ctx.fillStyle = chartLabelDark;
+    ctx.font = "11px ui-sans-serif, system-ui, Arial";
+    ctx.fillText(valueFormatter(value), left + 8, y + 14);
+
+    ctx.font = "12px ui-sans-serif, system-ui, Arial";
   });
+
+  ctx.restore();
 }
 
 function renderCharts(items) {

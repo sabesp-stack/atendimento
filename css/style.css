@@ -6,6 +6,23 @@
   --accent:#2F7CFF;
   --accent2:#22D3EE;
   --violet:#7C3AED;
+
+  /* ===== Cores antigas dos gráficos ===== */
+  --chart-lime:#C4F72C;
+  --chart-blue:#5B81FC;
+
+  --chart-lime-top: rgba(196,247,44,.95);
+  --chart-lime-mid: rgba(196,247,44,.70);
+  --chart-lime-bottom: rgba(196,247,44,.28);
+
+  --chart-blue-top: rgba(91,129,252,.95);
+  --chart-blue-mid: rgba(91,129,252,.70);
+  --chart-blue-bottom: rgba(91,129,252,.28);
+
+  --chart-label-dark: rgba(8, 12, 22, .92);
+  --chart-grid-line: rgba(148,163,184,.14);
+  --chart-axis-label: rgba(167,176,199,.92);
+
   --labelDark: rgba(8, 12, 22, .92);
   --danger:#FF4D6D;
   --border: rgba(148, 163, 184, .14);
@@ -518,18 +535,59 @@ tbody tr.active td{background: rgba(47,124,255,.14)}
 .chart{
   height:260px;
   width:100%;
-  background: rgba(0,0,0,.10);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(196,247,44,.06), transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(91,129,252,.08), transparent 36%),
+    rgba(0,0,0,.10);
   border:1px solid var(--border);
   border-radius:14px;
   padding:12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 10px 24px rgba(0,0,0,.14);
 }
 
-canvas{width:100%;height:100%}
-.divider{height:1px;background:var(--border);margin:12px 0}
+canvas{
+  width:100%;
+  height:100%;
+}
 
-.chartGrid{margin-top:10px}
-.chartCard{grid-column:span 12;min-height:auto}
-.chartTitle{margin-bottom:8px}
+.divider{
+  height:1px;
+  background:var(--border);
+  margin:12px 0;
+}
+
+.chartGrid{
+  margin-top:10px;
+}
+
+.chartCard{
+  grid-column:span 12;
+  min-height:auto;
+}
+
+.chartTitle{
+  margin-bottom:8px;
+  color:var(--muted);
+}
+
+/* Variáveis visuais de apoio para os gráficos em canvas.
+   O JavaScript deve ler estas variáveis para aplicar nas barras. */
+.chart,
+.chartCard{
+  --bar-lime-top: var(--chart-lime-top);
+  --bar-lime-mid: var(--chart-lime-mid);
+  --bar-lime-bottom: var(--chart-lime-bottom);
+
+  --bar-blue-top: var(--chart-blue-top);
+  --bar-blue-mid: var(--chart-blue-mid);
+  --bar-blue-bottom: var(--chart-blue-bottom);
+
+  --bar-label-color: var(--chart-label-dark);
+  --bar-grid-color: var(--chart-grid-line);
+  --bar-axis-label-color: var(--chart-axis-label);
+}
 
 /* ===== Galeria ===== */
 .galleryWrap{
